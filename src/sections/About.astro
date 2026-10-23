@@ -26,92 +26,44 @@ const publications = (await getCollection('blog'))
 const documentPublications = [
 	{
 		title: 'Cuerpos de agua',
-		type: t({ en: 'PDF publication', es: 'Publicación en PDF', 'pt-br': 'Publicação em PDF' }),
+		type: t('about.pdf-publication'),
 		cover: CuerposDeAguaCover,
 		pdf: CuerposDeAguaPdf,
 		contributor: '',
-		alt: t({
-			en: 'Poster for Trujillo: Cuerpos de agua',
-			es: 'Afiche de Trujillo: Cuerpos de agua',
-			'pt-br': 'Pôster de Trujillo: Cuerpos de agua',
-		}),
+		alt: t('about.poster-for-trujillo-cuerpos-de-agua'),
 	},
 	{
 		title: 'En - claves de paz · Boletín No. 5',
-		type: t({ en: 'Peace bulletin', es: 'Boletín de paz', 'pt-br': 'Boletim pela paz' }),
+		type: t('about.peace-bulletin'),
 		cover: EnClavesDePazPage5,
 		pdf: EnClavesDePazPdf,
 		alt: 'Page 5 of the En-claves de paz bulletin, showing the poem “Participaz” by Juan Felipe Rada',
-		contributor: t({
-			en: 'By Juan Felipe Rada',
-			es: 'Por Juan Felipe Rada',
-			'pt-br': 'Por Juan Felipe Rada',
-		}),
+		contributor: t('about.by-juan-felipe-rada'),
 	},
 	{
 		title:
 			'La descomposición de las organizaciones políticas en Buga en las contiendas electorales (1997–2003) y la relación entre paramilitares y políticos',
-		type: t({
-			en: 'Undergraduate thesis',
-			es: 'Trabajo de grado',
-			'pt-br': 'Trabalho de conclusão de curso',
-		}),
+		type: t('about.undergraduate-thesis'),
 		cover: BugaPoliticsCover,
 		pdf: BugaPoliticsPdf,
-		alt: t({
-			en: 'Title page of a political science thesis about political organizations and elections in Buga',
-			es: 'Portada del trabajo de grado sobre organizaciones políticas y elecciones en Buga',
-			'pt-br': 'Capa do trabalho de conclusão sobre organizações políticas e eleições em Buga',
-		}),
-		contributor: t({
-			en: 'Co-authored by Juan Felipe Rada Arias',
-			es: 'En coautoría con Juan Felipe Rada Arias',
-			'pt-br': 'Em coautoria com Juan Felipe Rada Arias',
-		}),
+		alt: t('about.title-page-of-a-political-science-thesis'),
+		contributor: t('about.co-authored-by-juan-felipe-rada-arias'),
 	},
 	{
 		title: 'Te sueñen Sans Serifa',
-		type: t({
-			en: 'Poem · Pasá la Voz magazine',
-			es: 'Poema · Revista Pasá la Voz',
-			'pt-br': 'Poema · Revista Pasá la Voz',
-		}),
+		type: t('about.poem-pasa-la-voz-magazine'),
 		cover: PasaLaVozPage,
 		pdf: PasaLaVozArchiveCopy,
 		alt: 'Page 46 of Revista Pasá la Voz, showing the poem “Te sueñen Sans Serifa” by Juan Felipe Rada Arias',
-		contributor: t({
-			en: 'Poem by Juan Felipe Rada Arias · 23rd edition, p. 46 · 48-page archive copy',
-			es: 'Poema de Juan Felipe Rada Arias · 23.ª edición, p. 46 · Copia de archivo de 48 páginas',
-			'pt-br': 'Poema de Juan Felipe Rada Arias · 23ª edição, p. 46 · Cópia de arquivo com 48 páginas',
-		}),
+		contributor: t('about.poem-by-juan-felipe-rada-arias-23rd-edit'),
 	},
 ];
 const funFacts = [
-	t({
-		en: 'Political scientist by training',
-		es: 'Politólogo de formación',
-		'pt-br': 'Cientista político por formação',
-	}),
-	t({
-		en: 'Curious coder by nature',
-		es: 'Programador curioso por naturaleza',
-		'pt-br': 'Programador curioso por natureza',
-	}),
-	t({
-		en: 'Digital business strategist',
-		es: 'Estratega de negocios digitales',
-		'pt-br': 'Estrategista de negócios digitais',
-	}),
-	t({
-		en: 'I write poems and personal essays',
-		es: 'Escribo poemas y textos personales',
-		'pt-br': 'Escrevo poemas e textos pessoais',
-	}),
-	t({
-		en: 'I collect race bibs as running souvenirs',
-		es: 'Colecciono dorsales como recuerdos de carreras',
-		'pt-br': 'Coleciono números de corrida como lembranças',
-	}),
+	t('about.political-scientist-by-training'),
+	t('about.curious-coder-by-nature'),
+	t('about.digital-business-strategist'),
+	t('about.i-write-poems-and-personal-essays'),
+	t('about.i-collect-race-bibs-as-running-souvenirs'),
 ];
 ---
 
@@ -120,21 +72,12 @@ const funFacts = [
 		<header class="about__hero layout-center">
 			<h1 class="section__title" id="about-title">
 				{
-					t({
-						en: 'About',
-						es: 'Acerca de mí',
-						'pt-br': 'Sobre mim',
-					})
+					t('about.about')
 				}
 			</h1>
 			<p class="about__summary">
 				{
-					t({
-						en: 'Brazil-based multidisciplinary humanist exploring the connections between the humanities, design, and code.',
-						es: 'Humanista multidisciplinario radicado en Brasil, explorando las conexiones entre las humanidades, el diseño y el código.',
-						'pt-br':
-							'Humanista multidisciplinar baseado no Brasil, explorando as conexões entre humanidades, design e programação.',
-					})
+					t('about.brazil-based-multidisciplinary-humanist-')
 				}
 			</p>
 		</header>
@@ -144,30 +87,22 @@ const funFacts = [
 <section
 	class="about section"
 	id="About"
-	aria-label={t({ en: 'My room', es: 'Mi habitación', 'pt-br': 'Meu quarto' })}
+	aria-label={t('about.my-room')}
 >
 	<div class="about__container container layout-grid layout-items-start">
 		<header class="about-section-heading layout-full">
 			<p class="about-section-kicker">01</p>
-			<h2>{t({ en: 'Moodboard', es: 'Moodboard', 'pt-br': 'Painel de referências' })}</h2>
+			<h2>{t('about.moodboard')}</h2>
 		</header>
 		<div
 			class="about__gallery layout-full"
 			role="group"
-			aria-label={t({
-				en: 'A few things from my room',
-				es: 'Algunas cosas de mi habitación',
-				'pt-br': 'Algumas coisas do meu quarto',
-			})}
+			aria-label={t('about.a-few-things-from-my-room')}
 		>
 			<div class="about__portrait-core">
 				<Image
 					class="about__portrait"
-					alt={t({
-						en: 'Digital illustration of Juan Felipe Rada',
-						es: 'Ilustración digital de Juan Felipe Rada',
-						'pt-br': 'Ilustração digital de Juan Felipe Rada',
-					})}
+					alt={t('about.digital-illustration-of-juan-felipe-rada')}
 					src={Illustration}
 					widths={[240, 352, 480]}
 					sizes="(max-width: 767px) 180px, 240px"
@@ -182,23 +117,14 @@ const funFacts = [
 				tabindex="0"
 				aria-expanded="false"
 				aria-controls="about-preview-moai"
-				aria-label={t({
-					en: 'A moai from my room',
-					es: 'Un moái de mi habitación',
-					'pt-br': 'Um moai do meu quarto',
-				})}
+				aria-label={t('about.a-moai-from-my-room')}
 				aria-describedby="about-note-moai"
 			>
 				<span class="about__orbit-orb" aria-hidden="true"></span>
 				<div class="about__orbit-preview about__moai" id="about-preview-moai"><Moai /></div>
 				<p class="about__orbit-note" id="about-note-moai">
 					{
-						t({
-							en: 'A small stone Moai, kept close among the things that make my room feel like mine.',
-							es: 'Un pequeño moái de piedra, entre las cosas que hacen que mi habitación se sienta propia.',
-							'pt-br':
-								'Um pequeno moai de pedra, entre as coisas que fazem meu quarto ter a minha cara.',
-						})
+						t('about.a-small-stone-moai-kept-close-among-the-')
 					}
 				</p>
 			</article>
@@ -209,22 +135,14 @@ const funFacts = [
 				tabindex="0"
 				aria-expanded="false"
 				aria-controls="about-preview-type"
-				aria-label={t({
-					en: 'Typography specimen poster',
-					es: 'Póster de muestras tipográficas',
-					'pt-br': 'Pôster de amostras tipográficas',
-				})}
+				aria-label={t('about.typography-specimen-poster')}
 				aria-describedby="about-note-type"
 			>
 				<span class="about__orbit-orb" aria-hidden="true"></span>
 				<div class="about__orbit-preview" id="about-preview-type"><TypeSpecimen /></div>
 				<p class="about__orbit-note" id="about-note-type">
 					{
-						t({
-							en: 'A specimen poster for the typefaces I keep coming back to.',
-							es: 'Un muestrario de las tipografías a las que siempre vuelvo.',
-							'pt-br': 'Um mostruário das tipografias às quais sempre volto.',
-						})
+						t('about.a-specimen-poster-for-the-typefaces-i-ke')
 					}
 				</p>
 			</article>
@@ -235,11 +153,7 @@ const funFacts = [
 				tabindex="0"
 				aria-expanded="false"
 				aria-controls="about-preview-bibs"
-				aria-label={t({
-					en: 'Race bib collection',
-					es: 'Colección de dorsales',
-					'pt-br': 'Coleção de números de corrida',
-				})}
+				aria-label={t('about.race-bib-collection')}
 				aria-describedby="about-note-bibs"
 			>
 				<span class="about__orbit-orb" aria-hidden="true"></span>
@@ -248,11 +162,7 @@ const funFacts = [
 				</div>
 				<p class="about__orbit-note" id="about-note-bibs">
 					{
-						t({
-							en: 'Each bib marks a race, a route, and a finish line.',
-							es: 'Cada dorsal marca una carrera, una ruta y una meta.',
-							'pt-br': 'Cada número marca uma corrida, um percurso e uma linha de chegada.',
-						})
+						t('about.each-bib-marks-a-race-a-route-and-a-fini')
 					}
 				</p>
 			</article>
@@ -263,22 +173,14 @@ const funFacts = [
 				tabindex="0"
 				aria-expanded="false"
 				aria-controls="about-preview-flag"
-				aria-label={t({
-					en: 'A phrase I keep on my wall',
-					es: 'Una frase que tengo en mi pared',
-					'pt-br': 'Uma frase que mantenho na parede',
-				})}
+				aria-label={t('about.a-phrase-i-keep-on-my-wall')}
 				aria-describedby="about-note-flag"
 			>
 				<span class="about__orbit-orb" aria-hidden="true"></span>
 				<div class="about__orbit-preview" id="about-preview-flag"><Flag /></div>
 				<p class="about__orbit-note" id="about-note-flag">
 					{
-						t({
-							en: 'A reminder to stay curious and make room for good encounters.',
-							es: 'Un recordatorio para mantener la curiosidad y abrir espacio a buenos encuentros.',
-							'pt-br': 'Um lembrete para manter a curiosidade e abrir espaço para bons encontros.',
-						})
+						t('about.a-reminder-to-stay-curious-and-make-room')
 					}
 				</p>
 			</article>
@@ -289,11 +191,7 @@ const funFacts = [
 				tabindex="0"
 				aria-expanded="false"
 				aria-controls="about-preview-quote"
-				aria-label={t({
-					en: 'A note about my work and writing',
-					es: 'Una nota sobre mi trabajo y escritura',
-					'pt-br': 'Uma nota sobre meu trabalho e minha escrita',
-				})}
+				aria-label={t('about.a-note-about-my-work-and-writing')}
 			>
 				<span class="about__orbit-orb" aria-hidden="true"></span>
 				<svg
@@ -319,22 +217,12 @@ const funFacts = [
 				<blockquote class="about__intro about__quote-preview" id="about-preview-quote">
 					<p class="about__lead">
 						{
-							t({
-								en: 'I work as a UI/UX developer in telecommunications, paying attention to the small interface details that shape people’s experience. Across different technology sectors, I try to bring a human touch to development.',
-								es: 'Trabajo como desarrollador UI/UX en telecomunicaciones y me fijo en los pequeños detalles de interfaz que transforman la experiencia. En distintos sectores tecnológicos, intento aportar un enfoque humano al desarrollo.',
-								'pt-br':
-									'Trabalho como desenvolvedor UI/UX em telecomunicações, atento aos pequenos detalhes de interface que moldam a experiência das pessoas. Em diferentes setores de tecnologia, tento trazer um olhar humano para o desenvolvimento.',
-							})
+							t('about.i-work-as-a-ui-ux-developer-in-telecommu')
 						}
 					</p>
 					<p class="about__lead">
 						{
-							t({
-								en: 'I also write. My opinions are personal, shaped by an intimate point of view.',
-								es: 'También escribo. Mis opiniones son personales y parten de una mirada íntima.',
-								'pt-br':
-									'Também escrevo. Minhas opiniões são pessoais e partem de uma perspectiva íntima.',
-							})
+							t('about.i-also-write-my-opinions-are-personal-sh')
 						}
 					</p>
 				</blockquote>
@@ -345,7 +233,7 @@ const funFacts = [
 				href="/CV_Juan_Felipe_Rada.pdf"
 				target="_blank"
 				class="about__poster about__orbit-item about__orbit-item--cv"
-				aria-label={t({ en: 'Download CV', es: 'Descargar CV', 'pt-br': 'Baixar CV' })}
+				aria-label={t('about.download-cv')}
 			>
 				<span class="about__orbit-orb" aria-hidden="true"></span>
 				<span class="about__poster-frame">
@@ -354,7 +242,7 @@ const funFacts = [
 					<span class="about__poster-text about__poster-text--short" aria-hidden="true"></span>
 					<span class="about__poster-text" aria-hidden="true"></span>
 					<span class="about__poster-hint">
-						{t({ en: 'Download CV', es: 'Descargar CV', 'pt-br': 'Baixar CV' })}
+						{t('about.download-cv')}
 						<i class="uil uil-external-link-alt" aria-hidden="true"></i>
 					</span>
 				</span>
@@ -368,7 +256,7 @@ const funFacts = [
 		<header class="about-section-heading layout-full">
 			<p class="about-section-kicker">02</p>
 			<h2 id="publications-title">
-				{t({ en: 'Publications', es: 'Publicaciones', 'pt-br': 'Publicações' })}
+				{t('about.publications')}
 			</h2>
 		</header>
 		<div class="publication-grid layout-full">
@@ -392,7 +280,7 @@ const funFacts = [
 								<h3>{publication.title}</h3>
 								{publication.contributor && <p>{publication.contributor}</p>}
 								<span>
-									{t({ en: 'View publication', es: 'Ver publicación', 'pt-br': 'Ver publicação' })}
+									{t('about.view-publication')}
 									<span aria-hidden="true">↗</span>
 								</span>
 							</div>
@@ -404,7 +292,7 @@ const funFacts = [
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								{t({ en: 'Archived Issuu source', es: 'Fuente archivada en Issuu', 'pt-br': 'Fonte arquivada no Issuu' })}
+								{t('about.archived-issuu-source')}
 							</a>
 						)}
 					</article>
@@ -416,8 +304,8 @@ const funFacts = [
 						<p class="publication-meta">
 							<span>
 								{publication.data.type === 'poem'
-									? t({ en: 'Poem', es: 'Poema', 'pt-br': 'Poema' })
-									: t({ en: 'Essay', es: 'Ensayo', 'pt-br': 'Ensaio' })}
+									? t('about.poem')
+									: t('about.essay')}
 							</span>
 							<time datetime={publication.data.pubDate.toISOString()}>
 								{publication.data.pubDate.toLocaleDateString(publication.data.lang ?? 'en', {
@@ -443,11 +331,7 @@ const funFacts = [
 			rel="noopener noreferrer"
 		>
 			{
-				t({
-					en: 'Read all my writing',
-					es: 'Lee todos mis textos',
-					'pt-br': 'Leia todos os meus textos',
-				})
+				t('about.read-all-my-writing')
 			}
 			<span aria-hidden="true">↗</span>
 		</a>
@@ -459,7 +343,7 @@ const funFacts = [
 		<header class="about-section-heading layout-full">
 			<p class="about-section-kicker">03</p>
 			<h2 id="facts-title">
-				{t({ en: 'Fun facts', es: 'Datos curiosos', 'pt-br': 'Curiosidades' })}
+				{t('about.fun-facts')}
 			</h2>
 		</header>
 		<ul class="fact-grid layout-full">

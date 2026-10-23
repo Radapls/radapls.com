@@ -1,4 +1,7 @@
-import { DEFAULT_LOCALE_SETTING, LOCALES_SETTING } from './locales';
+import { DEFAULT_LOCALE_SETTING, LOCALES_SETTING } from '../locales';
+import en from './locales/en.json';
+import es from './locales/es.json';
+import ptBr from './locales/pt-br.json';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
 /**
@@ -37,13 +40,15 @@ export type Multilingual = { [key in Lang]?: string };
  * @param - The current language
  * @returns - The translation function
  */
+const tables: Record<string, Record<string, string>> = { en, es, 'pt-br': ptBr };
+
 export function useTranslations(lang: Lang) {
 	return function t(multilingual: Multilingual | string): string {
 		if (typeof multilingual === 'string') {
-			return multilingual;
-		} else {
-			return multilingual[lang] || multilingual[DEFAULT_LOCALE] || '';
+			// ponytail: key lookup falls back to the key itself so missing strings fail visibly
+			return tables[lang]?.[multilingual] ?? tables[DEFAULT_LOCALE]?.[multilingual] ?? multilingual;
 		}
+		return multilingual[lang] || multilingual[DEFAULT_LOCALE] || '';
 	};
 }
 

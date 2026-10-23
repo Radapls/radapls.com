@@ -8,11 +8,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 <section class="contact section" id="Contact">
 	<h2 class="section__title">
 		{
-			t({
-				en: 'Contact details',
-				es: 'Datos de contacto',
-				'pt-br': 'Dados de contato',
-			})
+			t('contactmeform.contact-details')
 		}
 	</h2>
 
@@ -24,11 +20,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 				<span class="mail__dot" aria-hidden="true"></span>
 				<span class="mail__title">
 					{
-						t({
-							en: 'New Message',
-							es: 'Nuevo mensaje',
-							'pt-br': 'Nova mensagem',
-						})
+						t('contactmeform.new-message')
 					}
 				</span>
 			</div>
@@ -36,13 +28,13 @@ const t = useTranslations(Astro.currentLocale as Lang);
 			<div class="mail__head">
 				<div class="mail__row">
 					<span class="mail__label">
-						{t({ en: 'To:', es: 'Para:', 'pt-br': 'Para:' })}
+						{t('contactmeform.to')}
 					</span>
 					<span class="mail__value">{GLOBAL_EMAIL}</span>
 				</div>
 				<div class="mail__row">
 					<label class="mail__label" for="name">
-						{t({ en: 'From:', es: 'De:', 'pt-br': 'De:' })}
+						{t('contactmeform.from')}
 					</label>
 					<span class="mail__from">
 						<input
@@ -50,7 +42,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 							name="name"
 							type="text"
 							class="mail__input"
-							placeholder={t({ en: 'Your name', es: 'Tu nombre', 'pt-br': 'Seu nome' })}
+							placeholder={t('contactmeform.your-name')}
 							autocomplete="name"
 							required
 						/>
@@ -67,18 +59,14 @@ const t = useTranslations(Astro.currentLocale as Lang);
 				</div>
 				<div class="mail__row">
 					<label class="mail__label" for="project">
-						{t({ en: 'Subject:', es: 'Asunto:', 'pt-br': 'Assunto:' })}
+						{t('contactmeform.subject')}
 					</label>
 					<input
 						id="project"
 						name="project"
 						type="text"
 						class="mail__input"
-						placeholder={t({
-							en: 'Let&rsquo;s work together',
-							es: 'Trabajemos juntos',
-							'pt-br': 'Trabalhemos juntos',
-						})}
+						placeholder={t('contactmeform.let-rsquo-s-work-together')}
 					/>
 				</div>
 			</div>
@@ -90,11 +78,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 				rows="8"
 				required
 				wrap="soft"
-				placeholder={t({
-					en: 'Write your message here…',
-					es: 'Escribe tu mensaje aquí…',
-					'pt-br': 'Escreva sua mensagem aqui…',
-				})}></textarea>
+				placeholder={t('contactmeform.write-your-message-here')}></textarea>
 
 			<div class="mail__toolbar">
 				<button type="submit" class="mail__send" id="submit-button">
@@ -113,11 +97,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 						<path d="m22 7-10 6L2 7"></path>
 					</svg>
 					{
-						t({
-							en: 'Send',
-							es: 'Enviar',
-							'pt-br': 'Enviar',
-						})
+						t('contactmeform.send')
 					}
 				</button>
 			</div>
@@ -128,11 +108,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 
 		<a class="contact__alt" href={WHATSAPP as string}>
 			{
-				t({
-					en: '…or text me on WhatsApp',
-					es: '…o escríbeme por WhatsApp',
-					'pt-br': '…ou me chama no WhatsApp',
-				})
+				t('contactmeform.or-text-me-on-whatsapp')
 			}
 		</a>
 	</div>

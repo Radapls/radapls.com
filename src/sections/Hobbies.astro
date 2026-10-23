@@ -13,42 +13,26 @@ const t = useTranslations(Astro.currentLocale as Lang);
 	<h2 class="section__title">
 		👨🏼‍🎨
 		{
-			t({
-				en: 'Hobbies',
-				es: 'Pasatiempos',
-				'pt-br': 'Passatempos',
-			})
+			t('hobbies.hobbies')
 		}
 	</h2>
 	<div class="container layout-auto-grid">
 		<HobbyCard
-			title={t({
-				en: 'Pottery',
-				es: 'Cerámica',
-				'pt-br': 'Cerâmica',
-			})}
+			title={t('hobbies.pottery')}
 			image={Pottery}
-			alt={t({ en: 'Pottery project', es: 'Proyecto de cerámica', 'pt-br': 'Projeto de cerâmica' })}
+			alt={t('hobbies.pottery-project')}
 		/>
 
 		<HobbyCard
-			title={t({
-				en: 'Sewing',
-				es: 'Costura',
-				'pt-br': 'Costura',
-			})}
+			title={t('hobbies.sewing')}
 			image={Sewing}
-			alt={t({ en: 'Sewing project', es: 'Proyecto de costura', 'pt-br': 'Projeto de costura' })}
+			alt={t('hobbies.sewing-project')}
 		/>
 
 		<HobbyCard
-			title={t({
-				en: 'Poetry',
-				es: 'Poesía',
-				'pt-br': 'Poesia',
-			})}
+			title={t('hobbies.poetry')}
 			image={Poetry}
-			alt={t({ en: 'Poetry project', es: 'Proyecto de poesía', 'pt-br': 'Projeto de poesia' })}
+			alt={t('hobbies.poetry-project')}
 		/>
 	</div>
 </section>

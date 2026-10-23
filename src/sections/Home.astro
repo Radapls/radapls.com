@@ -4,6 +4,12 @@ import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
 
 const t = useTranslations(Astro.currentLocale as Lang);
 const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
+// Flightboard phrases per locale; the animation follows the client-side switcher
+const flightPhrases: Record<string, string[]> = {
+	en: ['Curious Coder', 'Political Scientist', 'Digital Business Strategist', 'Poet?', 'Runner?'],
+	es: ['Programador curioso', 'Politólogo', 'Estrategista de negocios digitales', '¿Poeta?', '¿Corredor?'],
+	'pt-br': ['Programador curioso', 'Cientista político', 'Estrategista de negócios digitais', 'Poeta?', 'Corredor?'],
+};
 ---
 
 <section class="home section" id="Home">
@@ -15,11 +21,7 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 		<p class="home__alias layout-full">
 			<span>
 				{
-					t({
-						en: 'aka',
-						es: 'alias',
-						'pt-br': 'apelido',
-					})
+					t('home.aka')
 				}
 			</span>
 			<strong>radapls</strong>
@@ -29,30 +31,12 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 				type="button"
 				class="home__flightboard"
 				data-flightboard
-				data-phrases={JSON.stringify([
-					t({ en: 'Curious Coder', es: 'Programador curioso', 'pt-br': 'Programador curioso' }),
-					t({ en: 'Political Scientist', es: 'Politólogo', 'pt-br': 'Cientista político' }),
-					t({
-						en: 'Digital Business Strategist',
-						es: 'Estratega de negocios digitales',
-						'pt-br': 'Estrategista de negócios digitais',
-					}),
-					t({ en: 'Poet?', es: '¿Poeta?', 'pt-br': 'Poeta?' }),
-					t({ en: 'Runner?', es: '¿Corredor?', 'pt-br': 'Corredor?' }),
-				])}
-				aria-label={t({
-					en: 'Start the rotating title board',
-					es: 'Iniciar la rotación del título',
-					'pt-br': 'Iniciar a rotação do título',
-				})}
+				data-phrases={JSON.stringify(flightPhrases)}
+				aria-label={t('home.start-the-rotating-title-board')}
 			>
 				<span data-flightboard-text>
 					{
-						t({
-							en: 'Curious Coder',
-							es: 'Programador curioso',
-							'pt-br': 'Programador curioso',
-						})
+						t('home.curious-coder')
 					}
 				</span>
 			</button>
@@ -63,11 +47,7 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 				class="button button--flex home__about-button"
 			>
 				{
-					t({
-						en: 'About Me',
-						es: 'Acerca de mí',
-						'pt-br': 'Sobre mim',
-					})
+					t('home.about-me')
 				}
 				<span class="home__about-arrow">→&#xFE0E;</span>
 			</a>
@@ -76,11 +56,7 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 					href={LINKEDIN}
 					target="_blank"
 					class="home__social-icon"
-					aria-label={t({
-						en: 'LinkedIn profile',
-						es: 'Perfil de LinkedIn',
-						'pt-br': 'Perfil do LinkedIn',
-					})}
+					aria-label={t('home.linkedin-profile')}
 				>
 					<i class="uil uil-linkedin" aria-hidden="true"></i>
 				</a>
@@ -88,11 +64,7 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 					href={GITHUB}
 					target="_blank"
 					class="home__social-icon"
-					aria-label={t({
-						en: 'GitHub profile',
-						es: 'Perfil de GitHub',
-						'pt-br': 'Perfil do GitHub',
-					})}
+					aria-label={t('home.github-profile')}
 				>
 					<i class="uil uil-github" aria-hidden="true"></i>
 				</a>
@@ -290,7 +262,9 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 <script>
 	document.querySelectorAll<HTMLButtonElement>('[data-flightboard]').forEach((board) => {
 		const text = board.querySelector<HTMLElement>('[data-flightboard-text]');
-		const phrases = JSON.parse(board.dataset.phrases ?? '[]') as string[];
+		const phrasesByLang = JSON.parse(board.dataset.phrases ?? '{}') as Record<string, string[]>;
+		const langOf = () => ((window as any).__i18n?.lang as string) ?? 'en';
+		let phrases = phrasesByLang[langOf()] ?? [];
 		if (!text || phrases.length < 2) return;
 
 		let current = 0;
@@ -328,6 +302,12 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 			showNext();
 			clearInterval(timer);
 			timer = setInterval(showNext, 3600);
+		});
+		window.addEventListener('locale-change', () => {
+			phrases = phrasesByLang[langOf()] ?? phrases;
+			current = 0;
+			text.replaceChildren(renderPhrase(phrases[current], true));
+			board.setAttribute('aria-label', phrases[current]);
 		});
 	});
 </script>

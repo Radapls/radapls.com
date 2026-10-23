@@ -3,7 +3,7 @@ import { LOCALES, DEFAULT_LOCALE, useTranslations, type Lang } from '../../i18n'
 const t = useTranslations(Astro.currentLocale as Lang);
 // Select drives the client-side switcher (src/scripts/i18n-client.ts) — no navigation
 ---
-<select id="localeSelect" aria-label={t({ en: 'Language', es: 'Idioma', 'pt-br': 'Idioma' })}>
+<select id="localeSelect" aria-label={t('i18n.localeselect.language')}>
 	{
 		Object.entries(LOCALES).map(([lang, cfg]) => (
 			<option value={lang} selected={lang === DEFAULT_LOCALE}>
@@ -12,6 +12,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		))
 	}
 </select>
+<script is:inline>try{var __l=localStorage.getItem('lang');if(__l)document.getElementById('localeSelect').value=__l}catch(e){}</script>
 <style>
 	#localeSelect {
 		background: none;

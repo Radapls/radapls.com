@@ -35,11 +35,7 @@ const loopData = format === 'image' ? Array.from({ length: SETS }, () => data).f
 	format === 'image' ? (
 		<section
 			class={`marquee ${type}`}
-			aria-label={t({
-				en: 'Project screenshots',
-				es: 'Capturas del proyecto',
-				'pt-br': 'Capturas do projeto',
-			})}
+			aria-label={t('slider.project-screenshots')}
 		>
 			<ul class="marquee__track" style={`--set-count:${data.length}`}>
 				{(loopData as Slide[]).map((slide, i) => (
@@ -47,11 +43,7 @@ const loopData = format === 'image' ? Array.from({ length: SETS }, () => data).f
 						class="marquee__card"
 						tabindex="0"
 						role="button"
-						aria-label={t({
-							en: `Enlarge ${slide.description ?? `slide ${i + 1}`}`,
-							es: `Ampliar ${slide.description ?? `diapositiva ${i + 1}`}`,
-							'pt-br': `Ampliar ${slide.description ?? `slide ${i + 1}`}`,
-						})}
+						aria-label={t('slider.enlarge-slide-description-slide-i-1')}
 					>
 						<img
 							draggable="false"
@@ -67,26 +59,18 @@ const loopData = format === 'image' ? Array.from({ length: SETS }, () => data).f
 			</ul>
 			<dialog
 				class="marquee__dialog"
-				aria-label={t({
-					en: 'Enlarged screenshot',
-					es: 'Captura ampliada',
-					'pt-br': 'Captura ampliada',
-				})}
+				aria-label={t('slider.enlarged-screenshot')}
 			>
 				<img alt="" />
 				<button
 					class="marquee__nav marquee__nav--prev"
-					aria-label={t({
-						en: 'Previous image',
-						es: 'Imagen anterior',
-						'pt-br': 'Imagem anterior',
-					})}
+					aria-label={t('slider.previous-image')}
 				>
 					‹
 				</button>
 				<button
 					class="marquee__nav marquee__nav--next"
-					aria-label={t({ en: 'Next image', es: 'Imagen siguiente', 'pt-br': 'Próxima imagem' })}
+					aria-label={t('slider.next-image')}
 				>
 					›
 				</button>

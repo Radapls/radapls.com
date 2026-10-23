@@ -1,14 +1,24 @@
 // ponytail: client-side locale swap via string-pair dict; pages always
 // render the default locale (en) server-side. Upgrade path: data-i18n keys.
-import data from '../i18n-dict.json';
+import en from '../i18n/locales/en.json';
+import es from '../i18n/locales/es.json';
+import ptBr from '../i18n/locales/pt-br.json';
 
-const DEFAULT = data.defaultLocale as string;
+// keep in sync with src/i18n/index.ts (module imports astro:i18n, unusable client-side)
+const DEFAULT = 'en';
+const tables: Record<string, Record<string, string>> = { en, es, 'pt-br': ptBr };
 const ATTRS = ['aria-label', 'title', 'placeholder', 'alt'] as const;
 const cur = { lang: DEFAULT };
 
 function applyLang(from: string, to: string) {
-	const map = (data.dict as any)[from]?.[to] as Record<string, string> | undefined;
-	if (!map || from === to) return;
+	const L = tables;
+	if (!L?.[from] || !L?.[to]) return;
+	const fromTable: Record<string, string> = L[from];
+	const toTable: Record<string, string> = L[to];
+	// tables are hash→string; index them text→hash for node lookup
+	const reverse: Record<string, string> = {};
+	for (const [k, v] of Object.entries(fromTable)) reverse[v] ??= k;
+	if (from === to) return;
 	const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
 	// ponytail: skip generated content collections rendered per-locale later
 	const skip = /^(SCRIPT|STYLE)$/;
@@ -17,14 +27,16 @@ function applyLang(from: string, to: string) {
 		if (n.parentElement && skip.test(n.parentElement.tagName)) continue;
 		const raw = n.nodeValue ?? '';
 		const key = raw.trim();
-		const hit = (map as Record<string, string>)[key];
+		const k = reverse[key];
+		const hit = k && toTable[k];
 		if (hit) n.nodeValue = raw.replace(key, hit);
 	}
 	for (const el of document.body.querySelectorAll('*')) {
 		for (const a of ATTRS) {
 			const v = el.getAttribute(a);
 			if (v) {
-				const hit = (map as Record<string, string>)[v.trim()];
+				const k = reverse[v.trim()];
+				const hit = k && toTable[k];
 				if (hit) el.setAttribute(a, v.replace(v.trim(), hit));
 			}
 		}
@@ -54,9 +66,12 @@ function setup() {
 		document.documentElement.lang = stored;
 	}
 	window.__i18n = {
-		lang: cur.lang,
-		locales: Object.keys(data.dict),
+		get lang() {
+			return cur.lang;
+		},
+		locales: Object.keys(tables),
 		setLocale,
 	};
+	window.dispatchEvent(new CustomEvent('locale-change', { detail: cur.lang }));
 }
 document.addEventListener('astro:page-load', setup);

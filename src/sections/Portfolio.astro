@@ -16,11 +16,7 @@ const locale = Astro.currentLocale;
 <section class="portfolio section" id="Portfolio" aria-labelledby="portfolio-title">
 	<h2 class="section__title" id="portfolio-title">
 		{
-			t({
-				en: 'Projects',
-				es: 'Proyectos',
-				'pt-br': 'Projetos',
-			})
+			t('portfolio.projects')
 		}
 	</h2>
 	<div class="portfolio__container container">
@@ -28,58 +24,29 @@ const locale = Astro.currentLocale;
 			<PortfolioCard
 				variant="feature"
 				bgImage={Roulette}
-				title={t({
-					en: 'Roulette Runner',
-					es: 'Ruleta de corredores',
-					'pt-br': 'Roleta de corrida',
-				})}
-				description={t({
-					en: 'Win your next run distance!. Project in Monkey C for Garmin Devices',
-					es: 'Gana tu proxima distancia de carrera!. Projecto es Monkey C para dispositivos Garmin',
-					'pt-br':
-						'Ganhe sua proxima distancia de carreira!. Projeto em Monkey C para dispositivos Garmin',
-				})}
+				title={t('portfolio.roulette-runner')}
+				description={t('portfolio.win-your-next-run-distance-project-in-mo')}
 				link="https://github.com/Radapls/roulette"
 			/>
 			<PortfolioCard
 				variant="side"
 				bgImage={Cunctae}
-				title={t({
-					en: 'Cunctum UI',
-					es: 'Cunctum UI',
-					'pt-br': 'Cunctum UI',
-				})}
-				description={t({
-					en: 'An Open Source Design system for Cunctae.com',
-					es: 'Un sistema de diseño de código abierto para Cunctae.com',
-					'pt-br': 'Um sistema de design de código aberto para Cunctae.com',
-				})}
+				title={t('portfolio.cunctum-ui')}
+				description={t('portfolio.an-open-source-design-system-for-cunctae')}
 				link="https://cunctae.github.io/cunctum-ui/"
 			/>
 			<PortfolioCard
 				variant="side"
 				bgImage={SpaceInvaders}
-				title={t({
-					en: 'Space Invaders',
-					es: 'Space Invaders',
-					'pt-br': 'Space Invaders',
-				})}
-				description={t({
-					en: 'Space Invaders project created with JavaScript and HTML Canvas',
-					es: 'Proyecto Space Invaders creado con JavaScript y HTML Canvas',
-					'pt-br': 'Projeto Space Invaders criado com JavaScript e HTML Canvas',
-				})}
+				title={t('portfolio.space-invaders')}
+				description={t('portfolio.space-invaders-project-created-with-java')}
 				link="https://radapls.github.io/space-invaders/"
 			/>
 			<PortfolioCard
 				variant="wide"
 				bgImage={SparkAr}
 				title="Spark AR Filters"
-				description={t({
-					en: 'Instagram filters built with Spark AR',
-					es: 'Filtros de Instagram construidos con Spark AR',
-					'pt-br': 'Filtros do Instagram construídos com o Spark AR',
-				})}
+				description={t('portfolio.instagram-filters-built-with-spark-ar')}
 				link={`/${locale}/projects/spark-ar/`}
 				external={false}
 			/>

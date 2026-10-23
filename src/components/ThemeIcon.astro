@@ -6,11 +6,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 
 <button
 	id="themeToggle"
-	aria-label={t({
-		en: 'Theme switch color',
-		es: 'Botón de cambio de color',
-		'pt-br': 'Botao de troca de cor',
-	})}
+	aria-label={t('themeicon.theme-switch-color')}
 	aria-pressed="false"
 >
 	<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

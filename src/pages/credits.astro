@@ -1,10 +1,9 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import { localeParams, useTranslations, type Lang } from 'src/i18n';
+import { DEFAULT_LOCALE, useTranslations } from 'src/i18n';
 
-export const getStaticPaths = () => localeParams;
 
-const locale = Astro.currentLocale as Lang;
+const locale = DEFAULT_LOCALE;
 const t = useTranslations(locale);
 ---
 

@@ -1,6 +1,5 @@
 ---
 import { LINKEDIN, GITHUB } from 'src/consts';
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
 
 const t = useTranslations(Astro.currentLocale as Lang);
@@ -60,7 +59,7 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 		</h2>
 		<div class="home__actions layout-center">
 			<a
-				href={getRelativeLocaleUrl(currentLocale, '/about')}
+				href="/about"
 				class="button button--flex home__about-button"
 			>
 				{
@@ -70,16 +69,7 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 						'pt-br': 'Sobre mim',
 					})
 				}
-				<svg
-					class="home__about-arrow"
-					width="28"
-					height="28"
-					viewBox="0 0 28 28"
-					fill="none"
-					aria-hidden="true"
-				>
-					<path d="M14 0L28 14L14 28M0 14H28" stroke="currentColor" stroke-width="1.5"></path>
-				</svg>
+				<span class="home__about-arrow">→&#xFE0E;</span>
 			</a>
 			<div class="home__social">
 				<a
@@ -212,9 +202,16 @@ const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCAL
 		flex-wrap: wrap;
 	}
 	.home__about-button {
+	font-family: var(--title-font);
+	font-weight: 200;
+	border-radius: var(--radius-pill);
 		gap: var(--mb-1);
 	}
 	.home__about-arrow {
+	font-family: var(--title-font);
+	font-weight: 200;
+	font-size: 1.25rem;
+	line-height: 1;
 		flex: 0 0 auto;
 		transition: transform 180ms ease;
 	}

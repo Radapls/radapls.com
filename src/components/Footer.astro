@@ -6,14 +6,13 @@ import AgplBadge from '@assets/img/license-agpl.svg';
 import { Image } from 'astro:assets';
 import type { BrandType } from 'src/types/variants';
 import { useTranslations, type Lang } from 'src/i18n';
-import { getRelativeLocaleUrl } from 'astro:i18n';
 
 interface Props {
 	variant?: BrandType;
 }
 
 const t = useTranslations(Astro.currentLocale as Lang);
-const creditsUrl = getRelativeLocaleUrl(Astro.currentLocale ?? 'en', '/credits');
+const creditsUrl = '/credits';
 ---
 
 <footer class="footer__bg">

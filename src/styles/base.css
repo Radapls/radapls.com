@@ -207,6 +207,7 @@ button {
 }
 .section__title {
 	font-size: var(--h1-font-size);
+	font-family: "PP Gatwick Glider", var(--title-font);
 	text-align: center;
 	/* Breathing room under the title now that sections have no subtitle */
 	margin-bottom: var(--mb-3);

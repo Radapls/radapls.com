@@ -1,12 +1,12 @@
 ---
-import { LOCALES, useTranslations, type Lang } from 'src/i18n';
+import { DEFAULT_LOCALE, useTranslations } from 'src/i18n';
 
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Layout from '@layouts/Layout.astro';
 import EmptyState from '@components/Blog/EmptyState.astro';
 
-const locale = Astro.currentLocale as Lang;
+const locale = DEFAULT_LOCALE;
 const t = useTranslations(locale);
 
 const posts = (await getCollection('experience')).filter(
@@ -19,10 +19,6 @@ const title = `Juan Felipe Rada | ${t({
 	'pt-br': 'Trajetória',
 })}`;
 
-export const getStaticPaths = () =>
-	Object.keys(LOCALES).map((lang) => ({
-		params: { lang },
-	}));
 ---
 
 <Layout {title} noLinks>

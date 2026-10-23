@@ -2,7 +2,6 @@
 import type { ImageMetadata } from 'astro';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import { Image } from 'astro:assets';
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import { DEFAULT_LOCALE, type Lang } from 'src/i18n';
 
 interface Props {
@@ -58,7 +57,7 @@ const imgClass = `brand-icon${toneClass}`;
 		<h3 class="qualification__title">{title}</h3>
 		{
 			link ? (
-				<a href={getRelativeLocaleUrl(currentLocale, link)}>
+				<a href={link}>
 					<span class="qualification__subtitle">{organization}</span>
 				</a>
 			) : (

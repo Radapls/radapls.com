@@ -1,16 +1,11 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import { getRelativeLocaleUrl } from 'astro:i18n';
 
-import { LOCALES, useTranslations, DEFAULT_LOCALE, type Lang } from 'src/i18n';
+import { useTranslations, DEFAULT_LOCALE } from 'src/i18n';
 
-const t = useTranslations(Astro.currentLocale as Lang);
-const locale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
+const t = useTranslations(DEFAULT_LOCALE);
+const locale = DEFAULT_LOCALE;
 
-export const getStaticPaths = () =>
-	Object.keys(LOCALES).map((lang) => ({
-		params: { lang },
-	}));
 ---
 
 <Layout title="Juan Felipe Rada | Thanks!" variant="radapls" withFooter={false} withHeader={false}>
@@ -66,7 +61,7 @@ export const getStaticPaths = () =>
 						})
 					}
 				</p>
-				<a href={getRelativeLocaleUrl(locale, '/')} class="thanks__btn">
+				<a href={'/'} class="thanks__btn">
 					<svg
 						viewBox="0 0 24 24"
 						width="16"

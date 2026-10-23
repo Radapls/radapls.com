@@ -1,91 +1,53 @@
 ---
-import { getLocalePaths, LOCALES } from '../../i18n';
+import { LOCALES } from '../../i18n';
+// ponytail: client-side language toggle — swaps strings via src/scripts/i18n-client.ts, no navigation
 ---
-
-<div class="language-select-container">
-	<select
-		id="language-select"
-		name="language-select"
-		data-languageSelect
-		aria-label={Astro.currentLocale === 'es'
-			? 'Cambiar idioma del sitio'
-			: Astro.currentLocale === 'pt-br'
-				? 'Alterar idioma do site'
-				: 'Change site language'}
-	>
-		{
-			getLocalePaths(Astro.url).map(({ path, lang }) => (
-				<option
-					label={LOCALES[lang].label}
-					value={path}
-					data-lang={lang}
-					selected={lang === Astro.currentLocale}
-					dir={LOCALES[lang].dir || null}
-				/>
-			))
-		}
-	</select>
+<div class="locale-select">
+	{
+		Object.entries(LOCALES).map(([lang, cfg]) => (
+			<button type="button" class="locale-select__btn" data-lang={lang}>
+				{cfg.label}
+			</button>
+		))
+	}
 </div>
-
 <script>
-	import { navigate } from 'astro:transitions/client';
-
-	let langSwitchScroll: number | null = null;
-
-	const setupLanguageSelect = () => {
-		const selects = document.querySelectorAll('[data-languageSelect]');
-		selects.forEach((select) => {
-			select.addEventListener('change', (event) => {
-				const target = event.target as HTMLSelectElement;
-				const lang = target.selectedOptions[0]?.dataset.lang;
-				const url = target.value;
-				if (lang && url) {
-					localStorage.setItem('selectedLang', lang);
-					// Remember exact position; navigate WITHOUT the hash so the
-					// router doesn't scroll to an anchor or jump to top.
-					langSwitchScroll = window.scrollY;
-					navigate(url, { history: 'replace' });
-				}
+	function setupLocaleSelect() {
+		const root = document.querySelector('.locale-select');
+		if (!root || (root as HTMLElement).dataset.bound) return;
+		(root as HTMLElement).dataset.bound = 'true';
+		const w = window as any;
+		const sync = () => {
+			const cur = w.__i18n?.lang ?? 'en';
+			root.querySelectorAll<HTMLButtonElement>('.locale-select__btn').forEach((b) => {
+				b.setAttribute('aria-pressed', String(b.dataset.lang === cur));
 			});
+		};
+		root.querySelectorAll<HTMLButtonElement>('.locale-select__btn').forEach((b) => {
+			b.addEventListener('click', () => w.__i18n?.setLocale(b.dataset.lang!));
 		});
-	};
-
-	// Single owner of scroll restoration for the language switch.
-	document.addEventListener('astro:after-swap', () => {
-		if (langSwitchScroll !== null) {
-			window.scrollTo({ top: langSwitchScroll, behavior: 'instant' as ScrollBehavior });
-			langSwitchScroll = null;
-		}
-		setupLanguageSelect();
-	});
-
-	setupLanguageSelect();
+		window.addEventListener('locale-change', sync);
+		sync();
+	}
+	document.addEventListener('astro:page-load', setupLocaleSelect);
 </script>
-
 <style>
-	/* Compact switcher: flag + code only, sized for cramped headers */
-	select {
-		font-family: 'Poppins';
-		border-radius: 4px;
-		font-size: var(--smaller-font-size);
-		font-weight: var(--font-medium);
-		height: 32px;
-		padding: 0 24px 0 10px;
-		background-color: var(--body-color);
-		color: var(--title-color);
-		appearance: none;
-		-webkit-appearance: none;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='gray' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-		background-repeat: no-repeat;
-		background-position: right 7px center;
+	.locale-select {
+		display: flex;
+		gap: 0.25rem;
+	}
+	.locale-select__btn {
+		background: none;
+		border: 1px solid color-mix(in srgb, var(--text-color) 25%, transparent);
+		border-radius: var(--radius-sm);
+		padding: 0.1rem 0.45rem;
+		font-size: 0.7rem;
+		color: var(--text-color);
 		cursor: pointer;
 	}
-	/* WCAG 2.4.7: visible focus for keyboard users. :focus (not only
-	   :focus-visible) because some browsers don't match :focus-visible
-	   on <select> reliably. */
-	select:focus,
-	select:focus-visible {
-		outline: 2px solid var(--first-color);
-		outline-offset: 2px;
+	.locale-select__btn[aria-pressed='true'] {
+		background: var(--first-color);
+		color: var(--container-color);
+		border-color: transparent;
 	}
 </style>

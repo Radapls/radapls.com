@@ -9,7 +9,7 @@
  * - filter_3.mp4 → https://www.instagram.com/ar/1065085450711728/
  * - filter_4.mp4 → never published
  */
-import { LOCALES, useTranslations, type Lang } from 'src/i18n';
+import { DEFAULT_LOCALE, useTranslations } from 'src/i18n';
 import { getCollection, render } from 'astro:content';
 
 import filter1 from '@assets/videos/filter_1.mp4';
@@ -18,12 +18,8 @@ import filter3 from '@assets/videos/filter_3.mp4';
 import filter4 from '@assets/videos/filter_4.mp4';
 import Layout from '@layouts/Layout.astro';
 
-export const getStaticPaths = () =>
-	Object.keys(LOCALES).map((lang) => ({
-		params: { lang },
-	}));
 
-const locale = Astro.currentLocale as Lang;
+const locale = DEFAULT_LOCALE;
 const t = useTranslations(locale);
 
 const entry = (await getCollection('projects', ({ id }) => id === `${locale}/spark-ar`))[0];

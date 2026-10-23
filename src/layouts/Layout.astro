@@ -142,7 +142,10 @@ const showHeaderBack = !['', '/', '/en', '/es', '/pt-br'].includes(currentPath);
 		</main>
 		{withFooter && <Footer {variant} />}
 		<ScrollUp />
-	</body>
+	<script>
+	import '../scripts/i18n-client';
+</script>
+</body>
 </html>
 
 <script>
@@ -224,4 +227,8 @@ const showHeaderBack = !['', '/', '/en', '/es', '/pt-br'].includes(currentPath);
 		document.addEventListener('astro:page-load', () => setTimeout(update, 200));
 		update();
 	})();
+</script>
+
+<script>
+	import '../scripts/i18n-client';
 </script>

@@ -1,53 +1,39 @@
 ---
-import { LOCALES } from '../../i18n';
-// ponytail: client-side language toggle — swaps strings via src/scripts/i18n-client.ts, no navigation
+import { LOCALES, DEFAULT_LOCALE, useTranslations, type Lang } from '../../i18n';
+const t = useTranslations(Astro.currentLocale as Lang);
+// Select drives the client-side switcher (src/scripts/i18n-client.ts) — no navigation
 ---
-<div class="locale-select">
+<select id="localeSelect" aria-label={t({ en: 'Language', es: 'Idioma', 'pt-br': 'Idioma' })}>
 	{
 		Object.entries(LOCALES).map(([lang, cfg]) => (
-			<button type="button" class="locale-select__btn" data-lang={lang}>
+			<option value={lang} selected={lang === DEFAULT_LOCALE}>
 				{cfg.label}
-			</button>
+			</option>
 		))
 	}
-</div>
-<script>
-	function setupLocaleSelect() {
-		const root = document.querySelector('.locale-select');
-		if (!root || (root as HTMLElement).dataset.bound) return;
-		(root as HTMLElement).dataset.bound = 'true';
-		const w = window as any;
-		const sync = () => {
-			const cur = w.__i18n?.lang ?? 'en';
-			root.querySelectorAll<HTMLButtonElement>('.locale-select__btn').forEach((b) => {
-				b.setAttribute('aria-pressed', String(b.dataset.lang === cur));
-			});
-		};
-		root.querySelectorAll<HTMLButtonElement>('.locale-select__btn').forEach((b) => {
-			b.addEventListener('click', () => w.__i18n?.setLocale(b.dataset.lang!));
-		});
-		window.addEventListener('locale-change', sync);
-		sync();
-	}
-	document.addEventListener('astro:page-load', setupLocaleSelect);
-</script>
+</select>
 <style>
-	.locale-select {
-		display: flex;
-		gap: 0.25rem;
-	}
-	.locale-select__btn {
+	#localeSelect {
 		background: none;
 		border: 1px solid color-mix(in srgb, var(--text-color) 25%, transparent);
 		border-radius: var(--radius-sm);
-		padding: 0.1rem 0.45rem;
-		font-size: 0.7rem;
+		padding: 0.1rem 0.3rem;
+		font-size: 0.75rem;
 		color: var(--text-color);
 		cursor: pointer;
 	}
-	.locale-select__btn[aria-pressed='true'] {
-		background: var(--first-color);
-		color: var(--container-color);
-		border-color: transparent;
-	}
 </style>
+<script>
+	function setupLocaleSelect() {
+		const sel = document.getElementById('localeSelect') as HTMLSelectElement | null;
+		if (!sel || sel.dataset.bound) return;
+		sel.dataset.bound = 'true';
+		const w = window as any;
+		sel.value = w.__i18n?.lang ?? 'en';
+		sel.addEventListener('change', () => w.__i18n?.setLocale(sel.value));
+		window.addEventListener('locale-change', () => {
+			sel.value = w.__i18n?.lang ?? 'en';
+		});
+	}
+	document.addEventListener('astro:page-load', setupLocaleSelect);
+</script>

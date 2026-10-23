@@ -66,4 +66,6 @@ export const TechStack: Stack[] = [
 export const companyStacks: { [key: string]: string[] } = {
 	wibx: ['angular', 'typescript', 'scss', 'ngrx', 'html', 'nativescript'],
 	birdi: ['react', 'scss', 'typescript', 'gatsby', 'rxjs', 'drupal'],
+	nt: ['angular', 'typescript', 'scss', 'rxjs', 'html'],
+	ericsson: ['react', 'typescript', 'scss', 'rxjs', 'html'],
 };

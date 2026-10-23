@@ -7,11 +7,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 <section class="noPost">
 	<div>
 		{
-			t({
-				es: 'No existen publicaciones',
-				en: 'No post exists',
-				'pt-br': 'Nao existem publicações',
-			})
+			t('blog.emptystate.no-post-exists')
 		}
 	</div>
 </section>

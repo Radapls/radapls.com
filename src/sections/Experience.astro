@@ -9,27 +9,16 @@ import ExperienceContent from '@components/Experience/ExperienceContent.astro';
 
 <section class="qualification section">
 	<h2 class="section__title">
-		📈
 		{
-			t({
-				en: 'Experience',
-				es: 'Experiencia',
-				'pt-br': 'Experiência',
-			})
+			t('experience.timeline')
 		}
 	</h2>
-	<span class="section__subtitle">
-		{
-			t({
-				en: 'My Personal Journey',
-				es: 'Mi viaje personal',
-				'pt-br': 'Minha Jornada Pessoal',
-			})
-		}
-	</span>
-
-	<div class="qualification__container container">
-		<div class="qualification__tabs">
+	<div class="container layout-stack">
+		<div
+			class="qualification__tabs"
+			role="tablist"
+			aria-label={t('experience.timeline')}
+		>
 			{
 				experienceTabs.map((tab, i) => (
 					<ExperienceTabs
@@ -46,93 +35,226 @@ import ExperienceContent from '@components/Experience/ExperienceContent.astro';
 			}
 		</div>
 
-		<div class="qualification__sections">
-			<div class="qualification__content" data-content id="education">
-				{
-					educationData.map((item, i) => (
-						<ExperienceContent
-							image={{
-								src: item.image.src,
-								alt: item.image.alt,
-								height: item.image.height,
-								width: item.image.width,
-							}}
-							title={t({
-								en: item.lang.en,
-								es: item.lang.es,
-								'pt-br': item.lang['pt-br'],
-							})}
-							organization={item.organization}
-							relativeTime={t({
-								en: item.relativeTime.en,
-								es: item.relativeTime.es,
-								'pt-br': item.relativeTime['pt-br'],
-							})}
-							isEven={i % 2 === 0}
-						/>
-					))
-				}
-			</div>
-			<div class="qualification__content qualification__active" data-content id="work">
-				{
-					workData.map((item, i) => (
-						<ExperienceContent
-							image={{
-								alt: item.image.alt,
-								height: item.image.height,
-								width: item.image.width,
-								src: item.image.src,
-							}}
-							title={t({
-								en: item.lang.en,
-								es: item.lang.es,
-								'pt-br': item.lang['pt-br'],
-							})}
-							organization={item.organization}
-							relativeTime={t({
-								en: item.relativeTime.en,
-								es: item.relativeTime.es,
-								'pt-br': item.relativeTime['pt-br'],
-							})}
-							isEven={i % 2 !== 0}
-							link={item.link}
-						/>
-					))
-				}
+		<div class="qualification__viewport">
+			<button
+				class="qualification__arrow qualification__arrow--prev"
+				type="button"
+				aria-label={t('experience.previous-experience')}
+			>
+				<svg
+					viewBox="0 0 24 24"
+					width="20"
+					height="20"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<polyline points="15 18 9 12 15 6"></polyline>
+				</svg>
+			</button>
+			<button
+				class="qualification__arrow qualification__arrow--next"
+				type="button"
+				aria-label={t('experience.next-experience')}
+			>
+				<svg
+					viewBox="0 0 24 24"
+					width="20"
+					height="20"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<polyline points="9 18 15 12 9 6"></polyline>
+				</svg>
+			</button>
+			<div class="qualification__sections">
+				<div
+					class="qualification__content"
+					data-content
+					id="education"
+					role="tabpanel"
+					aria-labelledby="tab-education"
+					tabindex="0"
+				>
+					{
+						educationData.map((item) => (
+							<ExperienceContent
+								image={item.image}
+								title={t({
+									en: item.lang.en,
+									es: item.lang.es,
+									'pt-br': item.lang['pt-br'],
+								})}
+								organization={item.organization}
+								relativeTime={t({
+									en: item.relativeTime.en,
+									es: item.relativeTime.es,
+									'pt-br': item.relativeTime['pt-br'],
+								})}
+							/>
+						))
+					}
+				</div>
+				<div
+					class="qualification__content qualification__active"
+					data-content
+					id="work"
+					role="tabpanel"
+					aria-labelledby="tab-work"
+					tabindex="0"
+				>
+					{
+						/* Contact teaser: sits in the empty zone LEFT of the first
+				    card (most recent experience). Clickable, but never part
+				    of the highlightable timeline cards. */
+					}
+					<a class="qualification__cta" href="#Contact">
+						<span class="qualification__cta-title">
+							{
+								t('experience.want-to-be-the-next')
+							}
+						</span>
+					</a>
+					{
+						workData.map((item) => (
+							<ExperienceContent
+								image={item.image}
+								title={t({
+									en: item.lang.en,
+									es: item.lang.es,
+									'pt-br': item.lang['pt-br'],
+								})}
+								organization={item.organization}
+								relativeTime={t({
+									en: item.relativeTime.en,
+									es: item.relativeTime.es,
+									'pt-br': item.relativeTime['pt-br'],
+								})}
+								link={item.link}
+							/>
+						))
+					}
+				</div>
 			</div>
 		</div>
 	</div>
 </section>
 
-<style>
-	.brand-icon {
-		height: 35px;
-		filter: drop-shadow(0px 0px 0.5px gray);
-	}
-</style>
+<script>
+	// Horizontal timeline: the track is natively scrollable inside its
+	// container (swipe / shift+wheel / drag). The card closest to the
+	// container's center gets highlighted; the track's side padding lets
+	// even the first and last card reach the center.
+	function highlightCenter() {
+		const scroller = document.querySelector('.qualification__sections');
+		const track = document.querySelector('.qualification__active[data-content]');
+		if (!scroller || !track) return;
 
-<script is:inline>
-	function setupExperienceTabs() {
-		const tabs = document.querySelectorAll('[data-target]'),
-			tabContents = document.querySelectorAll('[data-content]');
+		const scrollerRect = scroller.getBoundingClientRect();
+		const mid = scrollerRect.left + scrollerRect.width / 2;
+		const cards = track.querySelectorAll('.qualification__data');
+		let best: Element | null = null;
+		let bestDist = Infinity;
+		cards.forEach((card) => {
+			const rect = card.getBoundingClientRect();
+			const dist = Math.abs(rect.left + rect.width / 2 - mid);
+			if (dist < bestDist) {
+				bestDist = dist;
+				best = card;
+			}
+		});
+		cards.forEach((card) => card.classList.toggle('is-centered', card === best));
+	}
+
+	function setupExperience() {
+		const scroller = document.querySelector<HTMLElement>('.qualification__sections');
+		if (!scroller) return;
+
+		// Prev/next arrows: step the scroller by one card. An arrow hides
+		// (fades out) when there are no more cards in its direction.
+		const prev = document.querySelector<HTMLButtonElement>('.qualification__arrow--prev');
+		const next = document.querySelector<HTMLButtonElement>('.qualification__arrow--next');
+		let updateArrows = () => {};
+		if (prev && next) {
+			const step = () => {
+				// Only the active track has layout; hidden tracks report 0.
+				const cards = scroller.querySelectorAll<HTMLElement>(
+					'.qualification__active .qualification__data',
+				);
+				return cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : scroller.clientWidth;
+			};
+			updateArrows = () => {
+				const max = scroller.scrollWidth - scroller.clientWidth;
+				const atStart = scroller.scrollLeft <= 0;
+				const atEnd = scroller.scrollLeft >= max - 1;
+				prev.disabled = atStart;
+				next.disabled = atEnd;
+				prev.classList.toggle('is-hidden', atStart);
+				next.classList.toggle('is-hidden', atEnd);
+			};
+			prev.addEventListener('click', () =>
+				scroller.scrollBy({ left: -step(), behavior: 'smooth' }),
+			);
+			next.addEventListener('click', () => scroller.scrollBy({ left: step(), behavior: 'smooth' }));
+			scroller.addEventListener('scroll', updateArrows, { passive: true });
+			window.addEventListener('resize', updateArrows);
+			updateArrows();
+		}
+
+		// scroll doesn't bubble: listen on the scroller itself
+		scroller.addEventListener('scroll', highlightCenter, { passive: true });
+		window.addEventListener('resize', highlightCenter);
+
+		const tabs = document.querySelectorAll<HTMLElement>('[data-target]');
+		const tabContents = document.querySelectorAll('[data-content]');
+
+		const selectTab = (tab: HTMLElement) => {
+			const target = tab.dataset.target ? document.querySelector(tab.dataset.target) : null;
+			if (!target) return;
+
+			tabContents.forEach((tabContent) => tabContent.classList.remove('qualification__active'));
+			target.classList.add('qualification__active');
+
+			tabs.forEach((other) => {
+				other.classList.remove('qualification__active');
+				other.setAttribute('aria-selected', 'false');
+				other.tabIndex = -1;
+			});
+			tab.classList.add('qualification__active');
+			tab.setAttribute('aria-selected', 'true');
+			tab.tabIndex = 0;
+
+			// Back to the start (most recent) card of the new tab.
+			scroller.scrollLeft = 0;
+			highlightCenter();
+			updateArrows();
+		};
 
 		tabs.forEach((tab) => {
-			tab.addEventListener('click', () => {
-				const target = document.querySelector(tab.dataset.target);
-
-				tabContents.forEach((tabContent) => {
-					tabContent.classList.remove('qualification__active');
-				});
-				target.classList.add('qualification__active');
-
-				tabs.forEach((tab) => {
-					tab.classList.remove('qualification__active');
-				});
-				tab.classList.add('qualification__active');
-			});
+			tab.addEventListener('click', () => selectTab(tab));
 		});
+
+		// Arrow keys move between tabs (WAI-ARIA tabs pattern).
+		const tablist = document.querySelector<HTMLElement>('.qualification__tabs');
+		tablist?.addEventListener('keydown', (e) => {
+			if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+			const list = [...tabs];
+			const current = list.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
+			const dir = e.key === 'ArrowRight' ? 1 : -1;
+			const nextTab = list[(current + dir + list.length) % list.length];
+			selectTab(nextTab);
+			nextTab.focus();
+		});
+
+		highlightCenter();
 	}
 
-	setupExperienceTabs();
-	document.addEventListener('astro:after-swap', setupExperienceTabs);
+	document.addEventListener('astro:page-load', setupExperience);
 </script>

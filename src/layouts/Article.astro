@@ -1,31 +1,51 @@
 ---
 import Base from '@layouts/Layout.astro';
+import type { Lang } from 'src/i18n';
 
 interface Props {
 	title: string;
 	description?: string;
 	frontmatter?: undefined;
 	noLinks?: boolean;
+	canonical?: string;
+	lang?: Lang;
 }
 
-const { title, description, noLinks } = Astro.props.frontmatter || Astro.props;
+const { title, description, noLinks, canonical, lang } = Astro.props.frontmatter || Astro.props;
 ---
 
-<Base {title} {description} noLinks={noLinks}>
-	<article class="section container">
+<Base {title} {description} noLinks={noLinks} {canonical} {lang}>
+	<article class="section container article-body">
 		<slot />
 	</article>
 </Base>
 
-<style>
-	article {
-		> * {
-			margin-block: 1.2em 0;
-			margin-inline: 0;
+<!-- is:global + class scoping: slot content (MDX) carries the page's scope id,
+     not this component's, so scoped descendant selectors never matched it -->
+<style is:global>
+	.article-body {
+		/* Reading measure: ~70–80 characters per line (WCAG 1.4.8) */
+		max-width: 72ch;
+		margin-inline: auto;
+
+		/* One gap between siblings instead of margins on both sides of
+		   every element (which double up between consecutive blocks).
+		   Generous enough that a new paragraph is unmistakable (WCAG 1.4.8). */
+		> * + * {
+			margin-block-start: 1.5em;
+		}
+
+		/* Paragraph breaks must be unmistakable (WCAG 1.4.8: paragraph
+		   spacing well above the 1.65 line spacing) */
+		p + p {
+			margin-block-start: 2em;
 		}
 
 		p {
 			font-weight: 400;
+			/* Space-and-a-half line spacing (WCAG 1.4.8); survives user
+			   spacing overrides (WCAG 1.4.12) since heights are auto */
+			line-height: 1.65;
 		}
 
 		h2 {
@@ -192,6 +212,8 @@ const { title, description, noLinks } = Astro.props.frontmatter || Astro.props;
 
 		pre {
 			direction: ltr;
+			/* Code blocks scroll instead of breaking reflow at 200% zoom (WCAG 1.4.10) */
+			overflow-x: auto;
 			padding: 1em;
 			border-radius: 4px;
 			border: 2px solid color-mix(in srgb, var(--first-color) 20%, transparent);

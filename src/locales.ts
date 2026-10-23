@@ -2,13 +2,13 @@ export const DEFAULT_LOCALE_SETTING: string = 'en';
 
 export const LOCALES_SETTING: LocaleSetting = {
 	en: {
-		label: '🇺🇸 English',
+		label: '🇺🇸 EN-US',
 	},
 	es: {
-		label: '🇨🇴 Español',
+		label: '🇨🇴 ES-CO',
 	},
 	'pt-br': {
-		label: '🇧🇷 Português',
+		label: '🇧🇷 PT-BR',
 	},
 };
 

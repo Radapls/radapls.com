@@ -1,7 +1,6 @@
 ---
 import type { ImageMetadata } from 'astro';
-
-import { getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 
 interface Props {
 	title: string;
@@ -10,64 +9,111 @@ interface Props {
 }
 
 const { title, alt, image } = Astro.props;
-
-const bgImage = await getImage({ src: image });
 ---
 
-<div class="flip-card">
-	<div class="flip-card-inner">
-		<div class="flip-card-front" style={`background-image: url(${bgImage.src});`} }></div>
-		<div class="flip-card-back">
-			<h4 class="hobby_card__title">
-				{title.toUpperCase()}
-			</h4>
-		</div>
+<article class="hobby-card">
+	<Image
+		class="hobby-card__img"
+		src={image}
+		alt={alt}
+		widths={[300, 500, 700]}
+		sizes="(max-width: 568px) 90vw, 300px"
+		loading="lazy"
+		decoding="async"
+	/>
+	<div class="hobby-card__overlay">
+		<h4 class="hobby-card__title">{title}</h4>
 	</div>
-</div>
+</article>
 
 <style>
-	.flip-card {
-		min-height: 250px;
-	}
-
-	.flip-card-inner {
+	.hobby-card {
 		position: relative;
-		width: 100%;
-		height: 100%;
-		text-align: center;
-		transition: transform 1s;
-		transform-style: preserve-3d;
+		min-height: 250px;
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		box-shadow: var(--shadow-sm);
+		isolation: isolate;
+		transition:
+			box-shadow 250ms ease,
+			transform 250ms ease;
 	}
 
-	.flip-card:hover .flip-card-inner {
-		transform: rotateY(180deg);
+	.hobby-card:hover,
+	.hobby-card:focus-within {
+		box-shadow: var(--shadow-lg);
+		transform: translateY(-4px);
 	}
 
-	.flip-card-front,
-	.flip-card-back {
+	.hobby-card__img {
 		position: absolute;
+		inset: 0;
 		width: 100%;
 		height: 100%;
-		-webkit-backface-visibility: hidden; /* Safari */
-		backface-visibility: hidden;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		background-size: cover;
-		background-position: center;
+		object-fit: cover;
+		transition: transform 500ms ease;
 	}
 
-	.flip-card-front {
+	.hobby-card:hover .hobby-card__img,
+	.hobby-card:focus-within .hobby-card__img {
+		transform: scale(1.06);
 	}
 
-	.flip-card-back {
-		color: var(--first-color);
-		filter: opacity(1);
-		background-color: var(--container-color);
-		font-size: var(--h3-font-size);
-		border-radius: 0.5rem;
-		transform: rotateY(180deg);
+	.hobby-card__overlay {
+		position: absolute;
+		inset: 0;
 		display: flex;
-		align-items: center;
-		justify-content: center;
+		align-items: flex-end;
+		padding: 1.25rem;
+		/* Gradient scrim keeps the title legible over any image */
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.75) 0%,
+			rgba(0, 0, 0, 0.25) 40%,
+			rgba(0, 0, 0, 0) 70%
+		);
+		transition: background 250ms ease;
+	}
+
+	.hobby-card:hover .hobby-card__overlay,
+	.hobby-card:focus-within .hobby-card__overlay {
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.82) 0%,
+			rgba(0, 0, 0, 0.35) 55%,
+			rgba(0, 0, 0, 0.05) 100%
+		);
+	}
+
+	.hobby-card__title {
+		margin: 0;
+		color: #fff;
+		font-size: var(--h3-font-size);
+		font-weight: var(--font-semi-bold);
+		letter-spacing: 0.02em;
+		transform: translateY(0.25rem);
+		opacity: 0.95;
+		transition:
+			transform 250ms ease,
+			opacity 250ms ease;
+	}
+
+	.hobby-card:hover .hobby-card__title,
+	.hobby-card:focus-within .hobby-card__title {
+		transform: translateY(0);
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hobby-card,
+		.hobby-card__img,
+		.hobby-card__overlay,
+		.hobby-card__title {
+			transition: none;
+		}
+		.hobby-card:hover .hobby-card__img,
+		.hobby-card:focus-within .hobby-card__img {
+			transform: none;
+		}
 	}
 </style>

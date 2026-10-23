@@ -8,6 +8,21 @@ import Birdi3 from '@assets/img/birdi/birdi_3.webp';
 import Birdi4 from '@assets/img/birdi/birdi_4.webp';
 import Birdi5 from '@assets/img/birdi/birdi_5.webp';
 
-export const wibxPhotos = [Wibx1.src, Wibx2.src, Wibx3.src, Wibx4.src];
+export interface Slide {
+	src: string;
+	description?: string;
+}
 
-export const birdiPhotos = [Birdi2.src, Birdi3.src, Birdi4.src, Birdi5.src];
+export const wibxPhotos: Slide[] = [
+	{ src: Wibx1.src, description: 'Landing experience' },
+	{ src: Wibx2.src, description: 'Token dashboard' },
+	{ src: Wibx3.src, description: 'Wallet overview' },
+	{ src: Wibx4.src, description: 'Marketplace view' },
+];
+
+export const birdiPhotos: Slide[] = [
+	{ src: Birdi2.src, description: 'Medicine Cabinet redesign' },
+	{ src: Birdi3.src, description: 'Family Account launch' },
+	{ src: Birdi4.src, description: 'Subscription program' },
+	{ src: Birdi5.src, description: 'Payment history redesign' },
+];

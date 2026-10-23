@@ -1,0 +1,105 @@
+---
+/**
+ * Spark AR filters gallery. Copy comes from the `projects` content
+ * collection (per-locale MDX). The filters were taken down from
+ * Instagram, so the tiles are plain previews (kept here for
+ * documentation):
+ * - filter_2.mp4 → https://www.instagram.com/ar/966029728120894/
+ * - filter_1.mp4 → https://www.instagram.com/ar/347733366955299/
+ * - filter_3.mp4 → https://www.instagram.com/ar/1065085450711728/
+ * - filter_4.mp4 → never published
+ */
+import { DEFAULT_LOCALE, useTranslations } from 'src/i18n';
+import { getCollection, render } from 'astro:content';
+
+import filter1 from '@assets/videos/filter_1.mp4';
+import filter2 from '@assets/videos/filter_2.mp4';
+import filter3 from '@assets/videos/filter_3.mp4';
+import filter4 from '@assets/videos/filter_4.mp4';
+import Layout from '@layouts/Layout.astro';
+
+
+const locale = DEFAULT_LOCALE;
+const t = useTranslations(locale);
+
+const entry = (await getCollection('projects', ({ id }) => id === `${locale}/spark-ar`))[0];
+const { Content } = await render(entry);
+---
+
+<Layout title="Juan Felipe Rada | Spark AR">
+	<section class="section container">
+		<h2 class="section__title">{entry.data.title}</h2>
+		<div class="spark__lead">
+			<Content />
+		</div>
+
+		<div class="spark__filters">
+			{
+				[
+					{ src: filter2, n: 1 },
+					{ src: filter1, n: 2 },
+					{ src: filter3, n: 3 },
+					{ src: filter4, n: 4 },
+				].map(({ src, n }) => (
+					<span
+						class="spark__tile"
+						role="img"
+						aria-label={t({
+							en: `Filter ${n} preview`,
+							es: `Vista previa del filtro ${n}`,
+							'pt-br': `Prévia do filtro ${n}`,
+						})}
+					>
+						<video src={src} autoplay loop muted playsinline aria-hidden="true" />
+					</span>
+				))
+			}
+		</div>
+	</section>
+</Layout>
+
+<script>
+	// ponytail: the muted attribute alone isn't honored when ClientRouter
+	// swaps the document — force the property so autoplay never has sound
+	document.querySelectorAll('video').forEach((v) => {
+		v.muted = true;
+	});
+	document.addEventListener('astro:page-load', () => {
+		document.querySelectorAll('video').forEach((v) => (v.muted = true));
+	});
+</script>
+
+<style>
+	/* Presentation layout: MDX intro reads like a project sheet, then the
+	   filters flow in a fluid grid — tiles scale with the viewport so
+	   nothing gets cropped on small devices. */
+	.spark__lead {
+		color: var(--text-color);
+		max-width: 60ch;
+		margin: 0 auto 2.5rem;
+		line-height: 1.7;
+	}
+	.spark__lead :global(a) {
+		color: var(--first-color);
+		font-weight: var(--font-semi-bold);
+	}
+	.spark__filters {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+		gap: 1.5rem;
+		max-width: 60rem;
+		margin-inline: auto;
+	}
+	.spark__filters .spark__tile {
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		box-shadow: var(--shadow-sm);
+	}
+	.spark__filters video {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 9 / 16;
+		object-fit: cover;
+	}
+</style>

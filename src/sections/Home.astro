@@ -1,176 +1,313 @@
 ---
-import Illustration from '@assets/img/illustration.webp';
-import Flag from '@components/Flag.astro';
-import { Image } from 'astro:assets';
 import { LINKEDIN, GITHUB } from 'src/consts';
-import { useTranslations, type Lang } from 'src/i18n';
+import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
 
 const t = useTranslations(Astro.currentLocale as Lang);
+const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
+// Flightboard phrases per locale; the animation follows the client-side switcher
+const flightPhrases: Record<string, string[]> = {
+	en: ['Curious Coder', 'Political Scientist', 'Digital Business Strategist', 'Poet?', 'Runner?'],
+	es: ['Programador curioso', 'Politólogo', 'Estrategista de negocios digitales', '¿Poeta?', '¿Corredor?'],
+	'pt-br': ['Programador curioso', 'Cientista político', 'Estrategista de negócios digitais', 'Poeta?', 'Corredor?'],
+};
 ---
 
-<!--==================== HOME ====================-->
 <section class="home section" id="Home">
-	<div class="home__container container grid">
-		<div class="home__content grid">
+	<div class="container layout-grid">
+		<h1 class="home__title layout-full">
+			<span>Juan Felipe</span>
+			<span>Rada<span class="home__title-mark">.</span></span>
+		</h1>
+		<p class="home__alias layout-full">
+			<span>
+				{
+					t('home.aka')
+				}
+			</span>
+			<strong>radapls</strong>
+		</p>
+		<h2 class="home__eyebrow layout-center">
+			<button
+				type="button"
+				class="home__flightboard"
+				data-flightboard
+				data-phrases={JSON.stringify(flightPhrases)}
+				aria-label={t('home.start-the-rotating-title-board')}
+			>
+				<span data-flightboard-text>
+					{
+						t('home.curious-coder')
+					}
+				</span>
+			</button>
+		</h2>
+		<div class="home__actions layout-center">
+			<a
+				href="/about"
+				class="button button--flex home__about-button"
+			>
+				{
+					t('home.about-me')
+				}
+				<span class="home__about-arrow">→&#xFE0E;</span>
+			</a>
 			<div class="home__social">
-				<a href={LINKEDIN} target="_blank" class="home__social-icon" aria-label="LinkedIn profile">
+				<a
+					href={LINKEDIN}
+					target="_blank"
+					class="home__social-icon"
+					aria-label={t('home.linkedin-profile')}
+				>
 					<i class="uil uil-linkedin" aria-hidden="true"></i>
 				</a>
-				<a href={GITHUB} target="_blank" class="home__social-icon" aria-label="GitHub profile">
+				<a
+					href={GITHUB}
+					target="_blank"
+					class="home__social-icon"
+					aria-label={t('home.github-profile')}
+				>
 					<i class="uil uil-github" aria-hidden="true"></i>
 				</a>
 			</div>
-			<Image
-				class="illustration-image floating"
-				alt="Ilustracion digitial Juan Felipe Rada"
-				src={Illustration}
-				widths={[352, 704, 1252]}
-				sizes="(max-width: 567px) 200px, (max-width: 768px) 300px, 352px"
-				draggable={false}
-				loading={'eager'}
-				decoding="async"
-				fetchpriority="high"
-			/>
-
-			<div class="home__data">
-				<div style="display: flex; align-items: center; gap: 8px;">
-					<h1 class="home__title">
-						{
-							t({
-								en: 'Hello!',
-								es: 'Hola!',
-								'pt-br': 'Ola!',
-							})
-						}
-					</h1>
-					<h1 id="waveElement" class="wave">👋🏼</h1>
-				</div>
-				<h2 class="home__eyebrow">
-					{
-						t({
-							en: "I'm Juan Felipe",
-							es: 'Soy Juan Felipe',
-							'pt-br': 'Sou Juan Felipe',
-						})
-					}
-				</h2>
-				<h3 class="home__subtitle">
-					{
-						t({
-							en: 'Software, Politics, Art',
-							es: 'Software, Política, Arte',
-							'pt-br': 'Software, Política, Arte',
-						})
-					}
-				</h3>
-				<p class="home__description">
-					{
-						t({
-							en: '"You cannot judge the past with today\'s wisdom"',
-							es: '"No se puede juzgar el pasado, con la sabiduría del presente"',
-							'pt-br': '"Não se pode julgar o passado com a sabedoria do presente"',
-						})
-					}
-				</p>
-				<a href="#Contact" class="button button--flex heartbeat" id="contact-button">
-					{
-						t({
-							en: 'Contact Me',
-							es: 'Contáctame',
-							'pt-br': 'Contato',
-						})
-					}
-				</a>
-			</div>
 		</div>
-		<Flag />
 	</div>
 </section>
 
 <style>
-	.illustration-image {
-		order: 1;
-		justify-self: center;
-		filter: drop-shadow(0 0 50px var(--first-color));
+	/* Full-width, single-column introduction. */
+	.home__title {
+		display: flex;
+		justify-content: center;
+		align-items: baseline;
+		gap: 0.2em;
+		white-space: nowrap;
+		font-size: clamp(2rem, 9vw, 7.5rem);
+		font-weight: var(--font-bold);
+		line-height: 0.88;
+		letter-spacing: -0.075em;
+		margin-bottom: 0;
 	}
-	.wave {
-		display: inline-block;
-		animation: wave 3s;
-		transform-origin: 70% 70%;
-		font-size: 50px;
+	.home__title-mark {
+		color: var(--first-color);
+	}
+	.home__alias {
+		display: flex;
+		align-items: baseline;
+		justify-content: center;
+		gap: 0.4rem;
+		width: 100%;
+		max-width: 100%;
+		margin: 0;
+		color: var(--text-color);
+		font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+		animation: alias-arrive 500ms 250ms both;
+	}
+	.home__alias > span {
+		width: 4.5rem;
+		text-align: right;
+	}
+	.home__alias strong {
+		width: 5rem;
+		color: var(--first-color);
+		font-weight: var(--font-semi-bold);
+		text-align: left;
+	}
+	.home__eyebrow {
+		text-align: center;
+		font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+		font-weight: var(--font-medium);
+		color: var(--text-color);
+		margin: 0;
+	}
+	.home__flightboard {
+		max-width: 100%;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		line-height: inherit;
 		cursor: pointer;
 	}
-
-	.wave:hover {
-		animation: wave 3s infinite;
+	.home__flightboard:focus-visible {
+		outline: 2px solid var(--first-color);
+		outline-offset: 0.2em;
+		border-radius: 0.15em;
 	}
-	.wave:not(:hover) {
-		animation: none;
+	.home__flightboard [data-flightboard-text] {
+		display: grid;
+		width: 100%;
+		min-height: 2.6em;
+		align-items: center;
+		perspective: 700px;
 	}
-
-	@keyframes wave {
-		0% {
-			transform: rotate(0deg);
-		}
-		10% {
-			transform: rotate(14deg);
-		}
-		20% {
-			transform: rotate(-8deg);
-		}
-		30% {
-			transform: rotate(14deg);
-		}
-		40% {
-			transform: rotate(-4deg);
-		}
-		50% {
-			transform: rotate(10deg);
-		}
-		60% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(0deg);
-		}
+	.home__flightboard :global(.flightboard-phrase) {
+		grid-area: 1 / 1;
+		display: flex;
+		width: 100%;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		row-gap: 0.08em;
 	}
-
-	.floating {
+	.home__flightboard :global(.flightboard-word) {
+		display: inline-flex;
+		white-space: nowrap;
+	}
+	.home__flightboard :global(.flightboard-word + .flightboard-word) {
+		margin-inline-start: 0.42em;
+	}
+	.home__flightboard :global(.flightboard-letter) {
 		display: inline-block;
-		animation: float 3s ease-in-out infinite;
-		cursor: pointer;
+		backface-visibility: hidden;
+		transform-origin: 50% 50%;
+	}
+	.home__flightboard :global(.flightboard-arriving .flightboard-letter) {
+		animation: flightboard-arrive 300ms ease-out both;
+		animation-delay: calc(var(--letter-index) * 24ms);
+	}
+	.home__actions {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--mb-1-5);
+		flex-wrap: wrap;
+	}
+	.home__about-button {
+	font-family: var(--title-font);
+	font-weight: 200;
+	border-radius: var(--radius-pill);
+		gap: var(--mb-1);
+	}
+	.home__about-arrow {
+	font-family: var(--title-font);
+	font-weight: 200;
+	font-size: 1.25rem;
+	line-height: 1;
+		flex: 0 0 auto;
+		transition: transform 180ms ease;
+	}
+	.home__about-button:hover .home__about-arrow {
+		transform: translateX(4px);
+	}
+	.home__social {
+		display: flex;
+		flex-direction: row;
+		gap: var(--mb-1-5);
+		transform: none;
+	}
+	.home__social-icon {
+		font-size: 1.5rem;
+		color: var(--first-color);
+		transition: color 0.2s;
+	}
+	.home__social-icon:hover {
+		color: var(--first-color-alt);
 	}
 
-	@media screen and (max-width: 567px) {
-		#contact-button {
-			display: flex;
-			justify-content: center;
-			width: 100%;
+	/* Entrance: text block gently rises in on first load */
+	#Home .layout-grid {
+		animation: home-rise 700ms ease-out both;
+	}
+
+	@keyframes home-rise {
+		from {
+			opacity: 0;
+			transform: translateY(16px);
 		}
-	}
-
-	@keyframes float {
-		0%,
-		100% {
+		to {
+			opacity: 1;
 			transform: translateY(0);
 		}
-		50% {
-			transform: translateY(-10px);
+	}
+	@keyframes alias-arrive {
+		from {
+			opacity: 0;
+			transform: translateY(0.4rem);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	@keyframes flightboard-arrive {
+		0% {
+			transform: rotateX(-88deg);
+			opacity: 0;
+		}
+		100% {
+			transform: rotateX(0);
+			opacity: 1;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.home__flightboard :global(.flightboard-letter) {
+			animation: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#Home .layout-grid {
+			animation: none;
+		}
+		.home__alias {
+			animation: none;
+			transform: none;
+			opacity: 1;
 		}
 	}
 </style>
 
-<script is:inline>
-	document.addEventListener('DOMContentLoaded', () => {
-		const waveElement = document.getElementById('waveElement');
+<script>
+	document.querySelectorAll<HTMLButtonElement>('[data-flightboard]').forEach((board) => {
+		const text = board.querySelector<HTMLElement>('[data-flightboard-text]');
+		const phrasesByLang = JSON.parse(board.dataset.phrases ?? '{}') as Record<string, string[]>;
+		const langOf = () => ((window as any).__i18n?.lang as string) ?? 'en';
+		let phrases = phrasesByLang[langOf()] ?? [];
+		if (!text || phrases.length < 2) return;
 
-		if (waveElement) {
-			waveElement.addEventListener('click', () => {
-				waveElement.classList.add('animate');
-				setTimeout(() => {
-					waveElement.classList.remove('animate');
-				}, 5000);
-			});
-		}
+		let current = 0;
+		const renderPhrase = (phrase: string, animate = false) => {
+			const phraseElement = document.createElement('span');
+			phraseElement.className = `flightboard-phrase${animate ? ' flightboard-arriving' : ''}`;
+
+			let letterIndex = 0;
+			for (const word of phrase.split(/\s+/).filter(Boolean)) {
+				const wordElement = document.createElement('span');
+				wordElement.className = 'flightboard-word';
+				for (const character of word) {
+					const letter = document.createElement('span');
+					letter.className = 'flightboard-letter';
+					letter.textContent = character;
+					letter.style.setProperty('--letter-index', String(letterIndex++));
+					wordElement.append(letter);
+				}
+				phraseElement.append(wordElement);
+			}
+			return phraseElement;
+		};
+
+		const showNext = () => {
+			current = (current + 1) % phrases.length;
+			text.replaceChildren(renderPhrase(phrases[current], true));
+			board.setAttribute('aria-label', phrases[current]);
+		};
+
+		text.replaceChildren(renderPhrase(phrases[current]));
+		board.setAttribute('aria-label', phrases[current]);
+		let timer = setInterval(showNext, 3600);
+
+		board.addEventListener('click', () => {
+			showNext();
+			clearInterval(timer);
+			timer = setInterval(showNext, 3600);
+		});
+		window.addEventListener('locale-change', () => {
+			phrases = phrasesByLang[langOf()] ?? phrases;
+			current = 0;
+			text.replaceChildren(renderPhrase(phrases[current], true));
+			board.setAttribute('aria-label', phrases[current]);
+		});
 	});
 </script>

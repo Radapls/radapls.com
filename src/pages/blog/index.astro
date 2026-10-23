@@ -1,0 +1,285 @@
+---
+import { getCollection } from 'astro:content';
+import Article from '@layouts/Article.astro';
+import EmptyState from '@components/Blog/EmptyState.astro';
+import { BLOG_URL } from 'src/consts';
+import { LOCALES } from 'src/i18n';
+
+const TYPE_LABELS: Record<string, string> = {
+	post: 'Post',
+	poem: 'Poem',
+};
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const years = [...new Set(posts.map((p) => String(p.data.pubDate.getFullYear())))].sort().reverse();
+const langs = [...new Set(posts.map((p) => p.data.lang ?? 'en'))];
+const types = [...new Set(posts.map((p) => p.data.type ?? 'post'))];
+---
+
+<Article title="Blog" description="Writing by Juan Felipe Rada" canonical={`${BLOG_URL}/`}>
+	<h1 class="section__title">Blog</h1>
+	{
+		posts.length === 0 ? (
+			<EmptyState />
+		) : (
+			<>
+				<form id="blog-filters" class="filters" role="search">
+					<div class="filter-field filter-field--search">
+						<label for="filter-q">Search</label>
+						<input id="filter-q" name="q" type="search" placeholder="Search by title" autocomplete="off" />
+					</div>
+					<div class="filter-field">
+						<label for="filter-lang">Language</label>
+						<select id="filter-lang" name="lang">
+							<option value="all">All</option>
+							{langs.map((lang) => (
+								<option value={lang}>{LOCALES[lang].label}</option>
+							))}
+						</select>
+					</div>
+					<div class="filter-field">
+						<label for="filter-type">Type</label>
+						<select id="filter-type" name="type">
+							<option value="all">All</option>
+							{types.map((type) => (
+								<option value={type}>{TYPE_LABELS[type] ?? type}</option>
+							))}
+						</select>
+					</div>
+					<div class="filter-field">
+						<label for="filter-year">Year</label>
+						<select id="filter-year" name="year">
+							<option value="all">All</option>
+							{years.map((year) => (
+								<option value={year}>{year}</option>
+							))}
+						</select>
+					</div>
+					<div class="filter-field">
+						<label for="sort-toggle">Sort</label>
+						<button id="sort-toggle" type="button">Newest first</button>
+					</div>
+					<div class="filter-field filter-field--clear">
+						<label for="clear-filters" class="sr-only-label">Clear filters</label>
+						<button id="clear-filters" type="button" hidden>Clear filters</button>
+					</div>
+				</form>
+				<p class="filter-status" aria-live="polite">
+					<span id="filter-count">{posts.length}</span> posts
+				</p>
+				<ul class="post-list" id="post-list">
+					{posts.map((post) => (
+						<li
+							data-lang={post.data.lang ?? 'en'}
+							data-type={post.data.type ?? 'post'}
+							data-year={post.data.pubDate.getFullYear()}
+							data-date={post.data.pubDate.toISOString()}
+							data-title={post.data.title.toLowerCase()}
+						>
+							<a href={`/blog/${post.id}/`}>
+								<h2>{post.data.title}</h2>
+								<p>{post.data.description}</p>
+								<time datetime={post.data.pubDate.toISOString()}>
+									{post.data.pubDate.toLocaleDateString(post.data.lang ?? 'en', {
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric',
+									})}
+								</time>
+							</a>
+						</li>
+					))}
+				</ul>
+				<p id="no-results" class="no-results" hidden>No posts match your filters.</p>
+			</>
+		)
+	}
+</Article>
+
+<script>
+	function setupBlogFilters() {
+		const form = document.getElementById('blog-filters') as HTMLFormElement | null;
+		const list = document.getElementById('post-list');
+		const sortBtn = document.getElementById('sort-toggle') as HTMLButtonElement | null;
+		if (!form || !list) return;
+
+		const items = Array.from(list.children) as HTMLElement[];
+		const count = document.getElementById('filter-count');
+		const noResults = document.getElementById('no-results');
+		const clearBtn = document.getElementById('clear-filters') as HTMLButtonElement | null;
+
+		const SORTS = {
+			newest: 'Newest first',
+			oldest: 'Oldest first',
+			title: 'Title A–Z',
+		} as const;
+		const order = Object.keys(SORTS) as (keyof typeof SORTS)[];
+		let sort: keyof typeof SORTS = 'newest';
+
+		const apply = () => {
+			const data = new FormData(form);
+			const get = (key: string) => String(data.get(key) ?? '');
+			const lang = get('lang');
+			const type = get('type');
+			const year = get('year');
+			const q = get('q').toLowerCase().trim();
+
+			const visible = items.filter(
+				(el) =>
+					(lang === 'all' || el.dataset.lang === lang) &&
+					(type === 'all' || el.dataset.type === type) &&
+					(year === 'all' || el.dataset.year === year) &&
+					(!q || (el.dataset.title ?? '').includes(q)),
+			);
+
+			visible.sort((a, b) => {
+				if (sort === 'title') return (a.dataset.title ?? '').localeCompare(b.dataset.title ?? '');
+				const da = Date.parse(a.dataset.date ?? '');
+				const db = Date.parse(b.dataset.date ?? '');
+				return sort === 'oldest' ? da - db : db - da;
+			});
+
+			for (const el of items) el.style.display = visible.includes(el) ? '' : 'none';
+			for (const el of visible) list.appendChild(el); // reorder in place
+
+			if (count) count.textContent = String(visible.length);
+			if (noResults) noResults.hidden = visible.length > 0;
+
+			const dirty =
+				!!q || lang !== 'all' || type !== 'all' || year !== 'all' || sort !== 'newest';
+			if (clearBtn) clearBtn.hidden = !dirty;
+		};
+
+		clearBtn?.addEventListener('click', () => {
+			form.reset();
+			sort = 'newest';
+			if (sortBtn) sortBtn.textContent = SORTS[sort];
+			apply();
+		});
+
+		sortBtn?.addEventListener('click', () => {
+			sort = order[(order.indexOf(sort) + 1) % order.length];
+			sortBtn.textContent = SORTS[sort];
+			apply();
+		});
+
+		form.addEventListener('input', apply);
+		apply();
+	}
+
+	document.addEventListener('astro:page-load', setupBlogFilters);
+</script>
+
+<style>
+	.filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--sp-s, 1em);
+		align-items: flex-end;
+	}
+
+	/* Clear button stays in the row; toggling visibility (not display)
+	   keeps it from reflowing the row when it shows/hides. */
+	#clear-filters[hidden] {
+		display: inline-block;
+		visibility: hidden;
+	}
+	.filter-field--clear {
+		margin-inline-start: auto;
+	}
+
+	.filter-field {
+		display: grid;
+		gap: 0.3em;
+
+		label {
+			font-size: 0.8rem;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			opacity: 0.7;
+		}
+
+		select,
+		input,
+		button {
+			font: inherit;
+			padding: 0.4em 0.6em;
+			border-radius: 4px;
+			border: 1px solid color-mix(in srgb, var(--first-color) 30%, transparent);
+			background: var(--color-base, transparent);
+			color: inherit;
+			cursor: pointer;
+		}
+
+		&--search {
+			flex: 1 1 12em;
+			min-width: 10em;
+		}
+	}
+
+	/* Visually hidden but available to assistive tech (WCAG 1.3.1 / 4.1.2) */
+	.sr-only-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	.filter-status {
+		margin-block: 1.5em 0;
+		font-size: 0.85rem;
+		opacity: 0.6;
+	}
+
+	.no-results {
+		margin-block-start: 2em;
+		opacity: 0.7;
+	}
+
+	.post-list {
+		list-style: none;
+		padding: 0;
+		margin-block-start: 1em;
+
+		li + li {
+			margin-block-start: var(--sp-m, 2em);
+			border-block-start: 1px solid color-mix(in srgb, var(--first-color) 10%, transparent);
+			padding-block-start: var(--sp-m, 2em);
+		}
+
+		a {
+			display: grid;
+			gap: 0.4em;
+			text-decoration: none;
+			color: inherit;
+
+			&:hover h2,
+			&:focus-visible h2 {
+				color: var(--color-theme);
+			}
+		}
+
+		h2 {
+			font-size: 1.4rem;
+			line-height: 1.3;
+		}
+
+		p {
+			margin: 0;
+			opacity: 0.8;
+		}
+
+		time {
+			font-size: 0.9rem;
+			opacity: 0.6;
+		}
+	}
+</style>

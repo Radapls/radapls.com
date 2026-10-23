@@ -13,51 +13,32 @@ const t = useTranslations(Astro.currentLocale as Lang);
 	<h2 class="section__title">
 		👨🏼‍🎨
 		{
-			t({
-				en: 'Hobbies',
-				es: 'Pasatiempos',
-				'pt-br': 'Passatempos',
-			})
+			t('hobbies.hobbies')
 		}
 	</h2>
-	<span class="section__subtitle">
-		{
-			t({
-				en: 'Some things outside work!',
-				es: '¡Algunas cosas fuera del trabajo!',
-				'pt-br': 'Algumas coisas fora do trabalho!',
-			})
-		}
-	</span>
-	<div class="services__container container grid">
+	<div class="container layout-auto-grid">
 		<HobbyCard
-			title={t({
-				en: 'Pottery',
-				es: 'Cerámica',
-				'pt-br': 'Cerâmica',
-			})}
+			title={t('hobbies.pottery')}
 			image={Pottery}
-			alt="Pottery Project"
+			alt={t('hobbies.pottery-project')}
 		/>
 
 		<HobbyCard
-			title={t({
-				en: 'Sewing',
-				es: 'Costura',
-				'pt-br': 'Costura',
-			})}
+			title={t('hobbies.sewing')}
 			image={Sewing}
-			alt="Sewing Project"
+			alt={t('hobbies.sewing-project')}
 		/>
 
 		<HobbyCard
-			title={t({
-				en: 'Poetry',
-				es: 'Poesía',
-				'pt-br': 'Poesia',
-			})}
+			title={t('hobbies.poetry')}
 			image={Poetry}
-			alt="Poetry Project"
+			alt={t('hobbies.poetry-project')}
 		/>
 	</div>
 </section>
+
+<style>
+	#Services {
+		--layout-card-min: 15rem;
+	}
+</style>

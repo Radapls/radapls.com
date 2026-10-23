@@ -11,22 +11,11 @@
 	.nav__list {
 		column-gap: 0;
 	}
-	.home__content {
-		grid-template-columns: 1fr;
-		grid-auto-flow: dense;
-	}
 	.home__blob {
 		width: 180px;
 	}
 	.skills__title {
 		font-size: var(--normal-font-size);
-	}
-	.qualification__data {
-		gap: 0.5rem;
-	}
-	.services__container {
-		grid-template-columns: 1fr;
-		justify-content: center;
 	}
 	.services__content {
 		padding-right: 3.5rem;
@@ -39,10 +28,8 @@
 	}
 
 	.project__bg {
-	background-color: var(--first-color);
-
+		background-color: var(--first-color);
 	}
-
 
 	.project__title,
 	.project__description {
@@ -64,45 +51,52 @@
 }
 /* For medium devices */
 @media screen and (min-width: 568px) {
-	.home__content {
-		grid-template-columns: max-content 1fr 1fr;
-	}
 	.home__data {
 		grid-column: initial;
 	}
 
-	.about__container,
 	.portafolio__content,
 	.project__container,
-	.contact__container,
 	.footer__container,
-	.wibx__container,
-	.qualification__sections {
+	.wibx__container {
 		display: grid;
 		justify-content: center;
 	}
 
-    .project__container {
-        padding: 2rem 0;
-        background-color: var(--first-color);
-        border-radius: 0.5rem;
-    }
+	.project__container {
+		padding: 2rem 0;
+		background-color: var(--first-color);
+		border-radius: 0.5rem;
+	}
 }
 
 @media screen and (min-width: 768px) {
+	:root {
+		--layout-columns: 8;
+		--header-height: 3rem;
+	}
+	.layout-center {
+		grid-column: 2 / span 6;
+	}
+	.layout-rail {
+		grid-column: span 2;
+	}
+	.layout-main {
+		grid-column: span 6;
+	}
+	.layout-half {
+		grid-column: span 4;
+	}
 	.container {
 		margin-left: auto;
 		margin-right: auto;
 	}
 	body {
 		margin: 0;
-		padding-top: var(--banner-height, 0px);
+		padding-top: calc(var(--header-height) + var(--banner-height, 0px));
 	}
 	.section {
-		padding: 6rem 0 2rem;
-	}
-	.section__subtitle {
-		margin-bottom: 4rem;
+		padding: max(4rem, 7vw) 0 max(3rem, 6vw);
 	}
 	.header {
 		top: var(--banner-height, 0px);
@@ -116,10 +110,23 @@
 	.nav {
 		height: calc(var(--header-height) + 1.5rem);
 		column-gap: 1rem;
+		display: grid;
+		grid-template-columns: repeat(var(--layout-columns), minmax(0, 1fr));
+	}
+	.nav--portfolio .nav__logo {
+		grid-column: 4 / span 2;
+		justify-self: center;
+	}
+	.nav--portfolio .nav__btns {
+		grid-column: 7 / -1;
+		justify-self: end;
 	}
 	.nav__icon,
 	.nav__close,
 	.nav__toggle {
+		display: none;
+	}
+	.nav--portfolio .nav__menu {
 		display: none;
 	}
 	.nav__list {
@@ -132,13 +139,6 @@
 	.change-theme {
 		margin: 0;
 	}
-	.home__container {
-		row-gap: 5rem;
-	}
-	.home__content {
-		padding-top: 5.5rem;
-		column-gap: 2rem;
-	}
 	.home__blob {
 		width: 270px;
 	}
@@ -147,17 +147,6 @@
 	}
 	.home__scroll-button {
 		margin-left: 3rem;
-	}
-	.about__container {
-		column-gap: 5rem;
-	}
-
-	.about__description {
-		text-align: initial;
-	}
-	.about__info {
-		justify-content: space-between;
-		gap: 1rem;
 	}
 	.about__buttons {
 		justify-content: center;
@@ -170,9 +159,6 @@
 	}
 	.qualification__sections {
 		grid-template-columns: 0.5fr;
-	}
-	.services__container {
-		justify-content: center;
 	}
 	.services__icon {
 		font-size: 2rem;
@@ -197,7 +183,6 @@
 		background-color: var(--first-color-second);
 		border-radius: 1rem;
 		padding: 3rem 2.5rem 0;
-		grid-template-columns: 1fr max-content;
 		column-gap: 3rem;
 	}
 	.project__data {
@@ -207,10 +192,28 @@
 
 /* For large devices */
 @media screen and (min-width: 1024px) {
+	:root {
+		--layout-columns: 12;
+	}
+	.layout-center {
+		grid-column: 3 / span 8;
+	}
+	.layout-main {
+		grid-column: span 10;
+	}
+	.layout-half {
+		grid-column: span 6;
+	}
 	.header,
 	.main,
 	.footer__container {
 		padding: 0;
+	}
+	.nav--portfolio .nav__logo {
+		grid-column: 6 / span 2;
+	}
+	.nav--portfolio .nav__btns {
+		grid-column: 10 / -1;
 	}
 	.home__blob {
 		width: 320px;
@@ -218,16 +221,7 @@
 	.home__social {
 		transform: translateX(-6rem);
 	}
-	.services__container {
-		grid-template-columns: repeat(3, 238px);
-	}
 	.portafolio__content {
 		column-gap: 5rem;
-	}
-	.contact__form {
-		width: 460px;
-	}
-	.contact__inputs {
-		grid-template-columns: repeat(2, 1fr);
 	}
 }

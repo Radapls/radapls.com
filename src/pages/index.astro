@@ -1,69 +1,121 @@
 ---
-// Redirect to Top page for user's system locale
-// Basically, you don't need to edit this file.
+import Home from 'src/sections/Home.astro';
 
-import { SITE_CONFIG } from 'src/consts';
-import { DEFAULT_LOCALE, getLocalePaths, LOCALES, useTranslations, type Lang } from 'src/i18n';
+import Layout from '@layouts/Layout.astro';
+import Experience from '@sections/Experience.astro';
+import Portfolio from '@sections/Portfolio.astro';
+import ContactMeForm from '@sections/ContactMeForm.astro';
 
-const t = useTranslations(Astro.currentLocale as Lang);
-const langs = Object.keys(LOCALES);
-const baseUrl = import.meta.env.PROD ? Astro.site : '/';
-const defaultLocale = DEFAULT_LOCALE;
 ---
 
-<html lang={DEFAULT_LOCALE}>
-	<head>
-		<meta charset="UTF-8" />
-		<title>redirect...</title>
-		<link rel="sitemap" href="/sitemap-index.xml" />
-		<meta name="generator" content={Astro.generator} />
-		{
-			getLocalePaths(Astro.url).map((props) => (
-				<link
-					rel="alternate"
-					hreflang={LOCALES[props.lang].lang || props.lang}
-					href={Astro.site?.origin + props.path}
-				/>
-			))
-		}
+<Layout title="Juan Felipe Rada | Portfolio" variant="radapls" snap>
+	<Home />
+	<Experience />
+	<Portfolio />
+	<ContactMeForm />
+</Layout>
 
-		<!-- icon -->
-		<link rel="icon" type="image/x-icon" href="/favicon.icon" />
-		<link rel="icon" sizes="192x192" href="/android-chrome.png" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-		<meta name="color-scheme" content="light dark" />
+<script>
+	// Full-viewport steps: one wheel gesture or key press advances exactly
+	// one section, so each step gets the whole screen. Touch devices keep
+	// native scrolling + CSS snap (which behaves well there).
+	let armed = false;
+	function armSteps() {
+		if (armed) return;
+		armed = true;
 
-		<!-- OGP -->
-		<meta property="og:type" content="website" />
-		<meta property="og:title" content={t(SITE_CONFIG.title)} />
-		<meta property="og:site_name" content={t(SITE_CONFIG.title)} />
-		<meta property="og:description" content={t(SITE_CONFIG.description)} />
-		<meta property="og:image" content={Astro.site + 'ogp.png'} />
-		<meta property="og:url" content={Astro.url} />
-		<meta property="og:locale" content={DEFAULT_LOCALE} />
-		<meta name="twitter:card" content="summary" />
-
-		<noscript>
-			<meta http-equiv="refresh" content={`0;url=${baseUrl + DEFAULT_LOCALE}/`} />
-		</noscript>
-
-		<script is:inline define:vars={{ langs, baseUrl, defaultLocale }}>
-			if (localStorage.selectedLang && langs.includes(localStorage.selectedLang)) {
-				location.href = `${baseUrl + localStorage.selectedLang}/`;
-			} else {
-				const browserLang = navigator.language.toLowerCase();
-
-				if (langs.includes(browserLang)) {
-					location.href = `${baseUrl + browserLang}/`;
-				} else if (langs.includes(browserLang.split('-')[0])) {
-					location.href = `${baseUrl + browserLang.split('-')[0]}/`;
-				} else {
-					location.href = `${baseUrl + defaultLocale}/`;
+		// Steps: every section plus the footer (the final full-screen step)
+		const sections = () => [
+			...document.querySelectorAll<HTMLElement>('.snap-page .section'),
+			...document.querySelectorAll<HTMLElement>('footer.footer__bg'),
+		];
+		const nearest = () => {
+			const secs = sections();
+			let best = 0;
+			let dist = Infinity;
+			secs.forEach((s, i) => {
+				const d = Math.abs(s.getBoundingClientRect().top);
+				if (d < dist) {
+					dist = d;
+					best = i;
 				}
-			}
-		</script>
-	</head>
-	<body>
-		<h1>redirect...</h1>
-	</body>
-</html>
+			});
+			return best;
+		};
+
+		let locked = false;
+		let animId = 0;
+		// Eased scroll under our control. `behavior: 'instant'` matters:
+		// html has `scroll-behavior: smooth`, which would otherwise layer
+		// its own animation on every frame and make the motion janky.
+		const smoothScrollTo = (targetY: number, duration = 750) => {
+			cancelAnimationFrame(animId);
+			const startY = window.scrollY;
+			const dist = Math.round(targetY) - Math.round(startY);
+			if (Math.abs(dist) < 2) return;
+			document.documentElement.classList.add('stepping');
+			const start = performance.now();
+			const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+			const frame = (now: number) => {
+				const t = Math.min((now - start) / duration, 1);
+				window.scrollTo({ top: startY + dist * ease(t), behavior: 'instant' });
+				if (t < 1) {
+					animId = requestAnimationFrame(frame);
+				} else {
+					document.documentElement.classList.remove('stepping');
+					locked = false;
+				}
+			};
+			animId = requestAnimationFrame(frame);
+		};
+		const goTo = (i: number) => {
+			const secs = sections();
+			if (i < 0 || i >= secs.length) return;
+			locked = true;
+			const el = secs[i];
+			smoothScrollTo(el.getBoundingClientRect().top + window.scrollY);
+		};
+
+		const step = (down: boolean) => {
+			const secs = sections();
+			const next = nearest() + (down ? 1 : -1);
+			if (next < 0 || next >= secs.length) return;
+			goTo(next);
+		};
+
+		// Wheel capture: native scrolling must NEVER run alongside the step
+		// animation (they fight and the transition stutters). Every wheel
+		// event is prevented; deltas accumulate until they cross a threshold,
+		// which also suits trackpads whose events start tiny.
+		let acc = 0;
+		window.addEventListener(
+			'wheel',
+			(e) => {
+				if (!document.querySelector('.snap-page')) return;
+				e.preventDefault();
+				if (locked) {
+					acc = 0;
+					return;
+				}
+				acc += e.deltaY;
+				if (Math.abs(acc) > 40) {
+					step(acc > 0);
+					acc = 0;
+				}
+			},
+			{ passive: false },
+		);
+
+		window.addEventListener('keydown', (e) => {
+			if (!document.querySelector('.snap-page')) return;
+			if (e.target !== document.body) return;
+			const down = ['ArrowDown', 'PageDown', ' '].includes(e.key);
+			const up = ['ArrowUp', 'PageUp'].includes(e.key);
+			if (!down && !up) return;
+			e.preventDefault();
+			step(down);
+		});
+	}
+	document.addEventListener('astro:page-load', armSteps);
+	armSteps();
+</script>

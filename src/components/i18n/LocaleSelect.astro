@@ -1,71 +1,40 @@
 ---
-import { getLocalePaths, LOCALES } from '../../i18n';
+import { LOCALES, DEFAULT_LOCALE, useTranslations, type Lang } from '../../i18n';
+const t = useTranslations(Astro.currentLocale as Lang);
+// Select drives the client-side switcher (src/scripts/i18n-client.ts) — no navigation
 ---
-
-<div class="language-select-container">
-	<label for="language-select"> </label>
-	<select
-		id="language-select"
-		name="language-select"
-		data-languageSelect
-		aria-label={Astro.currentLocale === 'es'
-			? 'Cambiar idioma del sitio'
-			: Astro.currentLocale === 'pt-br'
-				? 'Alterar idioma do site'
-				: 'Change site language'}
-	>
-		{
-			getLocalePaths(Astro.url).map(({ path, lang }) => (
-				<option
-					label={LOCALES[lang].label}
-					value={path}
-					data-lang={lang}
-					selected={lang === Astro.currentLocale}
-					dir={LOCALES[lang].dir || null}
-				/>
-			))
-		}
-	</select>
-</div>
-
-<script>
-	import { navigate } from 'astro:transitions/client';
-
-	const setupLanguageSelect = () => {
-		const selects = document.querySelectorAll('[data-languageSelect]');
-		selects.forEach((select) => {
-			select.addEventListener('change', (event) => {
-				const target = event.target as HTMLSelectElement;
-				const lang = target.selectedOptions[0]?.dataset.lang;
-				const url = target.value;
-				if (lang && url) {
-					localStorage.setItem('selectedLang', lang);
-					const hash = window.location.hash;
-					navigate(url + hash, { history: 'replace' });
-				}
-			});
-		});
-	};
-
-	setupLanguageSelect();
-	document.addEventListener('astro:after-swap', setupLanguageSelect);
-</script>
-
+<select id="localeSelect" aria-label={t('i18n.localeselect.language')}>
+	{
+		Object.entries(LOCALES).map(([lang, cfg]) => (
+			<option value={lang} selected={lang === DEFAULT_LOCALE}>
+				{cfg.label}
+			</option>
+		))
+	}
+</select>
+<script is:inline>try{var __l=localStorage.getItem('lang');if(__l)document.getElementById('localeSelect').value=__l}catch(e){}</script>
 <style>
-	select {
-		font-family: 'Poppins';
-		border-radius: 4px;
-		font-size: var(--small-font-size);
-		font-weight: var(--font-medium);
-		height: 30px;
-		padding: 0 28px 0 15px;
-		background-color: var(--body-color);
-		color: var(--title-color);
-		appearance: none;
-		-webkit-appearance: none;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='gray' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-		background-repeat: no-repeat;
-		background-position: right 8px center;
+	#localeSelect {
+		background: none;
+		border: 1px solid color-mix(in srgb, var(--text-color) 25%, transparent);
+		border-radius: var(--radius-sm);
+		padding: 0.1rem 0.3rem;
+		font-size: 0.75rem;
+		color: var(--text-color);
 		cursor: pointer;
 	}
 </style>
+<script>
+	function setupLocaleSelect() {
+		const sel = document.getElementById('localeSelect') as HTMLSelectElement | null;
+		if (!sel || sel.dataset.bound) return;
+		sel.dataset.bound = 'true';
+		const w = window as any;
+		sel.value = w.__i18n?.lang ?? 'en';
+		sel.addEventListener('change', () => w.__i18n?.setLocale(sel.value));
+		window.addEventListener('locale-change', () => {
+			sel.value = w.__i18n?.lang ?? 'en';
+		});
+	}
+	document.addEventListener('astro:page-load', setupLocaleSelect);
+</script>

@@ -1,0 +1,17 @@
+---
+import About from '@sections/About.astro';
+import Layout from '@layouts/Layout.astro';
+import { DEFAULT_LOCALE, type Lang } from 'src/i18n';
+
+
+const titles: Record<Lang, string> = {
+	en: 'About | Juan Felipe Rada',
+	es: 'Acerca de mí | Juan Felipe Rada',
+	'pt-br': 'Sobre mim | Juan Felipe Rada',
+};
+const locale = DEFAULT_LOCALE;
+---
+
+<Layout title={titles[locale]}>
+	<About />
+</Layout>

@@ -1,8 +1,13 @@
 ---
+import type { Slide } from '@data/slider';
+import { useTranslations, type Lang } from 'src/i18n';
+
+const t = useTranslations(Astro.currentLocale as Lang);
+
 type PageProperties = 'wibx' | 'birdi';
 interface ImageProps {
 	format: 'image';
-	data: string[];
+	data: Slide[];
 	type: PageProperties;
 }
 
@@ -17,21 +22,64 @@ interface VideoProps {
 
 type Props = ImageProps | VideoProps;
 const { format, data, type }: Props = Astro.props;
+
+// Repeat the image slides so the marquee track is always wider than the
+// viewport (even on ultra-wide screens) and can loop seamlessly: the loop
+// translates by exactly one set's width, so the next copy backfills the
+// right edge before the keyframe resets.
+const SETS = 3;
+const loopData = format === 'image' ? Array.from({ length: SETS }, () => data).flat() : data;
 ---
 
-<section class={`slider-container ${type}`}>
-	{
-		format === 'image' ? (
-			<div class="slider">
-				{data.map((slide, i) => (
-					<a name={`slide_${i + 1}`}>
-						<img draggable="false" src={slide} />
-					</a>
+{
+	format === 'image' ? (
+		<section
+			class={`marquee ${type}`}
+			aria-label={t('slider.project-screenshots')}
+		>
+			<ul class="marquee__track" style={`--set-count:${data.length}`}>
+				{(loopData as Slide[]).map((slide, i) => (
+					<li
+						class="marquee__card"
+						tabindex="0"
+						role="button"
+						aria-label={t('slider.enlarge-slide-description-slide-i-1')}
+					>
+						<img
+							draggable="false"
+							src={slide.src}
+							alt={t({
+								en: slide.description ?? `Slide ${i + 1}`,
+								es: slide.description ?? `Diapositiva ${i + 1}`,
+								'pt-br': slide.description ?? `Slide ${i + 1}`,
+							})}
+						/>
+					</li>
 				))}
-			</div>
-		) : (
+			</ul>
+			<dialog
+				class="marquee__dialog"
+				aria-label={t('slider.enlarged-screenshot')}
+			>
+				<img alt="" />
+				<button
+					class="marquee__nav marquee__nav--prev"
+					aria-label={t('slider.previous-image')}
+				>
+					‹
+				</button>
+				<button
+					class="marquee__nav marquee__nav--next"
+					aria-label={t('slider.next-image')}
+				>
+					›
+				</button>
+			</dialog>
+		</section>
+	) : (
+		<section class={`slider-container ${type}`}>
 			<div class="slider">
-				{data.map((slide, i) => (
+				{(data as VideoProps['data']).map((slide, i) => (
 					<a name={`slide_${i + 1}`}>
 						<video
 							width="180"
@@ -45,184 +93,233 @@ const { format, data, type }: Props = Astro.props;
 					</a>
 				))}
 			</div>
-		)
-	}
-
-	<ul class="markers">
-		{
-			data.map((_slide) => (
-				<li>
-					<a />
-				</li>
-			))
-		}
-	</ul>
-</section>
+		</section>
+	)
+}
 
 <style>
+	/* ===== Right-to-left marquee that pauses on hover ===== */
+	.marquee {
+		--card-w: 640px;
+		--card-h: 420px;
+		--gap: 1rem;
+		/* Clip the loop horizontally (off-screen cards hidden, edge cards cut
+		   at the viewport like interrapidisimo's full-bleed carousel). No
+		   mask: it faded/clipped cards at the edges. */
+		overflow-x: clip;
+		overflow-y: visible;
+		/* Break out of the article's centered 768px column so the loop uses
+		   the entire viewport width. */
+		width: 100vw;
+		margin-inline: calc(50% - 50vw);
+		margin-block: 1rem;
+	}
+
+	.marquee__track {
+		display: flex;
+		gap: var(--gap);
+		width: max-content;
+		list-style: none;
+		animation: marquee-scroll 60s linear infinite;
+	}
+
+	/* Pause the loop and lift the captions when the user hovers the section. */
+	.marquee:hover .marquee__track,
+	.marquee:focus-within .marquee__track {
+		animation-play-state: paused;
+	}
+
+	@keyframes marquee-scroll {
+		from {
+			transform: translateX(0);
+		}
+		/* Travel exactly one original set's width (card + gap, per card). The
+		   next identical copy then occupies the starting position, so the
+		   reset is seamless at any viewport width. */
+		to {
+			transform: translateX(calc(-1 * var(--set-count) * (var(--card-w) + var(--gap))));
+		}
+	}
+
+	.marquee__card {
+		position: relative;
+		flex: 0 0 var(--card-w);
+		height: var(--card-h);
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		cursor: pointer;
+		transition:
+			transform 0.3s ease,
+			box-shadow 0.3s ease;
+	}
+
+	/* Slight magnification on hover/focus (transform, so the loop layout
+	   doesn't reflow). */
+	.marquee__card:hover,
+	.marquee__card:focus-visible {
+		transform: scale(1.03);
+		z-index: 2;
+	}
+
+	/* Native <dialog> lightbox. margin:auto re-centers the modal — the
+	   global `* { margin: 0 }` reset clobbers the UA default. */
+	.marquee__dialog {
+		border: 0;
+		padding: 0;
+		background: transparent;
+		margin: auto;
+	}
+	.marquee__dialog::backdrop {
+		background: rgba(0, 0, 0, 0.8);
+	}
+	.marquee__dialog img {
+		display: block;
+		max-width: 92vw;
+		max-height: 85vh;
+		border-radius: var(--radius-md);
+	}
+
+	/* Prev/next arrows overlaid on the sides of the image. */
+	.marquee__nav {
+		position: fixed;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 1;
+		border: 0;
+		border-radius: 50%;
+		width: 3rem;
+		height: 3rem;
+		font-size: 2rem;
+		line-height: 1;
+		color: #fff;
+		background: rgba(0, 0, 0, 0.5);
+		cursor: pointer;
+	}
+	.marquee__nav:hover {
+		background: rgba(0, 0, 0, 0.8);
+	}
+	.marquee__nav--prev {
+		left: 1rem;
+	}
+	.marquee__nav--next {
+		right: 1rem;
+	}
+
+	.marquee__card img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* Brand-colored glow instead of a hard outline. */
+	.marquee.wibx {
+		--glow: var(--marker-color-wibx);
+	}
+	.marquee.birdi {
+		--glow: var(--marker-color-birdi);
+	}
+
+	.marquee.wibx .marquee__card,
+	.marquee.birdi .marquee__card {
+		box-shadow:
+			var(--shadow-md),
+			0 0 20px color-mix(in srgb, var(--glow) 35%, transparent);
+	}
+
+	.marquee.wibx .marquee__card:hover,
+	.marquee.wibx .marquee__card:focus-within,
+	.marquee.birdi .marquee__card:hover,
+	.marquee.birdi .marquee__card:focus-within {
+		box-shadow:
+			var(--shadow-lg),
+			0 0 36px color-mix(in srgb, var(--glow) 60%, transparent);
+	}
+
+	/* Respect users who prefer no motion: stop the loop entirely. */
+	@media (prefers-reduced-motion: reduce) {
+		.marquee__track {
+			animation: none;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+	}
+
+	/* ===== Legacy video slider (unchanged behavior) ===== */
 	.slider-container {
-		timeline-scope: --carousel;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
-
 	.slider {
-		scroll-timeline: --carousel x;
 		display: flex;
 		flex-direction: row;
+		gap: 1rem;
 		border-radius: 4px;
 		width: 100%;
-		aspect-ratio: 16/9;
-
-		scroll-snap-type: x mandatory;
-		overscroll-behavior: contain;
-		scroll-behavior: smooth;
-
-		overflow-x: hidden;
-		overflow-y: hidden;
-
-		box-shadow: 0px 0px 50px 10px rgba(255, 255, 255, 0.1);
-		cursor: grab;
+		overflow-x: auto;
 	}
-
-	.slider:active {
-		cursor: grabbing;
-	}
-
-	.markers a {
-		display: block;
-		width: 0.75rem;
-		aspect-ratio: 1;
-		background: var(--marker-color);
-		opacity: 0.7;
-		border-radius: 50%;
-		position: relative;
-	}
-
-	.markers a.active {
-		background: var(--marker-active-color);
-		opacity: 1;
-	}
-
-	.markers a::before {
-		content: '';
-		display: block;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		width: 1rem;
-		height: 1rem;
-		border-radius: 50%;
-		transform: translate(-50%, -50%);
-		opacity: 0;
-		transition: opacity 0.3s;
-	}
-
-	.markers a.active::before {
-		opacity: 1;
-		border: solid var(--marker-active-color) 1px;
-	}
-
-	.slider a {
-		flex: 0 0 100%;
-		width: 100%;
-		scroll-snap-align: center;
-	}
-
-	.slider img {
-		object-fit: cover;
-		width: 100%;
-	}
-
 	.slider a {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
+</style>
 
-	.markers {
-		display: flex;
-		flex-direction: row;
-		gap: 0.25em;
-		list-style: none;
-		font-size: 2em;
-		margin-top: 1em;
-	}
-
-	.slider-container.wibx .markers a {
-		--marker-color: var(--marker-active-color-wibx);
-		--marker-active-color: var(--marker-color-wibx);
-	}
-
-	.slider-container.birdi .markers a {
-		--marker-color: var(--marker-active-color-birdi);
-		--marker-active-color: var(--marker-color-birdi);
+<style is:global>
+	/* Lock page scroll while a lightbox dialog is open. */
+	body:has(.marquee__dialog[open]) {
+		overflow: hidden;
 	}
 </style>
 
-<script is:inline>
-	document.addEventListener('astro:page-load', () => {
-		const sliderContainers = document.querySelectorAll('.slider-container');
-		
-		sliderContainers.forEach((container) => {
-			const slider = container.querySelector('.slider');
-			const markers = container.querySelectorAll('.markers li a');
-			
-			markers.forEach((marker, index) => {
-				marker.style.setProperty('--i', index + 1);
+<script>
+	// Click/Enter a card -> native <dialog> lightbox with the full image,
+	// with prev/next navigation between the section's unique slides.
+	document.querySelectorAll('.marquee').forEach((section) => {
+		const dialog = section.querySelector<HTMLDialogElement>('.marquee__dialog');
+		if (!dialog) return;
+		const full = dialog.querySelector('img')!;
+		const prev = dialog.querySelector<HTMLButtonElement>('.marquee__nav--prev')!;
+		const next = dialog.querySelector<HTMLButtonElement>('.marquee__nav--next')!;
+
+		// Dedupe the loop's repeated sets: one entry per unique image.
+		const slides = [...section.querySelectorAll<HTMLImageElement>('.marquee__card img')].reduce<
+			{ src: string; alt: string }[]
+		>((acc, img) => {
+			if (!acc.some((s) => s.src === img.src)) acc.push({ src: img.src, alt: img.alt });
+			return acc;
+		}, []);
+		let current = 0;
+		const show = (i: number) => {
+			current = (i + slides.length) % slides.length;
+			full.src = slides[current].src;
+			full.alt = slides[current].alt;
+		};
+
+		section.querySelectorAll<HTMLElement>('.marquee__card').forEach((card) => {
+			card.addEventListener('click', () => {
+				const img = card.querySelector('img')!;
+				show(slides.findIndex((s) => s.src === img.src));
+				dialog.showModal();
 			});
+			card.addEventListener('keydown', (e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					card.click();
+				}
+			});
+		});
 
-			const updateActiveMarker = () => {
-				const scrollLeft = slider.scrollLeft;
-				const sliderWidth = slider.clientWidth;
-				const activeIndex = Math.round(scrollLeft / sliderWidth);
-				markers.forEach((marker, index) => {
-					if (index === activeIndex) {
-						marker.classList.add('active');
-					} else {
-						marker.classList.remove('active');
-					}
-				});
-			};
-
-			slider.addEventListener('scroll', updateActiveMarker);
-			updateActiveMarker();
-
-			let isDown = false;
-			let startX;
-			let scrollLeft;
-
-			const startDragging = (e) => {
-				isDown = true;
-				slider.classList.add('active');
-				startX = (e.pageX || e.touches[0].pageX) - slider.offsetLeft;
-				scrollLeft = slider.scrollLeft;
-			};
-
-			const stopDragging = () => {
-				isDown = false;
-				slider.classList.remove('active');
-			};
-
-			const moveSlider = (e) => {
-				if (!isDown) return;
-				e.preventDefault();
-				const x = (e.pageX || e.touches[0].pageX) - slider.offsetLeft;
-				const walk = (x - startX) * 2;
-				slider.scrollLeft = scrollLeft - walk;
-			};
-
-			slider.addEventListener('mousedown', startDragging);
-			slider.addEventListener('touchstart', startDragging);
-
-			slider.addEventListener('mouseleave', stopDragging);
-			slider.addEventListener('mouseup', stopDragging);
-			slider.addEventListener('touchend', stopDragging);
-			slider.addEventListener('touchcancel', stopDragging);
-
-			slider.addEventListener('mousemove', moveSlider);
-			slider.addEventListener('touchmove', moveSlider);
+		prev.addEventListener('click', () => show(current - 1));
+		next.addEventListener('click', () => show(current + 1));
+		dialog.addEventListener('keydown', (e) => {
+			if (e.key === 'ArrowLeft') show(current - 1);
+			if (e.key === 'ArrowRight') show(current + 1);
+		});
+		// Backdrop click closes (Esc already closes natively).
+		dialog.addEventListener('click', (e) => {
+			if (e.target === dialog) dialog.close();
 		});
 	});
 </script>

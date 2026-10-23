@@ -1,0 +1,100 @@
+---
+/**
+ * Basalt moai — head and shoulders, like the real one framed on the
+ * About wall. SVG approximation: dark volcanic stone lit from the
+ * upper right, granular texture via speckles.
+ */
+---
+
+<div class="moai" role="img" aria-label="Stone carving of a moai">
+	<svg viewBox="0 0 100 120" fill="none" aria-hidden="true">
+		<defs>
+			<linearGradient id="moai-stone" x1="1" y1="0" x2="0.2" y2="1">
+				<stop offset="0" stop-color="#8a8a8a"></stop>
+				<stop offset="0.5" stop-color="#5f5f5f"></stop>
+				<stop offset="1" stop-color="#3a3a3a"></stop>
+			</linearGradient>
+			<linearGradient id="moai-stone-torso" x1="1" y1="0" x2="0" y2="1">
+				<stop offset="0" stop-color="#777167"></stop>
+				<stop offset="1" stop-color="#3d3833"></stop>
+			</linearGradient>
+		</defs>
+
+		<!-- upper torso -->
+		<path
+			d="M13 120c2-17 9-28 21-33 5 3 10 4 16 4s11-1 16-4c12 5 19 16 21 33H13Z"
+			fill="url(#moai-stone-torso)"></path>
+		<!-- head: blocky, rounded corners, jaw tucks into the torso -->
+		<path
+			d="M27 18c0-8 5-12 12-12h22c7 0 12 4 12 12v66c0 6-6 10-14 10h-18c-8 0-14-4-14-10V18Z"
+			fill="url(#moai-stone)"></path>
+
+		<!-- heavy brow ridge: the dominant feature, full width + cast shadow -->
+		<path d="M27 30h46v9c-7-4-15-5-23-5s-16 1-23 5v-9Z" fill="#1c1c1c"></path>
+		<path
+			d="M29 39c7-3 14-4 21-4s14 1 21 4v3c-7-3-14-4-21-4s-14 1-21 4v-3Z"
+			fill="#141414"
+			opacity="0.6"></path>
+		<!-- long nose, lit from the right -->
+		<path d="M50 38v28" stroke="#2e2e2e" stroke-width="5" stroke-linecap="round"></path>
+		<path d="M52 39v26" stroke="#9a9a9a" stroke-width="1.6" stroke-linecap="round" opacity="0.8"
+		></path>
+		<!-- nostril line -->
+		<path d="M44 65h12" stroke="#2e2e2e" stroke-width="2.5" stroke-linecap="round"></path>
+		<!-- thin pursed mouth -->
+		<path d="M42 73h16" stroke="#1c1c1c" stroke-width="2.4" stroke-linecap="round"></path>
+		<!-- chin -->
+		<path d="M45 82h10" stroke="#2e2e2e" stroke-width="1.6" stroke-linecap="round" opacity="0.7"
+		></path>
+		<!-- elongated ears -->
+		<path
+			d="M31 36c-2 6-2 18 0 26"
+			stroke="#2e2e2e"
+			stroke-width="2"
+			stroke-linecap="round"
+			opacity="0.8"></path>
+		<path
+			d="M69 36c2 6 2 18 0 26"
+			stroke="#2e2e2e"
+			stroke-width="2"
+			stroke-linecap="round"
+			opacity="0.8"></path>
+		<!-- cheek shadow, left side away from the light -->
+		<path d="M32 30c-3 14-3 36-1 52 2 3 4 5 4 5-4-18-4-40-3-57Z" fill="#262626" opacity="0.55"
+		></path>
+		<!-- highlight, right side toward the light -->
+		<path d="M66 26c3 14 3 34 1 50-1 4-3 7-3 7 4-19 4-41 2-57Z" fill="#c9c9c9" opacity="0.5"></path>
+
+		<!-- basalt speckle texture -->
+		<g fill="#242424" opacity="0.35">
+			<circle cx="37" cy="24" r="0.9"></circle>
+			<circle cx="55" cy="20" r="0.8"></circle>
+			<circle cx="64" cy="30" r="1"></circle>
+			<circle cx="44" cy="55" r="0.9"></circle>
+			<circle cx="58" cy="58" r="0.8"></circle>
+			<circle cx="35" cy="66" r="1"></circle>
+			<circle cx="62" cy="70" r="0.9"></circle>
+			<circle cx="48" cy="30" r="0.7"></circle>
+			<circle cx="40" cy="77" r="0.8"></circle>
+			<circle cx="56" cy="78" r="0.7"></circle>
+			<circle cx="30" cy="95" r="1"></circle>
+			<circle cx="45" cy="100" r="0.9"></circle>
+			<circle cx="60" cy="98" r="1"></circle>
+			<circle cx="70" cy="104" r="0.9"></circle>
+			<circle cx="38" cy="108" r="0.8"></circle>
+			<circle cx="52" cy="112" r="0.9"></circle>
+		</g>
+	</svg>
+</div>
+
+<style>
+	.moai {
+		width: 4.25rem;
+		filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.25));
+	}
+	.moai svg {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+</style>

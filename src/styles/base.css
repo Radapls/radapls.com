@@ -1,7 +1,78 @@
+/* Self-hosted PP Gatwick (src/assets/fonts): three cuts, each in
+   Extralight (200) and Semibold (600). Swap the family on --title-font
+   to switch cuts. */
+@font-face {
+	font-family: 'PP Gatwick Glider';
+	src: url('../assets/fonts/PPGatwick-GliderExtralight.otf') format('opentype');
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'PP Gatwick Glider';
+	src: url('../assets/fonts/PPGatwick-GliderSemibold.otf') format('opentype');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'PP Gatwick Jet';
+	src: url('../assets/fonts/PPGatwick-JetExtralight.otf') format('opentype');
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'PP Gatwick Jet';
+	src: url('../assets/fonts/PPGatwick-JetSemibold.otf') format('opentype');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'PP Gatwick Jumbo';
+	src: url('../assets/fonts/PPGatwick-JumboExtralight.otf') format('opentype');
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'PP Gatwick Jumbo';
+	src: url('../assets/fonts/PPGatwick-JumboSemibold.otf') format('opentype');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* Specimen-sheet faces (src/assets/fonts): Bayer Universal, Insignia
+   and OCR-A BT, only used on the About type poster */
+@font-face {
+	font-family: 'Bayer Universal';
+	src: url('../assets/fonts/BayerUniversal-Regular.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Insignia';
+	src: url('../assets/fonts/Insignia.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'OCR-A BT';
+	src: url('../assets/fonts/OCR-a___.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
 :root {
-	--header-height: 3rem;
+	--header-height: 5rem;
 
 	--body-font: 'Poppins', sans-serif;
+	--title-font: 'PP Gatwick Jumbo', 'Poppins', sans-serif;
 
 	--big-font-size: 2rem;
 	--h1-font-size: 1.5rem;
@@ -27,6 +98,12 @@
 	--z-tooltip: 10;
 	--z-fixed: 100;
 	--z-modal: 1000;
+
+	/*========== Radius scale ==========*/
+	--radius-sm: 4px;
+	--radius-md: 8px;
+	--radius-lg: 32px;
+	--radius-pill: 999px;
 }
 
 /* Font size for large devices */
@@ -46,7 +123,14 @@
 .nav__btns {
 	display: flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: 0.75rem;
+}
+/* Co-brand header: groups the theme toggle and language switcher */
+.nav__actions {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 1rem;
 }
 .change-theme {
 	font-size: 1.25rem;
@@ -65,16 +149,27 @@
 	margin: 0;
 }
 
-html {
-	scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+/* During an Astro view transition, disable smooth scroll so the router's
+   scroll-to-top doesn't animate visibly before the page swaps. */
+html.is-navigating {
+	scroll-behavior: auto;
 }
 body {
-	margin: 0 0 var(--header-height) 0;
+	margin: 0;
+	padding-top: calc(var(--header-height) + var(--banner-height, 0px));
 	font-family: var(--body-font);
 	font-size: var(--normal-font-size);
 	background-color: var(--body-color);
 	color: var(--text-color);
 	overflow-x: hidden;
+}
+html:has(.snap-page) body {
+	padding-top: var(--banner-height, 0px);
 }
 
 h1,
@@ -82,7 +177,9 @@ h2,
 h3,
 h4 {
 	color: var(--title-color);
+	font-family: var(--title-font);
 	font-weight: var(--font-semi-bold);
+	line-height: 1.15;
 }
 ul {
 	list-style: none;
@@ -90,6 +187,11 @@ ul {
 a {
 	text-decoration: none;
 	cursor: pointer;
+}
+:focus-visible {
+	outline: 3px solid var(--first-color);
+	outline-offset: 2px;
+	border-radius: 2px;
 }
 img {
 	max-width: 100%;
@@ -100,42 +202,141 @@ button {
 }
 /*==================== REUSABLE CSS CLASSES ====================*/
 .section {
-	padding: 2rem 0 4rem;
+	/* Vertical rhythm scales with the viewport instead of fixed rem */
+	padding: max(2.5rem, 5vw) 0 max(4rem, 8vw);
 }
 .section__title {
 	font-size: var(--h1-font-size);
-}
-.section__subtitle {
-	display: block;
-	font-size: var(--small-font-size);
-	margin-bottom: var(--mb-3);
-}
-
-.section__subtitle,
-.section__title {
+	font-family: "PP Gatwick Glider", var(--title-font);
 	text-align: center;
+	/* Breathing room under the title now that sections have no subtitle */
+	margin-bottom: var(--mb-3);
 }
 
 .scroll-lock {
 	overflow-y: hidden;
 }
+/* Step-by-step homepage: each section fills the viewport and the page
+   scrolls in snap steps (hero → about → experience → …). Sections taller
+   than the viewport still scroll freely inside their step. */
+html:has(.snap-page) {
+	scroll-snap-type: y mandatory;
+}
+/* While the stepper animates between steps, native snapping must not
+   fight the animation mid-flight (it causes visible double-corrections). */
+html:has(.snap-page).stepping {
+	scroll-snap-type: none;
+}
+/* The footer is a full step of its own, like every other section. */
+html:has(.snap-page) footer.footer__bg {
+	min-height: 100svh;
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	justify-content: safe center;
+	box-sizing: border-box;
+}
+.snap-page .section {
+	min-height: 100svh;
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	justify-content: safe center; /* falls back to top-aligned */
+	box-sizing: border-box;
+}
+/* Reduced motion: keep plain scrolling, no forced steps. */
+@media (prefers-reduced-motion: reduce) {
+	html:has(.snap-page) {
+		scroll-snap-type: none;
+	}
+	html:has(.snap-page) .header {
+		transition: none;
+	}
+	.snap-page .section {
+		min-height: auto;
+		display: block;
+	}
+	html:has(.snap-page) footer.footer__bg {
+		min-height: auto;
+		display: block;
+	}
+}
 /*==================== LAYOUT ====================*/
+:root {
+	--layout-columns: 4;
+	--layout-gap: clamp(0.75rem, 1.5vw, 1.5rem);
+	--layout-gutter: clamp(1rem, 4vw, 4rem);
+	--layout-max-width: 1600px;
+}
 .container {
-	max-width: 768px;
-	margin-left: var(--mb-1-5);
-	margin-right: var(--mb-1-5);
+	width: min(100% - 2 * var(--layout-gutter), var(--layout-max-width));
+	margin-inline: auto;
+}
+.layout-grid {
+	display: grid;
+	grid-template-columns: repeat(var(--layout-columns), minmax(0, 1fr));
+	gap: var(--layout-gap);
+}
+.layout-items-start {
+	align-items: start;
+}
+.layout-items-center {
+	justify-items: center;
+}
+.layout-stack {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--layout-gap);
+}
+.layout-full {
+	grid-column: 1 / -1;
+}
+.layout-center {
+	grid-column: 1 / -1;
+}
+.layout-rail,
+.layout-main,
+.layout-half {
+	grid-column: 1 / -1;
+}
+.layout-auto-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--layout-card-min, 14rem)), 1fr));
+	gap: var(--layout-gap);
 }
 .grid {
 	display: grid;
-	gap: 1.5rem;
+	gap: var(--layout-gap);
 }
 .header {
 	width: 100%;
 	position: fixed;
-	bottom: 0;
+	top: var(--banner-height, 0px);
 	left: 0;
 	z-index: var(--z-fixed);
 	background-color: var(--body-color);
+	transition:
+		transform 220ms ease,
+		visibility 0s linear;
+}
+.header.header-hidden {
+	transform: translateY(-110%);
+	visibility: hidden;
+	pointer-events: none;
+	transition:
+		transform 220ms ease,
+		visibility 0s linear 220ms;
+}
+html:has(.snap-page).footer-active .header {
+	transform: translateY(-110%);
+	visibility: hidden;
+	transition:
+		transform 220ms ease,
+		visibility 0s linear 220ms;
 }
 
 /*========== SCROLL BAR ==========*/
@@ -154,11 +355,85 @@ button {
 
 /*==================== NAV ====================*/
 .nav {
-	max-width: 968;
+	max-width: none;
 	height: 5rem;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+.nav--portfolio {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	column-gap: var(--layout-gap);
+}
+.nav.nav--cobrand {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	column-gap: var(--layout-gap);
+}
+.nav.nav--cobrand .nav__back {
+	grid-column: 1;
+	grid-row: 1;
+}
+.nav.nav--cobrand .co-brand {
+	grid-column: 2;
+	grid-row: 1;
+}
+.nav.nav--cobrand .nav__actions {
+	grid-column: 3;
+	grid-row: 1;
+	justify-self: end;
+}
+.nav__back {
+	grid-column: 1;
+	grid-row: 1;
+	align-self: center;
+	justify-self: start;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	color: var(--title-color);
+	border-radius: 50%;
+	transition: color 0.2s ease, background-color 0.2s ease;
+}
+.nav__back span {
+	font-family: var(--title-font);
+	font-size: 1.75rem;
+	line-height: 1;
+}
+.nav__back:hover {
+	color: var(--first-color);
+	background-color: color-mix(in srgb, var(--first-color) 10%, transparent);
+}
+.nav--with-back .nav__toggle {
+	margin-left: 2.5rem;
+}
+@media screen and (min-width: 768px) {
+	.nav--with-back .nav__menu {
+		padding-left: 3rem;
+	}
+}
+.nav--portfolio .nav__toggle {
+	grid-column: 1;
+	grid-row: 1;
+	justify-self: start;
+}
+.nav--portfolio .nav__logo {
+	grid-column: 2;
+	grid-row: 1;
+}
+.nav--portfolio .nav__menu {
+	grid-column: 1;
+	grid-row: 1;
+	justify-self: start;
+}
+.nav--portfolio .nav__btns {
+	grid-column: 3;
+	grid-row: 1;
+	justify-self: end;
 }
 .nav__logo,
 .nav__toggle {
@@ -189,14 +464,35 @@ button {
 @media screen and (max-width: 767px) {
 	.nav__menu {
 		position: fixed;
-		bottom: -100%;
+		top: calc(5rem + var(--banner-height, 0px));
+		bottom: auto;
 		left: 0;
 		width: 100%;
 		background-color: var(--body-color);
 		padding: 2rem 1.5rem 4rem;
-		box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.15);
-		border-radius: 1.5rem 1.5rem 0 0;
-		transition: 0.3s;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+		border-radius: 0 0 1.5rem 1.5rem;
+		transform: translateY(-120%);
+		visibility: hidden;
+		transition:
+			transform 0.3s,
+			visibility 0.3s;
+	}
+	.nav--portfolio .nav__logo {
+		justify-self: center;
+	}
+	.nav--portfolio .nav__btns {
+		gap: 0.5rem;
+	}
+	.nav--portfolio .nav__list {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+	.nav--portfolio .nav__link {
+		flex-direction: row;
+		gap: 0.75rem;
 	}
 }
 .nav__list {
@@ -220,7 +516,8 @@ button {
 .nav__close {
 	position: absolute;
 	right: 1.3rem;
-	bottom: 1.5rem;
+	top: 1.5rem;
+	bottom: auto;
 	font-size: 1.5rem;
 	cursor: pointer;
 	color: var(--first-color);
@@ -242,7 +539,8 @@ button {
 
 /* show menu */
 .show-menu {
-	bottom: 0;
+	transform: translateY(0);
+	visibility: visible;
 }
 
 /* Active link */
@@ -251,20 +549,10 @@ button {
 }
 /* Change background header */
 .scroll-header {
-	box-shadow: 0 -1px 4px var(--text-color);
+	box-shadow: var(--shadow-sm);
 }
 
 /*==================== HOME ====================*/
-.home__container {
-	gap: 1rem;
-}
-.home__content {
-	display: grid;
-	grid-template-columns: 1fr;
-	padding-top: 3.5rem;
-	align-items: center;
-	grid-auto-flow: dense;
-}
 .home__social {
 	display: grid;
 	grid-template-columns: max-content;
@@ -333,13 +621,20 @@ button {
 	display: inline-block;
 	background-color: var(--first-color);
 	color: #fff;
-	padding: 1rem;
-	border-radius: 0.5rem;
-	font-weight: var(--font-medium);
-	transition: background-color 200ms ease-in-out;
+	padding: 1rem 1.5rem;
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-sm);
+	font-weight: var(--font-semi-bold);
+	letter-spacing: 0.05em;
+	transition:
+		background-color 200ms ease-in-out,
+		box-shadow 200ms ease-in-out,
+		transform 200ms ease-in-out;
 }
 .button:hover {
 	background-color: var(--first-color-alt);
+	box-shadow: var(--shadow-md);
+	transform: translateY(-2px);
 }
 .button__icon {
 	font-size: 1.25rem;
@@ -378,7 +673,7 @@ button {
 	background-color: var(--first-color);
 	color: #fff;
 	padding: 1rem;
-	border-radius: 0.5rem;
+	border-radius: var(--radius-md);
 	font-weight: var(--font-medium);
 	font-size: var(--normal-font-size);
 	font-family: var(--body-font);
@@ -413,10 +708,102 @@ button {
 	font-size: 1.8rem;
 	margin-right: var(--mb-0-25);
 }
-.qualification__data {
+/* Horizontal timeline: natively scrollable container. The center line is
+   a background (backgrounds don't scroll with the content), so it stays
+   spanning the full width while the track moves. */
+.qualification__sections {
+	overflow-x: auto;
+	overflow-y: hidden;
+	/* Native scrollbar hidden (it would steal layout space); navigation
+	   is done with the prev/next arrows and swipe. */
+	scrollbar-width: none;
+	background-image: linear-gradient(var(--first-color), var(--first-color));
+	background-repeat: no-repeat;
+	background-position: 0 50%;
+	background-size: 100% 2px;
+}
+.qualification__sections::-webkit-scrollbar {
+	display: none;
+}
+/* Prev/next arrows flanking the timeline, on the center line */
+.qualification__viewport {
+	position: relative;
+}
+.qualification__arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 5;
 	display: grid;
-	grid-template-columns: 1fr max-content 1fr;
-	column-gap: 1.5rem;
+	place-items: center;
+	width: 2.4rem;
+	height: 2.4rem;
+	font-size: 1.5rem;
+	line-height: 1;
+	border-radius: 50%;
+	border: none;
+	background-color: var(--container-color);
+	color: var(--title-color);
+	box-shadow: var(--shadow-md);
+	cursor: pointer;
+	transition:
+		background-color 200ms ease,
+		color 200ms ease,
+		opacity 200ms ease;
+}
+.qualification__arrow:hover {
+	background-color: var(--first-color);
+	color: #fff;
+}
+.qualification__arrow:disabled,
+.qualification__arrow.is-hidden {
+	opacity: 0;
+	cursor: default;
+	pointer-events: none;
+}
+.qualification__arrow--prev {
+	left: 0.25rem;
+}
+.qualification__arrow--next {
+	right: 0.25rem;
+}
+/* Page scrollbar: same overlay treatment (native bar hidden, thin
+   indicator fades in while scrolling). */
+html {
+	scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+	display: none;
+}
+.page-scrollbar {
+	position: fixed;
+	top: 0;
+	right: 0.5rem;
+	bottom: 0;
+	width: 4px;
+	z-index: 100;
+	opacity: 0;
+	transition: opacity 400ms ease;
+	pointer-events: none;
+}
+.page-scrollbar.is-visible {
+	opacity: 1;
+}
+.page-scrollbar span {
+	display: block;
+	width: 100%;
+	border-radius: 999px;
+	background-color: var(--first-color);
+}
+.qualification__data {
+	position: relative;
+	width: 300px;
+	flex: none;
+}
+.qualification__marker {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
 }
 .qualification__title {
 	font-size: var(--normal-font-size);
@@ -432,25 +819,132 @@ button {
 	color: var(--text-color-light);
 }
 .qualification__rounder {
-	display: inline-block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	width: 13px;
 	height: 13px;
 	background-color: var(--first-color);
 	border-radius: 50%;
+	transition: transform 300ms ease;
 }
+/* Vertical stub linking the center line to the card above/below it */
 .qualification__line {
-	display: block;
+	position: absolute;
+	left: calc(50% - 1px);
 	width: 2px;
-	height: 100%;
+	height: 2rem;
 	background-color: var(--first-color);
-	transform: translate(6px, -8px);
+}
+.qualification__data:nth-child(odd) .qualification__line {
+	bottom: 50%;
+}
+.qualification__data:nth-child(even) .qualification__line {
+	top: 50%;
+}
+.qualification__card {
+	position: absolute;
+	left: 0;
+	right: 0;
+	/* Center the card content over its dot on the timeline line */
+	text-align: center;
+	transition:
+		transform 300ms ease,
+		opacity 300ms ease;
+}
+/* Cards alternate above and below the center line */
+.qualification__data:nth-child(odd) .qualification__card {
+	bottom: calc(50% + 2rem);
+}
+.qualification__data:nth-child(even) .qualification__card {
+	top: calc(50% + 2rem);
+}
+/* The card nearest the viewport center is magnified; the rest recede */
+.qualification__data:not(.is-centered) .qualification__card {
+	opacity: 0.55;
+}
+.qualification__data.is-centered .qualification__card {
+	transform: scale(1.12);
+}
+.qualification__data.is-centered .qualification__rounder {
+	transform: translate(-50%, -50%) scale(1.4);
+}
+.qualification__data.is-centered .qualification__title {
+	color: var(--first-color);
 }
 .qualification [data-content] {
 	display: none;
 }
 .qualification__active[data-content] {
-	display: block;
+	display: flex;
+	align-items: stretch;
+	gap: 3rem;
+	width: max-content;
+	position: relative;
+	/* Side padding (half a card) lets the first and last card reach the
+	   container's center, so every card can be highlighted. */
+	padding-inline: calc(50% - 150px);
+	/* Fixed height leaves room above and below the center line */
+	height: 26rem;
+}
+/* Contact teaser in the empty zone left of the first (most recent) card:
+   on the center line, dashed outline so it reads as an open slot — the
+   future — rather than a timeline card. Never highlighted (it is not a
+   .qualification__data element). */
+.qualification__cta {
+	position: absolute;
+	left: 1.25rem;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 1;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 0.4rem;
+	width: max-content;
+	max-width: 8.5rem;
+	padding: 0.6rem 0.75rem;
+	border: 1.5px dashed var(--first-color);
+	border-radius: var(--radius-md);
+	background-color: var(--container-color);
+	box-shadow: var(--shadow-sm);
+	text-align: center;
+	text-decoration: none;
+	transition:
+		box-shadow 200ms ease,
+		transform 200ms ease;
+}
+.qualification__cta:hover {
+	box-shadow: var(--shadow-md);
+	transform: translateY(-50%) scale(1.03);
+}
+.qualification__cta-title {
+	font-size: var(--small-font-size);
+	font-weight: var(--font-semi-bold);
+	line-height: 1.3;
+	color: var(--title-color);
+}
+/* On narrow screens the left zone is too small for the teaser */
+@media screen and (max-width: 768px) {
+	.qualification__cta {
+		display: none;
+	}
 }
 .qualification__button.qualification__active {
 	color: var(--first-color);
+}
+/*==================== WCAG 1.4.3 dark-theme fixes ====================*/
+/* The dark theme's bright accent fails contrast under white text; filled
+   surfaces use the deep variant instead (4.8:1). */
+.dark .button,
+.dark .button-form {
+	background-color: var(--first-color-deep);
+}
+.dark .button:hover,
+.dark .button-form:hover {
+	background-color: var(--first-color-deep-alt);
+}
+.dark .button--white {
+	color: var(--first-color-deep);
 }

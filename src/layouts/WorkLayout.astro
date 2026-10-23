@@ -18,7 +18,10 @@ const { title, description, noLinks, variant } = Astro.props;
 </Base>
 
 <style>
+	/* Global .container went full-bleed; cap prose width for readability. */
 	article {
+		max-width: 768px;
+
 		> * {
 			margin-block: 1.2em 0;
 			margin-inline: 0;
@@ -26,21 +29,23 @@ const { title, description, noLinks, variant } = Astro.props;
 
 		p {
 			font-weight: 400;
+			line-height: 1.75;
+			margin-block: 1.5em 0;
 		}
 
 		h1 {
-			font-size: 1.5rem;
+			font-size: 2rem;
 			text-align: center;
+			margin-block-start: 0.5em;
 		}
 
 		h2 {
-			margin-block: 3em 0;
+			margin-block: 2.5em 0;
 			padding-block-end: 0.2em;
-			border-inline-start: 4px solid var(--color-accent);
-			padding-inline-start: var(--sp-s);
+			border-inline-start: 4px solid var(--first-color);
+			padding-inline-start: var(--mb-1);
 			line-height: 1.4;
 			font-size: 1.6rem;
-			text-align: center;
 		}
 
 		h3 {
@@ -114,13 +119,13 @@ const { title, description, noLinks, variant } = Astro.props;
 		strong {
 			background: linear-gradient(
 				transparent 60%,
-				color-mix(in srgb, var(--color-theme) 20%, transparent) 40%
+				color-mix(in srgb, var(--first-color) 20%, transparent) 40%
 			);
 		}
 
 		:not(pre) code {
 			font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
-			color: var(--color-theme);
+			color: var(--first-color);
 			background-color: color-mix(in srgb, var(--first-color) 8%, transparent);
 			padding-block: 0.2em;
 			padding-inline: 0.4em;
@@ -168,7 +173,7 @@ const { title, description, noLinks, variant } = Astro.props;
 
 		a {
 			text-decoration: underline;
-			color: var(--color-theme);
+			color: var(--first-color);
 			font-weight: 500;
 			&:visited {
 				filter: brightness(80%);
@@ -217,7 +222,7 @@ const { title, description, noLinks, variant } = Astro.props;
 		details {
 			background-color: color-mix(in srgb, var(--first-color) 8%, transparent);
 			border: 0.12em solid color-mix(in srgb, var(--first-color) 10%, transparent);
-			padding: var(--sp-s);
+			padding: var(--mb-1);
 			border-radius: 10px;
 			overflow: hidden;
 			p:empty {
@@ -230,11 +235,11 @@ const { title, description, noLinks, variant } = Astro.props;
 				white-space: nowrap;
 				display: block;
 				position: relative;
-				margin: calc(-1 * var(--sp-s));
-				padding: var(--sp-s);
-				padding-inline-start: calc(var(--sp-s) + 1.8em);
+				margin: calc(-1 * var(--mb-1));
+				padding: var(--mb-1);
+				padding-inline-start: calc(var(--mb-1) + 1.8em);
 				cursor: pointer;
-				background-color: var(--color-base);
+				background-color: var(--container-color);
 				line-height: 1.2;
 				&::-webkit-details-marker {
 					display: none;
@@ -243,7 +248,7 @@ const { title, description, noLinks, variant } = Astro.props;
 					content: '';
 					display: block;
 					position: absolute;
-					inset: var(--sp-s);
+					inset: var(--mb-1);
 					width: 1.2em;
 					aspect-ratio: 1;
 					background: color-mix(in srgb, var(--first-color) 20%, transparent);
@@ -256,7 +261,7 @@ const { title, description, noLinks, variant } = Astro.props;
 			&[open] summary {
 				text-overflow: unset;
 				white-space: unset;
-				margin-block-end: var(--sp-s);
+				margin-block-end: var(--mb-1);
 				&::before {
 					rotate: x 180deg;
 				}

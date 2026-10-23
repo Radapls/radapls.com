@@ -10,34 +10,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 	type="button"
 	aria-label={t({ en: 'Scroll to top', es: 'Volver arriba', 'pt-br': 'Voltar ao topo' })}
 >
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 18.256 18.256"
-		style="transition:.3s"
-		class="scrollup__icon"
-	>
-		<g transform="translate(5.363 5.325)">
-			<path
-				d="M14.581,7.05,7.05,14.581"
-				transform="translate(-7.05 -7.012)"
-				fill="none"
-				stroke="var(--container-color)"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="1.5"></path>
-			<path
-				d="M10,7l5.287.037.038,5.287"
-				transform="translate(-7.756 -7)"
-				fill="none"
-				stroke="var(--container-color)"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="1.5"></path>
-		</g>
-		<path d="M0,0H18.256V18.256H0Z" fill="none"></path>
-	</svg>
+	<span class="scrollup__icon" aria-hidden="true">↑</span>
 </button>
 
 <script>
@@ -76,7 +49,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		border: 0;
 		opacity: 0;
 		padding: 0.5rem;
-		border-radius: 0.5rem;
+		border-radius: var(--radius-pill);
 		z-index: var(--z-tooltip);
 		transition: 0.4s;
 		display: flex;
@@ -90,9 +63,10 @@ const t = useTranslations(Astro.currentLocale as Lang);
 	}
 
 	.scrollup__icon {
+		font-family: var(--title-font);
 		font-size: 1.5rem;
+		line-height: 1;
 		color: var(--container-color);
-		rotate: 315deg;
 	}
 
 	.show-scroll {

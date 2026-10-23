@@ -69,7 +69,7 @@
 }
 
 :root {
-	--header-height: 3rem;
+	--header-height: 5rem;
 
 	--body-font: 'Poppins', sans-serif;
 	--title-font: 'PP Gatwick Glider', 'Poppins', sans-serif;
@@ -100,9 +100,9 @@
 	--z-modal: 1000;
 
 	/*========== Radius scale ==========*/
-	--radius-sm: 4px;
-	--radius-md: 8px;
-	--radius-lg: 16px;
+	--radius-sm: 999px;
+	--radius-md: 999px;
+	--radius-lg: 32px;
 	--radius-pill: 999px;
 }
 
@@ -160,12 +160,16 @@ html.is-navigating {
 	scroll-behavior: auto;
 }
 body {
-	margin: 0 0 var(--header-height) 0;
+	margin: 0;
+	padding-top: calc(var(--header-height) + var(--banner-height, 0px));
 	font-family: var(--body-font);
 	font-size: var(--normal-font-size);
 	background-color: var(--body-color);
 	color: var(--text-color);
 	overflow-x: hidden;
+}
+html:has(.snap-page) body {
+	padding-top: var(--banner-height, 0px);
 }
 
 h1,
@@ -243,12 +247,13 @@ html:has(.snap-page) footer.footer__bg {
 	justify-content: safe center; /* falls back to top-aligned */
 	box-sizing: border-box;
 }
-/* Reduced motion: keep plain scrolling, no forced steps. The footer
-   switch sets [data-reduce-motion] on <html>, so the manual toggle
-   gets the same treatment as the OS preference. */
+/* Reduced motion: keep plain scrolling, no forced steps. */
 @media (prefers-reduced-motion: reduce) {
 	html:has(.snap-page) {
 		scroll-snap-type: none;
+	}
+	html:has(.snap-page) .header {
+		transition: none;
 	}
 	.snap-page .section {
 		min-height: auto;
@@ -259,39 +264,78 @@ html:has(.snap-page) footer.footer__bg {
 		display: block;
 	}
 }
-html[data-reduce-motion] {
-	scroll-snap-type: none;
-}
-html[data-reduce-motion] .snap-page .section,
-html[data-reduce-motion] footer.footer__bg {
-	min-height: auto;
-	display: block;
-}
-html[data-reduce-motion] *,
-html[data-reduce-motion] *::before,
-html[data-reduce-motion] *::after {
-	animation-duration: 0.01ms !important;
-	animation-iteration-count: 1 !important;
-	transition-duration: 0.01ms !important;
-}
 /*==================== LAYOUT ====================*/
+:root {
+	--layout-columns: 4;
+	--layout-gap: clamp(0.75rem, 1.5vw, 1.5rem);
+	--layout-gutter: clamp(1rem, 4vw, 4rem);
+	--layout-max-width: 1600px;
+}
 .container {
-	/* Full-bleed layout: fluid width with viewport-scaled gutters, capped
-	   for readability on ultra-wide screens. */
-	width: min(100% - 2 * clamp(1rem, 4vw, 4rem), 1600px);
+	width: min(100% - 2 * var(--layout-gutter), var(--layout-max-width));
 	margin-inline: auto;
+}
+.layout-grid {
+	display: grid;
+	grid-template-columns: repeat(var(--layout-columns), minmax(0, 1fr));
+	gap: var(--layout-gap);
+}
+.layout-items-start {
+	align-items: start;
+}
+.layout-items-center {
+	justify-items: center;
+}
+.layout-stack {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--layout-gap);
+}
+.layout-full {
+	grid-column: 1 / -1;
+}
+.layout-center {
+	grid-column: 1 / -1;
+}
+.layout-rail,
+.layout-main,
+.layout-half {
+	grid-column: 1 / -1;
+}
+.layout-auto-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--layout-card-min, 14rem)), 1fr));
+	gap: var(--layout-gap);
 }
 .grid {
 	display: grid;
-	gap: 1.5rem;
+	gap: var(--layout-gap);
 }
 .header {
 	width: 100%;
 	position: fixed;
-	bottom: 0;
+	top: var(--banner-height, 0px);
 	left: 0;
 	z-index: var(--z-fixed);
 	background-color: var(--body-color);
+	transition:
+		transform 220ms ease,
+		visibility 0s linear;
+}
+.header.header-hidden {
+	transform: translateY(-110%);
+	visibility: hidden;
+	pointer-events: none;
+	transition:
+		transform 220ms ease,
+		visibility 0s linear 220ms;
+}
+html:has(.snap-page).footer-active .header {
+	transform: translateY(-110%);
+	visibility: hidden;
+	transition:
+		transform 220ms ease,
+		visibility 0s linear 220ms;
 }
 
 /*========== SCROLL BAR ==========*/
@@ -310,11 +354,85 @@ html[data-reduce-motion] *::after {
 
 /*==================== NAV ====================*/
 .nav {
-	max-width: 968px;
+	max-width: none;
 	height: 5rem;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+.nav--portfolio {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	column-gap: var(--layout-gap);
+}
+.nav.nav--cobrand {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	column-gap: var(--layout-gap);
+}
+.nav.nav--cobrand .nav__back {
+	grid-column: 1;
+	grid-row: 1;
+}
+.nav.nav--cobrand .co-brand {
+	grid-column: 2;
+	grid-row: 1;
+}
+.nav.nav--cobrand .nav__actions {
+	grid-column: 3;
+	grid-row: 1;
+	justify-self: end;
+}
+.nav__back {
+	grid-column: 1;
+	grid-row: 1;
+	align-self: center;
+	justify-self: start;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	color: var(--title-color);
+	border-radius: 50%;
+	transition: color 0.2s ease, background-color 0.2s ease;
+}
+.nav__back span {
+	font-family: var(--title-font);
+	font-size: 1.75rem;
+	line-height: 1;
+}
+.nav__back:hover {
+	color: var(--first-color);
+	background-color: color-mix(in srgb, var(--first-color) 10%, transparent);
+}
+.nav--with-back .nav__toggle {
+	margin-left: 2.5rem;
+}
+@media screen and (min-width: 768px) {
+	.nav--with-back .nav__menu {
+		padding-left: 3rem;
+	}
+}
+.nav--portfolio .nav__toggle {
+	grid-column: 1;
+	grid-row: 1;
+	justify-self: start;
+}
+.nav--portfolio .nav__logo {
+	grid-column: 2;
+	grid-row: 1;
+}
+.nav--portfolio .nav__menu {
+	grid-column: 1;
+	grid-row: 1;
+	justify-self: start;
+}
+.nav--portfolio .nav__btns {
+	grid-column: 3;
+	grid-row: 1;
+	justify-self: end;
 }
 .nav__logo,
 .nav__toggle {
@@ -345,14 +463,35 @@ html[data-reduce-motion] *::after {
 @media screen and (max-width: 767px) {
 	.nav__menu {
 		position: fixed;
-		bottom: -100%;
+		top: calc(5rem + var(--banner-height, 0px));
+		bottom: auto;
 		left: 0;
 		width: 100%;
 		background-color: var(--body-color);
 		padding: 2rem 1.5rem 4rem;
-		box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.15);
-		border-radius: 1.5rem 1.5rem 0 0;
-		transition: 0.3s;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+		border-radius: 0 0 1.5rem 1.5rem;
+		transform: translateY(-120%);
+		visibility: hidden;
+		transition:
+			transform 0.3s,
+			visibility 0.3s;
+	}
+	.nav--portfolio .nav__logo {
+		justify-self: center;
+	}
+	.nav--portfolio .nav__btns {
+		gap: 0.5rem;
+	}
+	.nav--portfolio .nav__list {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+	.nav--portfolio .nav__link {
+		flex-direction: row;
+		gap: 0.75rem;
 	}
 }
 .nav__list {
@@ -376,7 +515,8 @@ html[data-reduce-motion] *::after {
 .nav__close {
 	position: absolute;
 	right: 1.3rem;
-	bottom: 1.5rem;
+	top: 1.5rem;
+	bottom: auto;
 	font-size: 1.5rem;
 	cursor: pointer;
 	color: var(--first-color);
@@ -398,7 +538,8 @@ html[data-reduce-motion] *::after {
 
 /* show menu */
 .show-menu {
-	bottom: 0;
+	transform: translateY(0);
+	visibility: visible;
 }
 
 /* Active link */
@@ -407,20 +548,10 @@ html[data-reduce-motion] *::after {
 }
 /* Change background header */
 .scroll-header {
-	box-shadow: 0 -1px 4px var(--text-color);
+	box-shadow: var(--shadow-sm);
 }
 
 /*==================== HOME ====================*/
-.home__container {
-	gap: 1rem;
-}
-.home__content {
-	display: grid;
-	grid-template-columns: 1fr;
-	padding-top: 3.5rem;
-	align-items: center;
-	grid-auto-flow: dense;
-}
 .home__social {
 	display: grid;
 	grid-template-columns: max-content;

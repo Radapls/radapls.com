@@ -16,7 +16,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		}
 	</h2>
 
-	<div class="contact__container container">
+	<div class="container layout-stack layout-items-center">
 		<form action={`https://formsubmit.co/${GLOBAL_EMAIL}`} method="POST" class="mail">
 			<div class="mail__titlebar">
 				<span class="mail__dot" aria-hidden="true"></span>
@@ -54,7 +54,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 							autocomplete="name"
 							required
 						/>
-						&lt;<input
+						<input
 							id="email"
 							name="email"
 							type="email"
@@ -62,7 +62,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 							placeholder="you@mail.com"
 							autocomplete="email"
 							required
-						/>&gt;
+						/>
 					</span>
 				</div>
 				<div class="mail__row">
@@ -139,231 +139,160 @@ const t = useTranslations(Astro.currentLocale as Lang);
 </section>
 
 <style>
-	/*==================== CONTACT: retro mail window ====================*/
-	.contact__container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1.25rem;
+	/*==================== CONTACT ====================*/
+	#Contact {
+		--layout-gap: 1.25rem;
 	}
 	.contact__alt {
 		font-size: var(--small-font-size);
 		color: var(--text-color-light);
+		text-decoration: none;
+		transition: color 180ms ease;
 	}
 	.contact__alt:hover {
 		color: var(--first-color);
 	}
 
 	.mail {
-		width: min(100%, 560px);
-		background-color: #d6d3ce;
-		border: 1px solid #000;
-		box-shadow: var(--shadow-lg);
+		width: min(100%, 640px);
+		padding: clamp(1.25rem, 4vw, 2rem);
+		display: grid;
+		gap: 1.25rem;
+		background: var(--container-color);
+		color: var(--text-color);
+		border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-md);
 	}
 
-	/* Title bar: classic pinstripes + window dots */
 	.mail__titlebar {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 0.75rem;
-		background: repeating-linear-gradient(
-			0deg,
-			#d6d3ce 0 2px,
-			#000 2px 3px,
-			#d6d3ce 3px 5px,
-			#fff 5px 6px
-		);
-		border-bottom: 1px solid #000;
+		gap: 0.65rem;
+		padding-bottom: 0.9rem;
+		border-bottom: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);
 	}
 	.mail__dot {
-		width: 11px;
-		height: 11px;
-		border-radius: 50%;
-		border: 1px solid #000;
-		background-color: #fff;
-		flex: none;
+		display: none;
 	}
 	.mail__title {
 		flex: 1;
-		text-align: center;
-		font-size: var(--small-font-size);
+		font-size: var(--h3-font-size);
 		font-weight: var(--font-semi-bold);
-		color: #000;
-		padding: 0.1rem 0.4rem;
-		background-color: #d6d3ce;
-		border-radius: 4px;
-		margin-right: 3rem; /* balance the dots on the left */
+		color: var(--title-color);
 	}
 
-	/* Header rows: To / From / Subject */
 	.mail__head {
-		border-bottom: 1px solid #000;
+		display: grid;
+		gap: 0.75rem;
 	}
 	.mail__row {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
-		padding: 0.4rem 0.75rem;
-		border-bottom: 1px solid #9a9a9a;
-	}
-	.mail__row:last-child {
-		border-bottom: none;
+		min-width: 0;
 	}
 	.mail__label {
 		flex: none;
-		width: 4.5rem;
-		text-align: right;
+		width: 4.25rem;
 		font-size: var(--small-font-size);
 		font-weight: var(--font-semi-bold);
-		color: #000;
+		color: var(--text-color-light);
 	}
 	.mail__value {
-		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
 		font-size: var(--small-font-size);
-		color: #000;
+		color: var(--text-color);
+		min-width: 0;
+		overflow-wrap: anywhere;
 	}
 	.mail__from {
 		display: flex;
 		align-items: center;
-		gap: 0.35rem;
+		gap: 0.25rem;
 		flex: 1;
 		min-width: 0;
-		color: #555;
+		color: var(--text-color-light);
 	}
 	.mail__input {
 		min-width: 0;
 		flex: 1;
-		background-color: #fff;
-		border: 1px solid #000;
-		border-radius: 0;
-		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+		background-color: var(--input-color);
+		border: 1px solid color-mix(in srgb, var(--text-color) 16%, transparent);
+		border-radius: var(--radius-md);
 		font-size: var(--small-font-size);
-		color: #000;
-		padding: 0.2rem 0.4rem;
-		outline: none;
+		font-family: var(--body-font);
+		color: var(--text-color);
+		padding: 0.65rem 0.75rem;
+		transition: border-color 180ms ease, box-shadow 180ms ease;
 	}
-	.mail__input:focus {
-		box-shadow: 0 0 0 2px #000;
+	.mail__input:focus-visible,
+	.mail__body:focus-visible {
+		outline: 2px solid var(--first-color);
+		outline-offset: 2px;
+		border-color: var(--first-color);
 	}
 	.mail__input::placeholder {
-		color: #9a9a9a;
+		color: var(--text-color-light);
 	}
 
-	/* Message body */
 	.mail__body {
 		display: block;
 		width: 100%;
-		border: none;
-		border-bottom: 1px solid #000;
-		background-color: #fff;
+		border: 1px solid color-mix(in srgb, var(--text-color) 16%, transparent);
+		border-radius: var(--radius-md);
+		background-color: var(--input-color);
 		resize: vertical;
-		min-height: 8rem;
-		padding: 0.6rem 0.75rem;
-		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+		min-height: 10rem;
+		padding: 0.75rem;
+		font-family: var(--body-font);
 		font-size: var(--normal-font-size);
 		line-height: 1.5;
-		color: #000;
-		outline: none;
-	}
-	.mail__body:focus {
-		box-shadow: inset 0 0 0 2px #000;
+		color: var(--text-color);
 	}
 	.mail__body::placeholder {
-		color: #9a9a9a;
+		color: var(--text-color-light);
 	}
 
-	/* Toolbar with the beveled Send button */
 	.mail__toolbar {
 		display: flex;
 		justify-content: flex-end;
-		padding: 0.6rem 0.75rem;
 	}
 	.mail__send {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		padding: 0.45rem 1.25rem;
+		padding: 0.7rem 1.25rem;
 		font-size: var(--small-font-size);
 		font-weight: var(--font-semi-bold);
-		color: #000;
-		background-color: #d6d3ce;
-		border: 1px solid #000;
-		border-radius: 6px;
-		/* classic bevel: light top-left, dark bottom-right */
-		box-shadow:
-			inset 1px 1px 0 #fff,
-			inset -1px -1px 0 #9a9a9a;
+		font-family: var(--body-font);
+		color: #fff;
+		background-color: var(--first-color-deep, var(--first-color));
+		border: 0;
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
 		cursor: pointer;
+		transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 	}
 	.mail__send:hover {
-		background-color: #e4e1dc;
+		background-color: var(--first-color-deep-alt, var(--first-color-alt));
+		box-shadow: var(--shadow-md);
+		transform: translateY(-1px);
 	}
 	.mail__send:active {
-		box-shadow:
-			inset 1px 1px 0 #9a9a9a,
-			inset -1px -1px 0 #fff;
+		transform: translateY(0);
 	}
 
-	/* Dark theme: graphite window */
-	:global(.dark) .mail {
-		background-color: #3f3f46;
-	}
-	:global(.dark) .mail__titlebar {
-		background: repeating-linear-gradient(
-			0deg,
-			#3f3f46 0 2px,
-			#000 2px 3px,
-			#3f3f46 3px 5px,
-			#71717a 5px 6px
-		);
-	}
-	:global(.dark) .mail__title,
-	:global(.dark) .mail__label,
-	:global(.dark) .mail__value {
-		color: #e4e4e7;
-	}
-	:global(.dark) .mail__title {
-		background-color: #3f3f46;
-	}
-	:global(.dark) .mail__from {
-		color: #a1a1aa;
-	}
-	:global(.dark) .mail__dot {
-		background-color: #71717a;
-	}
-	:global(.dark) .mail__row {
-		border-bottom-color: #52525b;
-	}
-	:global(.dark) .mail__input,
-	:global(.dark) .mail__body {
-		background-color: #18181b;
-		color: #e4e4e7;
-		border-color: #000;
-	}
-	:global(.dark) .mail__input::placeholder,
-	:global(.dark) .mail__body::placeholder {
-		color: #71717a;
-	}
-	:global(.dark) .mail__input:focus {
-		box-shadow: 0 0 0 2px #a1a1aa;
-	}
-	:global(.dark) .mail__body:focus {
-		box-shadow: inset 0 0 0 2px #a1a1aa;
-	}
-	:global(.dark) .mail__send {
-		background-color: #52525b;
-		color: #e4e4e7;
-		box-shadow:
-			inset 1px 1px 0 #71717a,
-			inset -1px -1px 0 #27272a;
-	}
-	:global(.dark) .mail__send:hover {
-		background-color: #606068;
-	}
-	:global(.dark) .mail__send:active {
-		box-shadow:
-			inset 1px 1px 0 #27272a,
-			inset -1px -1px 0 #71717a;
+	@media (max-width: 520px) {
+		.mail__row {
+			align-items: flex-start;
+			flex-direction: column;
+			gap: 0.4rem;
+		}
+		.mail__label {
+			width: auto;
+		}
+		.mail__from {
+			width: 100%;
+		}
 	}
 </style>

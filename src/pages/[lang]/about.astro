@@ -1,0 +1,21 @@
+---
+import About from '@sections/About.astro';
+import Layout from '@layouts/Layout.astro';
+import { LOCALES, type Lang } from 'src/i18n';
+
+export const getStaticPaths = () =>
+	Object.keys(LOCALES).map((lang) => ({
+		params: { lang },
+	}));
+
+const titles: Record<Lang, string> = {
+	en: 'About | Juan Felipe Rada',
+	es: 'Acerca de mí | Juan Felipe Rada',
+	'pt-br': 'Sobre mim | Juan Felipe Rada',
+};
+const locale = Astro.currentLocale as Lang;
+---
+
+<Layout title={titles[locale]}>
+	<About />
+</Layout>

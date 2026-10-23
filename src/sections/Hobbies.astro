@@ -20,7 +20,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 			})
 		}
 	</h2>
-	<div class="services__container container grid">
+	<div class="container layout-auto-grid">
 		<HobbyCard
 			title={t({
 				en: 'Pottery',
@@ -52,3 +52,9 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		/>
 	</div>
 </section>
+
+<style>
+	#Services {
+		--layout-card-min: 15rem;
+	}
+</style>

@@ -6,12 +6,14 @@ import AgplBadge from '@assets/img/license-agpl.svg';
 import { Image } from 'astro:assets';
 import type { BrandType } from 'src/types/variants';
 import { useTranslations, type Lang } from 'src/i18n';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
 interface Props {
 	variant?: BrandType;
 }
 
 const t = useTranslations(Astro.currentLocale as Lang);
+const creditsUrl = getRelativeLocaleUrl(Astro.currentLocale ?? 'en', '/credits');
 ---
 
 <footer class="footer__bg">
@@ -25,29 +27,9 @@ const t = useTranslations(Astro.currentLocale as Lang);
 				width={30}
 			/>
 			<p class="footer__title">
-				<span>
-					&copy; {new Date().getFullYear() + ' '}
-				</span>
-				Juan Felipe Rada
+				<span>Since 1997</span>
 			</p>
 		</div>
-	</div>
-	<div class="footer__a11y">
-		<label class="a11y-switch" for="reduce-motion">
-			<input type="checkbox" id="reduce-motion" class="a11y-switch__input" />
-			<span class="a11y-switch__track" aria-hidden="true">
-				<span class="a11y-switch__thumb"></span>
-			</span>
-			<span class="a11y-switch__label">
-				{
-					t({
-						en: 'Reduce animations',
-						es: 'Reducir animaciones',
-						'pt-br': 'Reduzir animações',
-					})
-				}
-			</span>
-		</label>
 	</div>
 	<div class="footer__badges">
 		<a
@@ -80,6 +62,15 @@ const t = useTranslations(Astro.currentLocale as Lang);
 			})}
 		>
 			<Image src={WcagBadge} alt="WCAG 2.1 Level AA" width={88} height={31} loading="lazy" />
+		</a>
+		<a class="footer__credits" href={creditsUrl}>
+			{
+				t({
+					en: 'Third-party credits',
+					es: 'Créditos de terceros',
+					'pt-br': 'Créditos de terceiros',
+				})
+			}
 		</a>
 	</div>
 </footer>
@@ -120,92 +111,25 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		gap: 0.75rem;
 		margin-top: 1.5rem;
 	}
+	.footer__credits {
+		display: inline-flex;
+		align-items: center;
+		min-height: 31px;
+		padding: 0.35rem 0.7rem;
+		border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent);
+		border-radius: var(--radius-sm);
+		color: var(--text-color-light);
+		font-size: var(--smaller-font-size);
+		text-decoration: none;
+		transition: color 180ms ease, border-color 180ms ease;
+	}
+	.footer__credits:hover,
+	.footer__credits:focus-visible {
+		color: var(--first-color);
+		border-color: var(--first-color);
+	}
 
 	:global(.dark) .brand-image {
 		filter: grayscale(1) contrast(0.5) brightness(3.5);
 	}
-
-	/* a11y switch: real checkbox visually replaced by a track + thumb */
-	.footer__a11y {
-		display: flex;
-		justify-content: center;
-		margin-top: 1.5rem;
-	}
-	.a11y-switch {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.6rem;
-		cursor: pointer;
-		user-select: none;
-	}
-	.a11y-switch__input {
-		position: absolute;
-		opacity: 0;
-		width: 1px;
-		height: 1px;
-	}
-	.a11y-switch__track {
-		width: 2.75rem;
-		height: 1.5rem;
-		border-radius: var(--radius-pill);
-		background: color-mix(in srgb, var(--title-color) 25%, transparent);
-		padding: 0.1875rem;
-		display: flex;
-		align-items: center;
-		transition: background 200ms ease-in-out;
-	}
-	.a11y-switch__thumb {
-		width: 1.125rem;
-		height: 1.125rem;
-		border-radius: 50%;
-		background: var(--title-color);
-		transition: translate 200ms ease-in-out;
-	}
-	.a11y-switch__input:checked + .a11y-switch__track {
-		background: var(--first-color);
-	}
-	.a11y-switch__input:checked + .a11y-switch__track .a11y-switch__thumb {
-		translate: 1.25rem 0;
-	}
-	.a11y-switch__input:focus-visible + .a11y-switch__track {
-		outline: 2px solid var(--first-color);
-		outline-offset: 2px;
-	}
-	.a11y-switch__label {
-		font-size: var(--smaller-font-size);
-		color: var(--text-color);
-	}
 </style>
-
-<script>
-	// Reduce-motion switch (WCAG 2.2.2 Pause/Stop/Hide): pauses every
-	// autoplaying video and kills CSS animations/transitions. Defaults
-	// to the OS prefers-reduced-motion setting; an explicit choice is
-	// remembered in localStorage.
-	const KEY = 'reduce-motion';
-
-	function apply(on: boolean) {
-		document.documentElement.toggleAttribute('data-reduce-motion', on);
-		document.querySelectorAll('video').forEach((v) => {
-			if (on) v.pause();
-			else void v.play().catch(() => {});
-		});
-	}
-
-	function init() {
-		const box = document.getElementById('reduce-motion') as HTMLInputElement | null;
-		if (!box) return;
-		const saved = localStorage.getItem(KEY);
-		const on =
-			saved !== null ? saved === '1' : matchMedia('(prefers-reduced-motion: reduce)').matches;
-		box.checked = on;
-		apply(on);
-		box.addEventListener('change', () => {
-			localStorage.setItem(KEY, box.checked ? '1' : '0');
-			apply(box.checked);
-		});
-	}
-
-	document.addEventListener('astro:page-load', init);
-	init();
-</script>

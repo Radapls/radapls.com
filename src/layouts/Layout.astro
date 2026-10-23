@@ -41,6 +41,8 @@ const {
 } = Astro.props;
 
 const locale = lang ?? (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
+const currentPath = Astro.url.pathname.replace(/\/+$/, '');
+const showHeaderBack = !['', '/', '/en', '/es', '/pt-br'].includes(currentPath);
 ---
 
 <!doctype html>
@@ -129,7 +131,7 @@ const locale = lang ?? (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCA
 		<ClientRouter />
 	</head>
 	<body>
-		{withHeader && <Header {variant} noLinks={noLinks} hideLocaleSelect={Boolean(canonical)} />}
+		{withHeader && <Header {variant} noLinks={noLinks} hideLocaleSelect={Boolean(canonical)} showBack={showHeaderBack} />}
 		<main
 			class:list={['main', { 'snap-page': snap }]}
 			id="main"
@@ -153,6 +155,32 @@ const locale = lang ?? (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCA
 	document.addEventListener('astro:page-load', () => {
 		document.documentElement.classList.remove('is-navigating');
 	});
+
+	// Hide the fixed header while the footer is the current visible region.
+	(() => {
+		let footerObserver: IntersectionObserver | undefined;
+		const observeFooter = () => {
+			footerObserver?.disconnect();
+			const footer = document.querySelector<HTMLElement>('footer.footer__bg');
+			if (!footer) {
+				document.documentElement.classList.remove('footer-active');
+				return;
+			}
+			footerObserver = new IntersectionObserver(
+				([entry]) => {
+					if (!entry) return;
+					document.documentElement.classList.toggle(
+						'footer-active',
+						entry.isIntersecting && entry.intersectionRatio >= 0.5,
+					);
+				},
+				{ threshold: 0.5 },
+			);
+			footerObserver.observe(footer);
+		};
+		document.addEventListener('astro:page-load', observeFooter);
+		observeFooter();
+	})();
 
 	// Page scrollbar: same treatment as the timeline's — the native bar is
 	// hidden (no layout shift) and a thin overlay indicator fades in while

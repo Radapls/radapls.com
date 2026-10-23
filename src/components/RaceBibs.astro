@@ -3,6 +3,12 @@
  * Race bibs — real objects from my room pinned to the About wall.
  * One bib per race I've run; labels are shortened to fit the card.
  */
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+
 const bibs = [
 	{ number: '7476', race: 'Medellín 21K' },
 	{ number: '2473', race: 'Valle 21K' },
@@ -15,7 +21,7 @@ const bibs = [
 ];
 ---
 
-<ul class="bibs" aria-label="Race numbers">
+<ul class:list={['bibs', className]} aria-label="Race numbers">
 	{
 		bibs.map((bib, i) => (
 			<li class="bibs__item" style={`--bib-tilt: ${i % 2 === 0 ? 1.5 : -2}deg;`}>
@@ -31,17 +37,19 @@ const bibs = [
 
 <style>
 	.bibs {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		align-items: start;
+		gap: 0.4rem;
 		list-style: none;
 	}
 
 	.bibs__item {
 		position: relative;
 		display: flex;
+		min-width: 0;
 		justify-content: center;
-		padding-top: 0.5rem; /* room for the pin */
+		padding-top: 0.35rem; /* room for the pin */
 		transform: rotate(var(--bib-tilt, 0deg));
 		transition: transform 250ms ease-in-out;
 	}
@@ -68,8 +76,9 @@ const bibs = [
 		flex-direction: column;
 		align-items: center;
 		gap: 0.15rem;
-		width: 6.5rem;
-		padding: 0.45rem 0.5rem 0.55rem;
+		width: 100%;
+		min-width: 0;
+		padding: 0.3rem 0.25rem;
 		background: var(--container-color);
 		border: 1px solid color-mix(in srgb, var(--title-color) 30%, transparent);
 		border-radius: var(--radius-sm);
@@ -77,8 +86,11 @@ const bibs = [
 	}
 
 	.bibs__race {
-		font-size: 0.5rem;
-		letter-spacing: 0.14em;
+		max-width: 100%;
+		overflow: hidden;
+		font-size: 0.42rem;
+		letter-spacing: 0.06em;
+		text-overflow: ellipsis;
 		text-transform: uppercase;
 		white-space: nowrap;
 		color: var(--text-color);
@@ -88,7 +100,7 @@ const bibs = [
 
 	.bibs__number {
 		font-family: var(--title-font);
-		font-size: 1.25rem;
+		font-size: 0.9rem;
 		font-weight: var(--font-bold);
 		line-height: 1.1;
 		color: var(--title-color);

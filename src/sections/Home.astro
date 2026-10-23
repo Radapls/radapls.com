@@ -1,184 +1,231 @@
 ---
-import Illustration from '@assets/img/illustration.webp';
-import { Image } from 'astro:assets';
 import { LINKEDIN, GITHUB } from 'src/consts';
-import { useTranslations, type Lang } from 'src/i18n';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
 
 const t = useTranslations(Astro.currentLocale as Lang);
+const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
 ---
 
 <section class="home section" id="Home">
-	<div class="home__container container">
-		<div class="home__content">
-			<div class="home__data">
-				<p class="home__kicker">
+	<div class="container layout-grid">
+		<h1 class="home__title layout-full">
+			<span>Juan Felipe</span>
+			<span>Rada<span class="home__title-mark">.</span></span>
+		</h1>
+		<p class="home__alias layout-full">
+			<span>
+				{
+					t({
+						en: 'aka',
+						es: 'alias',
+						'pt-br': 'apelido',
+					})
+				}
+			</span>
+			<strong>radapls</strong>
+		</p>
+		<h2 class="home__eyebrow layout-center">
+			<button
+				type="button"
+				class="home__flightboard"
+				data-flightboard
+				data-phrases={JSON.stringify([
+					t({ en: 'Curious Coder', es: 'Programador curioso', 'pt-br': 'Programador curioso' }),
+					t({ en: 'Political Scientist', es: 'Politólogo', 'pt-br': 'Cientista político' }),
+					t({
+						en: 'Digital Business Strategist',
+						es: 'Estratega de negocios digitales',
+						'pt-br': 'Estrategista de negócios digitais',
+					}),
+					t({ en: 'Poet?', es: '¿Poeta?', 'pt-br': 'Poeta?' }),
+					t({ en: 'Runner?', es: '¿Corredor?', 'pt-br': 'Corredor?' }),
+				])}
+				aria-label={t({
+					en: 'Start the rotating title board',
+					es: 'Iniciar la rotación del título',
+					'pt-br': 'Iniciar a rotação do título',
+				})}
+			>
+				<span data-flightboard-text>
 					{
 						t({
-							en: 'Software, Politics, Art',
-							es: 'Software, Política, Arte',
-							'pt-br': 'Software, Política, Arte',
+							en: 'Curious Coder',
+							es: 'Programador curioso',
+							'pt-br': 'Programador curioso',
 						})
 					}
-				</p>
-				<h1 class="home__title">
-					<span class="home__greeting">
-						{
-							t({
-								en: 'Hello!',
-								es: 'Hola!',
-								'pt-br': 'Ola!',
-							})
-						}
-					</span>
-					<span
-						id="waveElement"
-						class="wave"
-						role="img"
-						aria-label={t({
-							en: 'waving hand',
-							es: 'saludo con la mano',
-							'pt-br': 'aceno com a mão',
-						})}>👋🏼</span
-					>
-				</h1>
-				<h2 class="home__eyebrow">
-					{
-						t({
-							en: "I'm Juan Felipe",
-							es: 'Soy Juan Felipe',
-							'pt-br': 'Sou Juan Felipe',
-						})
-					}
-				</h2>
-				<p class="home__description">
-					{
-						t({
-							en: '"You cannot judge the past with today\'s wisdom"',
-							es: '"No se puede juzgar el pasado, con la sabiduría del presente"',
-							'pt-br': '"Não se pode julgar o passado com a sabedoria do presente"',
-						})
-					}
-				</p>
-				<div class="home__actions">
-					<a href="#Contact" class="button button--flex heartbeat" id="contact-button">
-						{
-							t({
-								en: 'Contact Me',
-								es: 'Contáctame',
-								'pt-br': 'Contato',
-							})
-						}
-					</a>
-					<div class="home__social">
-						<a
-							href={LINKEDIN}
-							target="_blank"
-							class="home__social-icon"
-							aria-label={t({
-								en: 'LinkedIn profile',
-								es: 'Perfil de LinkedIn',
-								'pt-br': 'Perfil do LinkedIn',
-							})}
-						>
-							<i class="uil uil-linkedin" aria-hidden="true"></i>
-						</a>
-						<a
-							href={GITHUB}
-							target="_blank"
-							class="home__social-icon"
-							aria-label={t({
-								en: 'GitHub profile',
-								es: 'Perfil de GitHub',
-								'pt-br': 'Perfil do GitHub',
-							})}
-						>
-							<i class="uil uil-github" aria-hidden="true"></i>
-						</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="home__stage">
-				<Image
-					class="illustration-image floating"
-					alt={t({
-						en: 'Digital illustration of Juan Felipe Rada',
-						es: 'Ilustración digital de Juan Felipe Rada',
-						'pt-br': 'Ilustração digital de Juan Felipe Rada',
+				</span>
+			</button>
+		</h2>
+		<div class="home__actions layout-center">
+			<a
+				href={getRelativeLocaleUrl(currentLocale, '/about')}
+				class="button button--flex home__about-button"
+			>
+				{
+					t({
+						en: 'About Me',
+						es: 'Acerca de mí',
+						'pt-br': 'Sobre mim',
+					})
+				}
+				<svg
+					class="home__about-arrow"
+					width="28"
+					height="28"
+					viewBox="0 0 28 28"
+					fill="none"
+					aria-hidden="true"
+				>
+					<path d="M14 0L28 14L14 28M0 14H28" stroke="currentColor" stroke-width="1.5"></path>
+				</svg>
+			</a>
+			<div class="home__social">
+				<a
+					href={LINKEDIN}
+					target="_blank"
+					class="home__social-icon"
+					aria-label={t({
+						en: 'LinkedIn profile',
+						es: 'Perfil de LinkedIn',
+						'pt-br': 'Perfil do LinkedIn',
 					})}
-					src={Illustration}
-					widths={[352, 704, 1252]}
-					sizes="(max-width: 567px) 200px, (max-width: 768px) 300px, 352px"
-					draggable={false}
-					loading={'eager'}
-					decoding="async"
-					fetchpriority="high"
-				/>
+				>
+					<i class="uil uil-linkedin" aria-hidden="true"></i>
+				</a>
+				<a
+					href={GITHUB}
+					target="_blank"
+					class="home__social-icon"
+					aria-label={t({
+						en: 'GitHub profile',
+						es: 'Perfil de GitHub',
+						'pt-br': 'Perfil do GitHub',
+					})}
+				>
+					<i class="uil uil-github" aria-hidden="true"></i>
+				</a>
 			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	/* USWDS-inspired: wider canvas, left-aligned, token-based spacing.
-	   The hero is a composed group, not a full-bleed section: cap it so
-	   text + illustration stay together on wide screens. Section padding
-	   owns the vertical rhythm now. */
-	.home__container {
-		max-width: 1200px;
+	/* Full-width, single-column introduction. */
+	.home__title {
+		display: flex;
+		justify-content: center;
+		align-items: baseline;
+		gap: 0.2em;
+		white-space: nowrap;
+		font-size: clamp(2rem, 9vw, 7.5rem);
+		font-weight: var(--font-bold);
+		line-height: 0.88;
+		letter-spacing: -0.075em;
+		margin-bottom: 0;
 	}
-	.home__content {
-		position: relative;
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: var(--mb-2-5);
-		align-items: center;
+	.home__title-mark {
+		color: var(--first-color);
 	}
-	.home__data {
+	.home__alias {
+		display: flex;
+		align-items: baseline;
+		justify-content: center;
+		gap: 0.4rem;
+		width: 100%;
+		max-width: 100%;
+		margin: 0;
+		color: var(--text-color);
+		font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+		animation: alias-arrive 500ms 250ms both;
+	}
+	.home__alias > span {
+		width: 4.5rem;
+		text-align: right;
+	}
+	.home__alias strong {
+		width: 5rem;
+		color: var(--first-color);
+		font-weight: var(--font-semi-bold);
 		text-align: left;
 	}
-	.home__kicker {
-		display: inline-block;
-		font-family: var(--body-font);
-		font-size: var(--small-font-size);
-		font-weight: var(--font-semi-bold);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--first-color);
-		margin-bottom: var(--mb-0-75);
-		border-left: 4px solid var(--first-color);
-		padding-left: var(--mb-0-75);
-	}
-	.home__title {
-		/* anatolyzenkov-style: display type scales with the viewport */
-		font-size: clamp(2.75rem, 6vw, 4.25rem);
-		margin-bottom: var(--mb-0-25);
-		display: flex;
-		align-items: center;
-		gap: var(--mb-0-5);
-	}
 	.home__eyebrow {
-		font-size: clamp(1.75rem, 4.5vw, 3rem);
+		text-align: center;
+		font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+		font-weight: var(--font-medium);
 		color: var(--text-color);
-		margin-bottom: var(--mb-1);
+		margin: 0;
 	}
-	.home__description {
-		max-width: 48ch;
-		font-size: var(--h3-font-size);
-		font-style: italic;
-		color: var(--text-color-light);
-		margin-bottom: var(--mb-2);
+	.home__flightboard {
+		max-width: 100%;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		line-height: inherit;
+		cursor: pointer;
+	}
+	.home__flightboard:focus-visible {
+		outline: 2px solid var(--first-color);
+		outline-offset: 0.2em;
+		border-radius: 0.15em;
+	}
+	.home__flightboard [data-flightboard-text] {
+		display: grid;
+		width: 100%;
+		min-height: 2.6em;
+		align-items: center;
+		perspective: 700px;
+	}
+	.home__flightboard :global(.flightboard-phrase) {
+		grid-area: 1 / 1;
+		display: flex;
+		width: 100%;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		row-gap: 0.08em;
+	}
+	.home__flightboard :global(.flightboard-word) {
+		display: inline-flex;
+		white-space: nowrap;
+	}
+	.home__flightboard :global(.flightboard-word + .flightboard-word) {
+		margin-inline-start: 0.42em;
+	}
+	.home__flightboard :global(.flightboard-letter) {
+		display: inline-block;
+		backface-visibility: hidden;
+		transform-origin: 50% 50%;
+	}
+	.home__flightboard :global(.flightboard-arriving .flightboard-letter) {
+		animation: flightboard-arrive 300ms ease-out both;
+		animation-delay: calc(var(--letter-index) * 24ms);
 	}
 	.home__actions {
 		display: flex;
 		align-items: center;
-		gap: var(--mb-2);
+		justify-content: center;
+		gap: var(--mb-1-5);
 		flex-wrap: wrap;
+	}
+	.home__about-button {
+		gap: var(--mb-1);
+	}
+	.home__about-arrow {
+		flex: 0 0 auto;
+		transition: transform 180ms ease;
+	}
+	.home__about-button:hover .home__about-arrow {
+		transform: translateX(4px);
 	}
 	.home__social {
 		display: flex;
 		flex-direction: row;
 		gap: var(--mb-1-5);
+		transform: none;
 	}
 	.home__social-icon {
 		font-size: 1.5rem;
@@ -189,21 +236,8 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		color: var(--first-color-alt);
 	}
 
-	/* Illustration stage (glow is now a shared backdrop on .home__content) */
-	.home__stage {
-		order: 1;
-		position: relative;
-		display: grid;
-		place-items: center;
-	}
-	.illustration-image {
-		justify-self: center;
-		/* Lighter, more refined than the old heavy 50px drop-shadow */
-		filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.25));
-	}
-
 	/* Entrance: text block gently rises in on first load */
-	.home__data {
+	#Home .layout-grid {
 		animation: home-rise 700ms ease-out both;
 	}
 
@@ -217,122 +251,86 @@ const t = useTranslations(Astro.currentLocale as Lang);
 			transform: translateY(0);
 		}
 	}
-
-	/* Two-column editorial layout from tablet up */
-	@media screen and (min-width: 768px) {
-		.home__content {
-			grid-template-columns: 1.15fr 0.85fr;
-			gap: 0;
+	@keyframes alias-arrive {
+		from {
+			opacity: 0;
+			transform: translateY(0.4rem);
 		}
-		.home__data {
-			order: 0;
-			/* Text runs under the illustration's glow for a connected feel */
-			position: relative;
-			z-index: 1;
-			padding-right: var(--mb-2);
-		}
-		.home__stage {
-			order: 1;
-			/* Pull the illustration left so it overlaps the text column
-			   instead of sitting in a separate box */
-			margin-left: -3rem;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.home__data {
-			animation: none;
-		}
-	}
-
-	.wave {
-		display: inline-block;
-		animation: wave 3s;
-		transform-origin: 70% 70%;
-		font-size: clamp(2.5rem, 5vw, 3.75rem);
-		cursor: pointer;
-	}
-
-	.wave:hover {
-		animation: wave 3s infinite;
-	}
-	.wave:not(:hover) {
-		animation: none;
-	}
-
-	@keyframes wave {
-		0% {
-			transform: rotate(0deg);
-		}
-		10% {
-			transform: rotate(14deg);
-		}
-		20% {
-			transform: rotate(-8deg);
-		}
-		30% {
-			transform: rotate(14deg);
-		}
-		40% {
-			transform: rotate(-4deg);
-		}
-		50% {
-			transform: rotate(10deg);
-		}
-		60% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(0deg);
-		}
-	}
-
-	.floating {
-		display: inline-block;
-		animation: float 3s ease-in-out infinite;
-		cursor: pointer;
-	}
-
-	/* WCAG 2.2.2: stop continuous motion for users who opt out of it. */
-	@media (prefers-reduced-motion: reduce) {
-		.floating {
-			animation: none;
-		}
-	}
-
-	@media screen and (max-width: 567px) {
-		#contact-button {
-			display: flex;
-			justify-content: center;
-			width: 100%;
-		}
-		.home__actions {
-			gap: var(--mb-1-5);
-		}
-	}
-
-	@keyframes float {
-		0%,
-		100% {
+		to {
+			opacity: 1;
 			transform: translateY(0);
 		}
-		50% {
-			transform: translateY(-10px);
+	}
+	@keyframes flightboard-arrive {
+		0% {
+			transform: rotateX(-88deg);
+			opacity: 0;
+		}
+		100% {
+			transform: rotateX(0);
+			opacity: 1;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.home__flightboard :global(.flightboard-letter) {
+			animation: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#Home .layout-grid {
+			animation: none;
+		}
+		.home__alias {
+			animation: none;
+			transform: none;
+			opacity: 1;
 		}
 	}
 </style>
 
-<script is:inline>
-	document.addEventListener('DOMContentLoaded', () => {
-		const waveElement = document.getElementById('waveElement');
+<script>
+	document.querySelectorAll<HTMLButtonElement>('[data-flightboard]').forEach((board) => {
+		const text = board.querySelector<HTMLElement>('[data-flightboard-text]');
+		const phrases = JSON.parse(board.dataset.phrases ?? '[]') as string[];
+		if (!text || phrases.length < 2) return;
 
-		if (waveElement) {
-			waveElement.addEventListener('click', () => {
-				waveElement.classList.add('animate');
-				setTimeout(() => {
-					waveElement.classList.remove('animate');
-				}, 5000);
-			});
-		}
+		let current = 0;
+		const renderPhrase = (phrase: string, animate = false) => {
+			const phraseElement = document.createElement('span');
+			phraseElement.className = `flightboard-phrase${animate ? ' flightboard-arriving' : ''}`;
+
+			let letterIndex = 0;
+			for (const word of phrase.split(/\s+/).filter(Boolean)) {
+				const wordElement = document.createElement('span');
+				wordElement.className = 'flightboard-word';
+				for (const character of word) {
+					const letter = document.createElement('span');
+					letter.className = 'flightboard-letter';
+					letter.textContent = character;
+					letter.style.setProperty('--letter-index', String(letterIndex++));
+					wordElement.append(letter);
+				}
+				phraseElement.append(wordElement);
+			}
+			return phraseElement;
+		};
+
+		const showNext = () => {
+			current = (current + 1) % phrases.length;
+			text.replaceChildren(renderPhrase(phrases[current], true));
+			board.setAttribute('aria-label', phrases[current]);
+		};
+
+		text.replaceChildren(renderPhrase(phrases[current]));
+		board.setAttribute('aria-label', phrases[current]);
+		let timer = setInterval(showNext, 3600);
+
+		board.addEventListener('click', () => {
+			showNext();
+			clearInterval(timer);
+			timer = setInterval(showNext, 3600);
+		});
 	});
 </script>

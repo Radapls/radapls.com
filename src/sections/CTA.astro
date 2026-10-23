@@ -8,8 +8,8 @@ const t = useTranslations(Astro.currentLocale as Lang);
 
 <section class="project section">
 	<div class="project__bg">
-		<div class="project__container container grid">
-			<div class="project__data">
+		<div class="project__container container layout-grid">
+			<div class="project__data layout-half">
 				<h2 class="project__title">
 					{
 						t({
@@ -41,7 +41,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 			<Image
 				src={Project}
 				alt="project"
-				class="project__img"
+				class="project__img layout-half"
 				draggable="false"
 				width={232}
 				height={200}

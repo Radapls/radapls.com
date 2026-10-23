@@ -15,7 +15,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 			})
 		}
 	</h2>
-	<div class="skills__container container">
+	<div class="container layout-auto-grid">
 		{
 			SkillIcons.map((item) => (
 				<div class="skl-card">
@@ -29,10 +29,9 @@ const t = useTranslations(Astro.currentLocale as Lang);
 </section>
 
 <style>
-	.skills__container {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		gap: 0.5rem;
+	#Skills {
+		--layout-card-min: clamp(5.25rem, 14vw, 11rem);
+		--layout-gap: 0.5rem;
 	}
 
 	.skl-card {
@@ -62,17 +61,5 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		all: unset;
 		color: var(--first-color-lighter);
 		transition: 0.2s;
-	}
-
-	@media screen and (max-width: 768px) {
-		.skills__container {
-			grid-template-columns: repeat(4, 1fr);
-		}
-	}
-
-	@media screen and (max-width: 568px) {
-		.skills__container {
-			grid-template-columns: repeat(3, 1fr);
-		}
 	}
 </style>

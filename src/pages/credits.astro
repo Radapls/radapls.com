@@ -8,43 +8,39 @@ const t = useTranslations(locale);
 ---
 
 <Layout
-	title={t({ en: 'Credits & acknowledgments | Juan Felipe Rada', es: 'Créditos y agradecimientos | Juan Felipe Rada', 'pt-br': 'Créditos e agradecimentos | Juan Felipe Rada' })}
+	title={t('credits.credits-acknowledgments-juan-felipe-rada')}
 	variant="radapls"
 >
 	<main class="credits section">
 		<div class="container">
 			<h1 class="section__title">
-				{t({ en: 'Credits & acknowledgments', es: 'Créditos y agradecimientos', 'pt-br': 'Créditos e agradecimentos' })}
+				{t('credits.credits-acknowledgments')}
 			</h1>
 			<p class="credits__intro">
-				{t({
-					en: 'A note on the third-party tools and services used to build and run this portfolio. The license badges in the footer cover the site’s source code and posts.',
-					es: 'Una nota sobre las herramientas y servicios de terceros usados para crear y mantener este portafolio. Los distintivos del pie de página indican las licencias del código y las publicaciones.',
-					'pt-br': 'Uma nota sobre as ferramentas e serviços de terceiros usados para criar e manter este portfólio. Os selos no rodapé indicam as licenças do código e das publicações.',
-				})}
+				{t('credits.a-note-on-the-third-party-tools-and-serv')}
 			</p>
 
 			<section class="credits__group" aria-labelledby="credits-tools">
-				<h2 id="credits-tools">{t({ en: 'Tools and libraries', es: 'Herramientas y bibliotecas', 'pt-br': 'Ferramentas e bibliotecas' })}</h2>
+				<h2 id="credits-tools">{t('credits.tools-and-libraries')}</h2>
 				<ul>
-					<li><a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> — {t({ en: 'website framework', es: 'framework del sitio', 'pt-br': 'framework do site' })}</li>
+					<li><a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> — {t('credits.website-framework')}</li>
 					<li><a href="https://docs.astro.build/en/guides/integrations-guide/mdx/" target="_blank" rel="noopener noreferrer">Astro MDX</a>, <a href="https://docs.astro.build/en/guides/integrations-guide/rss/" target="_blank" rel="noopener noreferrer">RSS</a>, and <a href="https://docs.astro.build/en/guides/integrations-guide/sitemap/" target="_blank" rel="noopener noreferrer">Sitemap</a> integrations</li>
-					<li><a href="https://www.npmjs.com/package/astro-critters" target="_blank" rel="noopener noreferrer">astro-critters</a> — {t({ en: 'critical CSS inlining', es: 'inserción de CSS crítico', 'pt-br': 'inclusão de CSS crítico' })}</li>
-					<li><a href="https://gsap.com/" target="_blank" rel="noopener noreferrer">GSAP</a> — {t({ en: 'animation library', es: 'biblioteca de animación', 'pt-br': 'biblioteca de animação' })}</li>
-					<li><a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer">TypeScript</a> — {t({ en: 'programming language and type checking', es: 'lenguaje de programación y verificación de tipos', 'pt-br': 'linguagem de programação e verificação de tipos' })}</li>
-					<li><a href="https://sharp.pixelplumbing.com/" target="_blank" rel="noopener noreferrer">Sharp</a> — {t({ en: 'image processing during builds', es: 'procesamiento de imágenes durante la compilación', 'pt-br': 'processamento de imagens durante a compilação' })}</li>
-					<li><a href="https://www.cypress.io/" target="_blank" rel="noopener noreferrer">Cypress</a>, <a href="https://prettier.io/" target="_blank" rel="noopener noreferrer">Prettier</a>, <a href="https://github.com/svg/svgo" target="_blank" rel="noopener noreferrer">SVGO</a>, and <a href="https://github.com/isaacs/rimraf" target="_blank" rel="noopener noreferrer">Rimraf</a> — {t({ en: 'development utilities', es: 'herramientas de desarrollo', 'pt-br': 'ferramentas de desenvolvimento' })}</li>
+					<li><a href="https://www.npmjs.com/package/astro-critters" target="_blank" rel="noopener noreferrer">astro-critters</a> — {t('credits.critical-css-inlining')}</li>
+					<li><a href="https://gsap.com/" target="_blank" rel="noopener noreferrer">GSAP</a> — {t('credits.animation-library')}</li>
+					<li><a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer">TypeScript</a> — {t('credits.programming-language-and-type-checking')}</li>
+					<li><a href="https://sharp.pixelplumbing.com/" target="_blank" rel="noopener noreferrer">Sharp</a> — {t('credits.image-processing-during-builds')}</li>
+					<li><a href="https://www.cypress.io/" target="_blank" rel="noopener noreferrer">Cypress</a>, <a href="https://prettier.io/" target="_blank" rel="noopener noreferrer">Prettier</a>, <a href="https://github.com/svg/svgo" target="_blank" rel="noopener noreferrer">SVGO</a>, and <a href="https://github.com/isaacs/rimraf" target="_blank" rel="noopener noreferrer">Rimraf</a> — {t('credits.development-utilities')}</li>
 				</ul>
 			</section>
 
 			<section class="credits__group" aria-labelledby="credits-services">
-				<h2 id="credits-services">{t({ en: 'External services and assets', es: 'Servicios y recursos externos', 'pt-br': 'Serviços e recursos externos' })}</h2>
+				<h2 id="credits-services">{t('credits.external-services-and-assets')}</h2>
 				<ul>
-					<li><a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a> — {t({ en: 'Poppins and display fonts', es: 'Poppins y tipografías de exhibición', 'pt-br': 'Poppins e fontes de destaque' })}</li>
-					<li><a href="https://pangrampangram.com/products/gatwick-glider" target="_blank" rel="noopener noreferrer">PP Gatwick Glider</a> — {t({ en: 'title typeface, used under a personal-use license on this personal, non-commercial portfolio', es: 'tipografía de títulos, usada bajo una licencia de uso personal en este portafolio personal y sin fines comerciales', 'pt-br': 'fonte dos títulos, usada sob licença para uso pessoal neste portfólio pessoal e sem fins comerciais' })}</li>
-					<li><a href="https://devicon.dev/" target="_blank" rel="noopener noreferrer">Devicon</a>, served by <a href="https://www.jsdelivr.com/" target="_blank" rel="noopener noreferrer">jsDelivr</a> — {t({ en: 'technology icons', es: 'íconos de tecnologías', 'pt-br': 'ícones de tecnologias' })}</li>
-					<li><a href="https://formsubmit.co/" target="_blank" rel="noopener noreferrer">FormSubmit</a> — {t({ en: 'contact form delivery', es: 'envío del formulario de contacto', 'pt-br': 'envio do formulário de contato' })}</li>
-					<li><a href="https://www.w3.org/WAI/WCAG2AA-Conformance" target="_blank" rel="noopener noreferrer">W3C</a> — {t({ en: 'source of the WCAG badge shown in the footer', es: 'origen del distintivo WCAG del pie de página', 'pt-br': 'origem do selo WCAG exibido no rodapé' })}</li>
+					<li><a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a> — {t('credits.poppins-and-display-fonts')}</li>
+					<li><a href="https://pangrampangram.com/products/gatwick-glider" target="_blank" rel="noopener noreferrer">PP Gatwick Glider</a> — {t('credits.title-typeface-used-under-a-personal-use')}</li>
+					<li><a href="https://devicon.dev/" target="_blank" rel="noopener noreferrer">Devicon</a>, served by <a href="https://www.jsdelivr.com/" target="_blank" rel="noopener noreferrer">jsDelivr</a> — {t('credits.technology-icons')}</li>
+					<li><a href="https://formsubmit.co/" target="_blank" rel="noopener noreferrer">FormSubmit</a> — {t('credits.contact-form-delivery')}</li>
+					<li><a href="https://www.w3.org/WAI/WCAG2AA-Conformance" target="_blank" rel="noopener noreferrer">W3C</a> — {t('credits.source-of-the-wcag-badge-shown-in-the-fo')}</li>
 				</ul>
 			</section>
 		</div>

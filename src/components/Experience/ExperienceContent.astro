@@ -16,12 +16,13 @@ interface Props {
 	title: string;
 	organization: string;
 	relativeTime: string;
+	summary?: string;
 	link?: string;
 }
 
 const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
 
-const { image, title, organization, relativeTime, link } = Astro.props;
+const { image, title, organization, relativeTime, summary, link } = Astro.props;
 const LogoSvg = image.svg;
 const toneClass = image.tone ? ` brand-icon--${image.tone}` : '';
 const svgClass = `brand-icon brand-icon--svg${toneClass}`;

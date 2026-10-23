@@ -13,11 +13,7 @@ const posts = (await getCollection('experience')).filter(
 	(post) => post.id.split('/')[0] === locale,
 );
 
-const title = `Juan Felipe Rada | ${t({
-	es: 'Trayectoria',
-	en: 'Timeline',
-	'pt-br': 'Trajetória',
-})}`;
+const title = `Juan Felipe Rada | ${t('case-studies.index.timeline')}`;
 
 ---
 
@@ -25,11 +21,7 @@ const title = `Juan Felipe Rada | ${t({
 	<section class="section container">
 		<h2 class="section__title">
 			{
-				t({
-					en: 'My experience',
-					es: 'My experiencia',
-					'pt-br': 'Minha experiência',
-				})
+				t('case-studies.index.my-experience')
 			}
 		</h2>
 

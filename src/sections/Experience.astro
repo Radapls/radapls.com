@@ -10,18 +10,14 @@ import ExperienceContent from '@components/Experience/ExperienceContent.astro';
 <section class="qualification section">
 	<h2 class="section__title">
 		{
-			t({
-				en: 'Timeline',
-				es: 'Trayectoria',
-				'pt-br': 'Trajetória',
-			})
+			t('experience.timeline')
 		}
 	</h2>
 	<div class="container layout-stack">
 		<div
 			class="qualification__tabs"
 			role="tablist"
-			aria-label={t({ en: 'Timeline', es: 'Trayectoria', 'pt-br': 'Trajetória' })}
+			aria-label={t('experience.timeline')}
 		>
 			{
 				experienceTabs.map((tab, i) => (
@@ -43,11 +39,7 @@ import ExperienceContent from '@components/Experience/ExperienceContent.astro';
 			<button
 				class="qualification__arrow qualification__arrow--prev"
 				type="button"
-				aria-label={t({
-					en: 'Previous experience',
-					es: 'Experiencia anterior',
-					'pt-br': 'Experiência anterior',
-				})}
+				aria-label={t('experience.previous-experience')}
 			>
 				<svg
 					viewBox="0 0 24 24"
@@ -66,11 +58,7 @@ import ExperienceContent from '@components/Experience/ExperienceContent.astro';
 			<button
 				class="qualification__arrow qualification__arrow--next"
 				type="button"
-				aria-label={t({
-					en: 'Next experience',
-					es: 'Experiencia siguiente',
-					'pt-br': 'Próxima experiência',
-				})}
+				aria-label={t('experience.next-experience')}
 			>
 				<svg
 					viewBox="0 0 24 24"
@@ -130,11 +118,7 @@ import ExperienceContent from '@components/Experience/ExperienceContent.astro';
 					<a class="qualification__cta" href="#Contact">
 						<span class="qualification__cta-title">
 							{
-								t({
-									en: 'Want to be the next?',
-									es: '¿Quieres ser el próximo?',
-									'pt-br': 'Quer ser o próximo?',
-								})
+								t('experience.want-to-be-the-next')
 							}
 						</span>
 					</a>

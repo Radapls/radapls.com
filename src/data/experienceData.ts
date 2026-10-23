@@ -86,12 +86,17 @@ export const workData = [
 			'pt-br': 'Desenvolvedor UI/UX',
 		},
 		organization: 'Ericsson',
+		summary: {
+			en: 'UI/UX development across two key telecom projects.',
+			es: 'Desarrollo UI/UX en dos proyectos clave de telecomunicaciones.',
+			'pt-br': 'Desenvolvimento UI/UX em dois projetos-chave de telecomunicações.',
+		},
 		relativeTime: {
 			en: 'Oct 2025 - Present',
 			es: 'Oct 2025 - Presente',
 			'pt-br': 'Out 2025 - Presente',
 		},
-		link: '/experience/ericsson',
+		link: '/case-studies/ericsson',
 	},
 	{
 		image: {
@@ -106,12 +111,17 @@ export const workData = [
 			'pt-br': 'Desenvolvedor Frontend',
 		},
 		organization: 'Wibx Company',
+		summary: {
+			en: 'First role after my career change: AR filters, system design, back-office tooling and landing pages.',
+			es: 'Mi primer rol tras el cambio de carrera: filtros AR, diseño de sistemas, back-office y landing pages.',
+			'pt-br': 'Primeiro papel após a mudança de carreira: filtros de RA, design de sistemas, back-office e landing pages.',
+		},
 		relativeTime: {
 			en: 'Jan 2022 - Oct 2025',
 			es: 'Ene 2022 - Oct 2025',
 			'pt-br': 'Jan 2022 - Out 2025',
 		},
-		link: '/experience/wibx',
+		link: '/case-studies/wibx',
 	},
 	{
 		image: {
@@ -127,12 +137,17 @@ export const workData = [
 			'pt-br': 'Desenvolvedor Frontend',
 		},
 		organization: 'BirdiRx',
+		summary: {
+			en: 'US healthcare frontend: my first English-language project, from zero to HIPAA fluency.',
+			es: 'Frontend de salud en EE. UU.: mi primer proyecto en inglés, de cero a dominar HIPAA.',
+			'pt-br': 'Frontend de saúde nos EUA: meu primeiro projeto em inglês, do zero ao domínio de HIPAA.',
+		},
 		relativeTime: {
 			en: 'May 2023 - Jan 2025',
 			es: 'May 2023 - Ene 2025',
 			'pt-br': 'Mai 2023 - Jan 2025',
 		},
-		link: '/experience/birdi',
+		link: '/case-studies/birdi',
 	},
 	{
 		image: {
@@ -148,12 +163,17 @@ export const workData = [
 			'pt-br': 'Pesquisador Social',
 		},
 		organization: 'Instituto de Estudios Interculturales',
+		summary: {
+			en: 'Social research on intercultural education and community development across the Pacific region.',
+			es: 'Investigación social en educación intercultural y desarrollo comunitario en la región Pacífica.',
+			'pt-br': 'Pesquisa social em educação intercultural e desenvolvimento comunitário na região do Pacífico.',
+		},
 		relativeTime: {
 			en: 'Jun 2020 - Dec 2021',
 			es: 'Jun 2020 - Dic 2021',
 			'pt-br': 'Jun 2020 - Dez 2021',
 		},
-		link: '/experience/iei',
+		link: '/case-studies/iei',
 	},
 	{
 		image: {
@@ -168,12 +188,17 @@ export const workData = [
 			'pt-br': 'Ligação de Monitoramento Estratégico',
 		},
 		organization: 'Alcaldia de Cali',
+		summary: {
+			en: 'Delivery Unit member tracking the city’s development plan and flagship projects.',
+			es: 'Miembro de la Delivery Unit, haciendo seguimiento al plan de desarrollo y proyectos insignia de la ciudad.',
+			'pt-br': 'Membro da Delivery Unit, monitorando o plano de desenvolvimento e os projetos emblemáticos da cidade.',
+		},
 		relativeTime: {
 			en: 'Mar 2019 - Dec 2019',
 			es: 'Mar 2019 - Dic 2019',
 			'pt-br': 'Mar 2019 - Dez 2019',
 		},
-		link: '/experience/alcaldia',
+		link: '/case-studies/alcaldia',
 	},
 	{
 		image: {
@@ -188,11 +213,16 @@ export const workData = [
 			'pt-br': 'Assistente de Pesquisa',
 		},
 		organization: 'Misión de Observación Electoral (MOE)',
+		summary: {
+			en: 'Electoral observation research for transparency and citizen oversight of democracy.',
+			es: 'Investigación en observación electoral para la transparencia y el control ciudadano de la democracia.',
+			'pt-br': 'Pesquisa em observação eleitoral pela transparência e controle cidadão da democracia.',
+		},
 		relativeTime: {
 			en: 'Jan 2018 - Jul 2018',
 			es: 'Ene 2018 - Jul 2018',
 			'pt-br': 'Jan 2018 - Jul 2018',
 		},
-		link: '/experience/moe',
+		link: '/case-studies/moe',
 	},
 ];

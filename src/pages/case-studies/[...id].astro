@@ -4,11 +4,10 @@ import WorkLayout from '@layouts/WorkLayout.astro';
 
 export async function getStaticPaths() {
 	const work = await getCollection('experience');
-
-	return work.map((post) => {
-		const [lang, ...id] = post.id.split('/');
-		return { params: { lang, id: id.join('/') || undefined }, props: post };
-	});
+	// ponytail: single-path i18n — render default-locale entries only
+	return work
+		.filter((post) => post.id.startsWith('en/'))
+		.map((post) => ({ params: { id: post.id.replace(/^en\//, '') }, props: post }));
 }
 
 const post = Astro.props;

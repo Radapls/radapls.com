@@ -5,11 +5,7 @@ import Logo from '@assets/img/JFRA.svg';
 
 const t = useTranslations(DEFAULT_LOCALE);
 
-const title = t({
-	es: 'Página no encontrada',
-	en: 'Page Not Found',
-	'pt-br': 'Página não encontrada',
-});
+const title = t('404.page-not-found');
 
 ---
 
@@ -29,22 +25,13 @@ const title = t({
 
 			<p class="lost__text">
 				{
-					t({
-						es: 'La página que buscas no se pudo encontrar. Por favor, regresa al inicio.',
-						en: 'The page you are looking for could not be found. Please return to the top.',
-						'pt-br':
-							'A página que você está procurando não foi encontrada. Por favor, volte ao início.',
-					})
+					t('404.the-page-you-are-looking-for-could-not-b')
 				}
 			</p>
 
 			<a href="/" class="lost__cta">
 				{
-					t({
-						es: 'Página principal',
-						en: 'Top Page',
-						'pt-br': 'Página inicial',
-					})
+					t('404.top-page')
 				}
 				<i class="uil uil-estate" aria-hidden="true"></i>
 			</a>

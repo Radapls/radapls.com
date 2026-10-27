@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import CasePage from '@components/CasePage.astro';
+
+export async function getStaticPaths() {
+	const work = await getCollection('experience');
+	// ponytail: single-path i18n — paths come from default-locale entries only;
+	// translations are rendered below and swapped client-side.
+	return work
+		.filter((post) => post.id.startsWith('en/') && post.data.kind !== 'education')
+		.map((post) => ({ params: { id: post.id.replace(/^en\//, '') }, props: { post } }));
+}
+---
+
+<CasePage post={Astro.props.post} backHref="/case-studies/" backLabelKey="case-studies.back-to-all" />

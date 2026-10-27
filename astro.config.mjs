@@ -32,7 +32,22 @@ export default defineConfig({
 	prefetch: {
 		prefetchAll: true,
 	},
-	integrations: [sitemap(), mdx(), critters()],
+	integrations: [
+		// /blog pages are canonical on blog.radapls.com — keep them out of this sitemap
+		sitemap({ filter: (page) => !page.includes('/blog') }),
+		mdx(),
+		critters(),
+	],
+	redirects: {
+		'/en': '/', '/es': '/', '/pt-br': '/',
+		'/en/about': '/about', '/es/about': '/about', '/pt-br/about': '/about',
+		'/en/credits': '/credits', '/es/credits': '/credits', '/pt-br/credits': '/credits',
+		'/en/thanks': '/thanks', '/es/thanks': '/thanks', '/pt-br/thanks': '/thanks',
+		'/en/experience': '/case-studies', '/es/experience': '/case-studies', '/pt-br/experience': '/case-studies',
+		'/en/experience/[...id]': '/case-studies/[...id]',
+		'/es/experience/[...id]': '/case-studies/[...id]',
+		'/pt-br/experience/[...id]': '/case-studies/[...id]',
+	},
 	i18n: {
 		defaultLocale: 'en',
 		locales: ['en', 'es', 'pt-br'],

@@ -1,135 +1,1199 @@
 ---
-import ProfilePic from '@assets/img/juan.webp';
-import CurriculumVitae from '@assets/documents/CV_Juan_Felipe_Rada.pdf';
+import Flag from '@components/Flag.astro';
+import TypeSpecimen from '@components/TypeSpecimen.astro';
+import Moai from '@components/Moai.astro';
+import RaceBibs from '@components/RaceBibs.astro';
+import Logo from '@assets/img/JFRA.svg';
+import Illustration from '@assets/img/illustration.webp';
+import CuerposDeAguaPdf from '@assets/documents/Trujillo_cuerpos_y_agua.pdf?url';
+import EnClavesDePazPdf from '@assets/documents/en-claves-de-paz-no-5.pdf?url';
+import BugaPoliticsPdf from '@assets/documents/la-descomposicion-organizaciones-politicas-buga.pdf?url';
+import PasaLaVozArchiveCopy from '@assets/documents/revista-pasa-la-voz-edicion-23-archive-copy.pdf?url';
+import ArtDecoPoster from '@assets/img/posters/SAMCRO Art Deco-01.png';
+import ConstructivismPoster from '@assets/img/posters/SAMCRO Constructivismo-01.png';
+import JaponismPoster from '@assets/img/posters/SAMCRO Japonismo-01.png';
+import PsychedeliaPoster from '@assets/img/posters/SAMCRO Psicodelia-01.png';
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { BLOG_URL } from 'src/consts';
+
+import filter1 from '@assets/videos/filter_1.mp4';
+import filter2 from '@assets/videos/filter_2.mp4';
+import filter3 from '@assets/videos/filter_3.mp4';
+import filter4 from '@assets/videos/filter_4.mp4';
 
 import { useTranslations, type Lang } from 'src/i18n';
-import { Image } from 'astro:assets';
 
 const t = useTranslations(Astro.currentLocale as Lang);
+const publications = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+const documentPublications: {
+	title: string;
+	type: string;
+	pdf: string;
+	contributor: string;
+	archive?: string;
+}[] = [
+	{
+		title: 'Cuerpos de agua',
+		type: t('about.pdf-publication'),
+		pdf: CuerposDeAguaPdf,
+		contributor: '',
+	},
+	{
+		title: 'En - claves de paz · Boletín No. 5',
+		type: t('about.peace-bulletin'),
+		pdf: EnClavesDePazPdf,
+		contributor: t('about.by-juan-felipe-rada'),
+	},
+	{
+		title:
+			'La descomposición de las organizaciones políticas en Buga en las contiendas electorales (1997–2003) y la relación entre paramilitares y políticos',
+		type: t('about.undergraduate-thesis'),
+		pdf: BugaPoliticsPdf,
+		contributor: t('about.co-authored-by-juan-felipe-rada-arias'),
+	},
+	{
+		title: 'Te sueño en Sans Serifa',
+		type: t('about.poem-pasa-la-voz-magazine'),
+		pdf: PasaLaVozArchiveCopy,
+		contributor: t('about.poem-by-juan-felipe-rada-arias-23rd-edit'),
+		archive:
+			'https://web.archive.org/web/20230227202541/https://issuu.com/comitepasalavoz/docs/revista_pas__la_voz_edici_n_23___2_',
+	},
+];
+// Fun facts: SAMCRO (my cat) posters I designed on my own, one per style.
+const posters = [
+	{
+		src: ArtDecoPoster,
+		title: t({ en: 'Art déco', es: 'Art déco', 'pt-br': 'Art déco' }),
+		description: t({
+			en: 'SAMCRO, my cat, posing as a 1920s icon.',
+			es: 'SAMCRO, mi gato, posando como un ícono de los años veinte.',
+			'pt-br': 'SAMCRO, meu gato, posando como um ícone dos anos vinte.',
+		}),
+		alt: t({
+			en: 'Art déco poster of SAMCRO, my cat, designed by me',
+			es: 'Póster art déco de SAMCRO, mi gato, diseñado por mí',
+			'pt-br': 'Pôster art déco de SAMCRO, meu gato, desenhado por mim',
+		}),
+	},
+	{
+		src: ConstructivismPoster,
+		title: t({ en: 'Constructivism', es: 'Constructivismo', 'pt-br': 'Construtivismo' }),
+		description: t({
+			en: 'SAMCRO enlisted for the cause, constructivist cut.',
+			es: 'SAMCRO alistado para la causa, corte constructivista.',
+			'pt-br': 'SAMCRO alistado para a causa, corte construtivista.',
+		}),
+		alt: t({
+			en: 'Constructivist poster of SAMCRO, my cat, designed by me',
+			es: 'Póster constructivista de SAMCRO, mi gato, diseñado por mí',
+			'pt-br': 'Pôster construtivista de SAMCRO, meu gato, desenhado por mim',
+		}),
+	},
+	{
+		src: JaponismPoster,
+		title: t({ en: 'Japonism', es: 'Japonismo', 'pt-br': 'Japonismo' }),
+		description: t({
+			en: 'SAMCRO floating in a Japonism print.',
+			es: 'SAMCRO flotando en una estampa japonista.',
+			'pt-br': 'SAMCRO flutuando em uma estampa japonista.',
+		}),
+		alt: t({
+			en: 'Japonism poster of SAMCRO, my cat, designed by me',
+			es: 'Póster japonista de SAMCRO, mi gato, diseñado por mí',
+			'pt-br': 'Pôster japonista de SAMCRO, meu gato, desenhado por mim',
+		}),
+	},
+	{
+		src: PsychedeliaPoster,
+		title: t({ en: 'Psychedelia', es: 'Psicodelia', 'pt-br': 'Psicodelia' }),
+		description: t({
+			en: 'SAMCRO, fully psychedelic.',
+			es: 'SAMCRO, completamente psicodélico.',
+			'pt-br': 'SAMCRO, completamente psicodélico.',
+		}),
+		alt: t({
+			en: 'Psychedelia poster of SAMCRO, my cat, designed by me',
+			es: 'Póster psicodélico de SAMCRO, mi gato, diseñado por mí',
+			'pt-br': 'Pôster psicodélico de SAMCRO, meu gato, desenhado por mim',
+		}),
+	},
+];
 ---
 
-<!--==================== ABOUT ====================-->
-<section class="about section" id="About">
-	<h2 class="section__title">
-		{
-			t({
-				en: 'About me',
-				es: 'Acerca de mí',
-				'pt-br': 'Sobre mim',
-			})
-		}
-	</h2>
-	<span class="section__subtitle"></span>
-
-	<div class="about__container container grid">
-		<div class="about__data">
-			<p class="about__description">
+<section class="about-hero section" aria-labelledby="about-title">
+	<div class="container layout-grid">
+		<header class="about__hero layout-center">
+			<h1 class="section__title" id="about-title">
 				{
-					t({
-						en: 'My name is Juan Felipe Rada, currently working as a UX/UI developer in the telecommunications sector. I am curious about understanding the details of interfaces, seeing how those small touches make a big change in the user experience. I have worked in different technology sectors, always trying to bring a human touch to development.',
-						es: 'Mi nombre es Juan Felipe Rada, actualmente trabajo como desarrollador UX/UI en el sector de telecomunicaciones, me da curiosidad entender los detalles de las interfaces, ver como esos pequeños toques dan un gran cambio en la experiencia de los usuarios. He trabajado en diferentes sectores de tecnología, siempre intentando dar un toque humano al desarrollo.',
-						'pt-br':
-							'Meu nome é Juan Felipe Rada, atualmente trabalho como desenvolvedor UX/UI no setor de telecomunicações. Tenho curiosidade em entender os detalhes das interfaces, ver como esses pequenos toques fazem uma grande mudança na experiência do usuário. Trabalhei em diferentes setores de tecnologia, sempre tentando trazer um toque humano ao desenvolvimento.',
-					})
+					t('about.about')
+				}
+			</h1>
+			<p class="about__summary">
+				{
+					t('about.brazil-based-multidisciplinary-humanist-')
 				}
 			</p>
+		</header>
+	</div>
+</section>
 
-			<p class="about__description">
-				{
-					t({
-						en: 'Sometimes in my free time I like to write, more than calling it a blog, I would call it an idea board. My opinions are merely personal, and from a very intimate perspective. I usually do not use Artificial Intelligence with the aim of making mistakes, only by making mistakes do we learn. If you are interested you can see some posts',
-						es: 'A veces en mis tiempos libres me gusta escribir, más allá de llamarlo un blog, lo nombraría un tablero de ideas. Mis opiniones son meramente personales, y desde una mirada muy íntima. Suelo no usar Inteligencia artificial con el objetivo de equivocarme, solo equivocándonos aprendemos, si te interesa puedes ver algunas publicaciones',
-						'pt-br': 'Às vezes no meu tempo livre gosto de escrever, mais do que chamar de blog, eu chamaria de quadro de ideias. Minhas opiniões são meramente pessoais, e de uma perspectiva muito íntima. Costumo não usar Inteligência Artificial com o objetivo de cometer erros, só errando aprendemos. Se você estiver interessado pode ver algumas publicações',
-					})
-				}
-				<a
-					data-astro-reload
-					class="about__description__link"
-					href="/blog"
-					role="link"
-					aria-roledescription={t({
-						en: 'Personal blog link',
-						es: 'Enlace al blog personal',
-						'pt-br': 'Link blog pessoal',
-					})}
-				>
+<section
+	class="about section"
+	id="About"
+	aria-label={t('about.my-room')}
+>
+	<div class="about__container container layout-grid layout-items-start">
+		<header class="about-section-heading layout-full">
+			<p class="about-section-kicker">01</p>
+			<h2>{t('about.moodboard')}</h2>
+		</header>
+		<div
+			class="about__gallery layout-full"
+			role="group"
+			aria-label={t('about.a-few-things-from-my-room')}
+		>
+			<div class="about__portrait-core">
+				<Image
+					class="about__portrait"
+					alt={t('about.digital-illustration-of-juan-felipe-rada')}
+					src={Illustration}
+					widths={[240, 352, 480]}
+					sizes="(max-width: 767px) 180px, 240px"
+					loading="lazy"
+					decoding="async"
+				/>
+			</div>
+
+			<article
+				class="about__orbit-item about__orbit-item--moai"
+				role="button"
+				tabindex="0"
+				aria-expanded="false"
+				aria-controls="about-preview-moai"
+				aria-label={t('about.a-moai-from-my-room')}
+				aria-describedby="about-note-moai"
+			>
+				<span class="about__orbit-orb" aria-hidden="true"></span>
+				<div class="about__orbit-preview about__moai" id="about-preview-moai"><Moai /></div>
+				<p class="about__orbit-note" id="about-note-moai">
 					{
-						t({
-							en: 'here',
-							es: 'acá',
-							'pt-br': 'aqui',
-						})
+						t('about.a-small-stone-moai-kept-close-among-the-')
 					}
-				</a>
-			</p>
+				</p>
+			</article>
 
-			<div class="about__buttons">
-				<a rel="nofollow" type="file" href={CurriculumVitae} class="button button--flex">
-					<p>
+			<article
+				class="about__orbit-item about__orbit-item--type"
+				role="button"
+				tabindex="0"
+				aria-expanded="false"
+				aria-controls="about-preview-type"
+				aria-label={t('about.typography-specimen-poster')}
+				aria-describedby="about-note-type"
+			>
+				<span class="about__orbit-orb" aria-hidden="true"></span>
+				<div class="about__orbit-preview" id="about-preview-type"><TypeSpecimen /></div>
+				<p class="about__orbit-note" id="about-note-type">
+					{
+						t('about.a-specimen-poster-for-the-typefaces-i-ke')
+					}
+				</p>
+			</article>
+
+			<article
+				class="about__orbit-item about__orbit-item--bibs"
+				role="button"
+				tabindex="0"
+				aria-expanded="false"
+				aria-controls="about-preview-bibs"
+				aria-label={t('about.race-bib-collection')}
+				aria-describedby="about-note-bibs"
+			>
+				<span class="about__orbit-orb" aria-hidden="true"></span>
+				<div class="about__orbit-preview" id="about-preview-bibs">
+					<RaceBibs class="about__orbit-bibs" />
+				</div>
+				<p class="about__orbit-note" id="about-note-bibs">
+					{
+						t('about.each-bib-marks-a-race-a-route-and-a-fini')
+					}
+				</p>
+			</article>
+
+			<article
+				class="about__orbit-item about__orbit-item--flag"
+				role="button"
+				tabindex="0"
+				aria-expanded="false"
+				aria-controls="about-preview-flag"
+				aria-label={t('about.a-phrase-i-keep-on-my-wall')}
+				aria-describedby="about-note-flag"
+			>
+				<span class="about__orbit-orb" aria-hidden="true"></span>
+				<div class="about__orbit-preview" id="about-preview-flag"><Flag /></div>
+				<p class="about__orbit-note" id="about-note-flag">
+					{
+						t('about.a-reminder-to-stay-curious-and-make-room')
+					}
+				</p>
+			</article>
+
+			<article
+				class="about__orbit-item about__orbit-item--quote about__orbit-item--lower"
+				role="button"
+				tabindex="0"
+				aria-expanded="false"
+				aria-controls="about-preview-quote"
+				aria-label={t('about.a-note-about-my-work-and-writing')}
+			>
+				<span class="about__orbit-orb" aria-hidden="true"></span>
+				<blockquote class="about__intro about__quote-preview" id="about-preview-quote">
+					<p class="about__lead">
 						{
-							t({
-								en: 'Download CV',
-								es: 'Descargar CV',
-								'pt-br': 'Baixar CV',
-							})
+							t('about.i-work-as-a-ui-ux-developer-in-telecommu')
 						}
 					</p>
-					<i class="uil uil-download-alt button__icon"></i>
+					<p class="about__lead">
+						{
+							t('about.i-also-write-my-opinions-are-personal-sh')
+						}
+					</p>
+				</blockquote>
+			</article>
+
+			<a
+				rel="nofollow"
+				href="/CV_Juan_Felipe_Rada.pdf"
+				target="_blank"
+				class="about__poster about__orbit-item about__orbit-item--cv"
+				aria-label={t('about.download-cv')}
+			>
+				<span class="about__orbit-orb" aria-hidden="true"></span>
+				<span class="about__poster-frame">
+					<Logo class="about__poster-logo" role="img" aria-hidden="true" width={44} height={44} />
+					<span class="about__poster-text" aria-hidden="true"></span>
+					<span class="about__poster-text about__poster-text--short" aria-hidden="true"></span>
+					<span class="about__poster-text" aria-hidden="true"></span>
+					<span class="about__poster-hint">
+						{t('about.download-cv')}
+						<i class="uil uil-external-link-alt" aria-hidden="true"></i>
+					</span>
+				</span>
+			</a>
+		</div>
+	</div>
+</section>
+
+<section class="about-publications section" aria-labelledby="publications-title">
+	<div class="container layout-grid">
+		<header class="about-section-heading layout-full">
+			<p class="about-section-kicker">02</p>
+			<h2 id="publications-title">
+				{t('about.publications')}
+			</h2>
+		</header>
+		<div class="publication-grid layout-full">
+			{
+				documentPublications.map((publication) => (
+					<article class="publication-document">
+						<a href={publication.pdf} target="_blank" rel="noopener noreferrer">
+							<div class="publication-document__details">
+								<p>
+									{publication.type}
+								</p>
+								<h3>{publication.title}</h3>
+								{publication.contributor && <p>{publication.contributor}</p>}
+								<span>
+									{t('about.view-publication')}
+									<svg
+										viewBox="0 0 24 24"
+										width="14"
+										height="14"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										aria-hidden="true"
+									>
+										<path d="M7 17 17 7M8 7h9v9"></path>
+									</svg>
+								</span>
+							</div>
+						</a>
+						{publication.archive && (
+							<a
+								class="publication-document__source"
+								href={publication.archive}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{t('about.archived-issuu-source')}
+							</a>
+						)}
+					</article>
+				))
+			}
+			{
+				publications.map((publication) => (
+					<article class="publication-card">
+						<p class="publication-meta">
+							<span>
+								{publication.data.type === 'poem'
+									? t('about.poem')
+									: t('about.essay')}
+							</span>
+							<time datetime={publication.data.pubDate.toISOString()}>
+								{publication.data.pubDate.toLocaleDateString(publication.data.lang ?? 'en', {
+									year: 'numeric',
+									month: 'short',
+								})}
+							</time>
+						</p>
+						<h3>
+							<a href={`${BLOG_URL}/${publication.id}/`} target="_blank" rel="noopener noreferrer">
+								{publication.data.title}
+							</a>
+						</h3>
+					</article>
+				))
+			}
+		</div>
+		<a
+			class="about-more-writing layout-full"
+			href={`${BLOG_URL}/`}
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			{
+				t('about.read-all-my-writing')
+			}
+			<svg
+				viewBox="0 0 24 24"
+				width="14"
+				height="14"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<path d="M7 17 17 7M8 7h9v9"></path>
+			</svg>
+		</a>
+	</div>
+</section>
+
+<section class="about-facts section" aria-labelledby="facts-title">
+	<div class="container layout-grid">
+		<header class="about-section-heading layout-full">
+			<p class="about-section-kicker">03</p>
+			<h2 id="facts-title">
+				{t('about.fun-facts')}
+			</h2>
+		</header>
+		<div class="poster-strip layout-full">
+			{
+				posters.map((poster) => (
+					<article class="poster-strip__item">
+						<div class="poster-strip__info">
+							<h3 class="poster-strip__title">{poster.title}</h3>
+							<p class="poster-strip__description">{poster.description}</p>
+						</div>
+						<Image
+							class="poster-strip__image"
+							src={poster.src}
+							alt={poster.alt}
+							widths={[200, 400, 600]}
+							sizes="(max-width: 767px) 70vw, 260px"
+							loading="lazy"
+							decoding="async"
+						/>
+					</article>
+				))
+			}
+		</div>
+		<div class="spark-sub layout-full">
+			<h3>{t('about.spark-ar-filters')}</h3>
+			<p class="spark-sub__text">
+				{t('about.spark-ar-description')}
+				<a
+					href="https://spark.meta.com/learn/FAQ/Meta-spark-update"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{t('about.spark-ar-removed-link')}
 				</a>
+				{t('about.spark-ar-description-end')}
+			</p>
+			<div class="spark-sub__videos">
+				{
+					[
+						{ src: filter1, n: 1 },
+						{ src: filter2, n: 2 },
+						{ src: filter3, n: 3 },
+						{ src: filter4, n: 4 },
+					].map(({ src, n }) => (
+						<span
+							class="spark-sub__tile"
+							role="img"
+							aria-label={t({
+								en: `Filter ${n} preview`,
+								es: `Vista previa del filtro ${n}`,
+								'pt-br': `Prévia do filtro ${n}`,
+							})}
+						>
+							<video src={src} autoplay loop muted playsinline aria-hidden="true" />
+						</span>
+					))
+				}
 			</div>
 		</div>
 	</div>
 </section>
 
+<script>
+	// ponytail: the muted attribute alone isn't honored when ClientRouter
+	// swaps the document — force the property so autoplay never has sound
+	const mute = () =>
+		document
+			.querySelectorAll<HTMLVideoElement>('.spark-sub__tile video')
+			.forEach((v) => (v.muted = true));
+	mute();
+	document.addEventListener('astro:page-load', mute);
+</script>
+
 <style>
-	/*==================== ABOUT ====================*/
-	.about__img {
-		border-radius: 0.5rem;
-		justify-self: center;
-		align-self: center;
+	/*==================== ABOUT (a wall of my room) ====================*/
+	#About {
+		--layout-max-width: 82rem;
+		--layout-gap: clamp(1.25rem, 3vw, 2.5rem);
 	}
-	.about__description {
-		text-align: left;
-		margin-bottom: var(--mb-2-5);
+	.about-hero,
+	.about-publications,
+	.about-facts {
+		--layout-max-width: 82rem;
 	}
-	.about__info {
-		display: flex;
-		justify-content: space-between;
-		margin-bottom: var(--mb-2-5);
-		gap: 1rem;
+	.about-hero.section {
+		min-height: min(72svh, 50rem);
+		display: grid;
+		align-content: center;
 	}
-	.about__info-title {
-		font-size: var(--h2-font-size);
-		font-weight: var(--font-semi-bold);
-		color: var(--title-color);
-	}
-	.about__info-name {
-		font-size: var(--smaller-font-size);
-	}
-	.about__info-title,
-	.about__info-name {
-		display: block;
+	.about__hero {
+		width: 100%;
+		margin-inline: auto;
 		text-align: center;
 	}
-	.about__buttons {
+	.about__hero .section__title {
+		margin-bottom: 0.75rem;
+		font-size: clamp(3rem, 8vw, 6rem);
+		line-height: 0.95;
+		letter-spacing: -0.06em;
+	}
+	.about__summary {
+		max-width: 48rem;
+		margin-inline: auto;
+		font-size: clamp(1rem, 2vw, 1.35rem);
+		line-height: 1.45;
+		color: var(--text-color-light);
+	}
+	.about-section-heading {
+		display: flex;
+		align-items: baseline;
+		gap: 1rem;
+		margin-bottom: clamp(1.5rem, 4vw, 3rem);
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid color-mix(in srgb, var(--title-color) 20%, transparent);
+	}
+	.about-section-heading h2 {
+		font-size: clamp(2rem, 5vw, 3.75rem);
+		line-height: 1;
+		letter-spacing: -0.045em;
+	}
+	.about-section-kicker {
+		font-family: 'Share Tech Mono', monospace;
+		font-size: var(--small-font-size);
+		color: var(--first-color);
+	}
+	.about-publications {
+		--layout-gap: clamp(1rem, 2vw, 1.5rem);
+		background: color-mix(in srgb, var(--container-color) 45%, transparent);
+	}
+	.publication-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--layout-gap);
+	}
+	.publication-card {
+		min-height: 12rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 2rem;
+		padding: clamp(1.25rem, 2.5vw, 2rem);
+		border: 1px solid color-mix(in srgb, var(--title-color) 18%, transparent);
+		border-radius: var(--radius-md);
+		background: var(--body-color);
+		transition:
+			transform 180ms ease,
+			border-color 180ms ease;
+	}
+	.publication-card:hover {
+		transform: translateY(-3px);
+		border-color: var(--first-color);
+	}
+	.publication-document {
+		display: flex;
+		flex-direction: column;
+		min-height: 12rem;
+		overflow: hidden;
+		border: 1px solid color-mix(in srgb, var(--title-color) 18%, transparent);
+		border-radius: var(--radius-md);
+		background: var(--body-color);
+		transition:
+			transform 180ms ease,
+			border-color 180ms ease;
+	}
+	.publication-document:hover {
+		transform: translateY(-3px);
+		border-color: var(--first-color);
+	}
+	.publication-document > a {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		color: inherit;
+		text-decoration: none;
+	}
+	.publication-document__source {
+		padding: 0 clamp(1.1rem, 2vw, 1.5rem) 1.25rem;
+		font-size: var(--smaller-font-size);
+		color: var(--first-color);
+	}
+	.publication-document__details {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: clamp(1.1rem, 2vw, 1.5rem);
+	}
+	.publication-document__details > p {
+		font-size: var(--smaller-font-size);
+		color: var(--text-color-light);
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
+	}
+	.publication-document__details h3 {
+		font-size: clamp(1.35rem, 2.3vw, 1.75rem);
+		line-height: 1.15;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
+	}
+	.publication-document__details > span {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: auto;
+		padding-top: 0.75rem;
+		border-top: 1px solid color-mix(in srgb, var(--title-color) 18%, transparent);
+		font-size: var(--small-font-size);
+		font-weight: var(--font-medium);
+	}
+	.publication-document__details > span :global(svg) {
+		color: var(--first-color);
+	}
+	.publication-meta {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		font-size: var(--smaller-font-size);
+		color: var(--text-color-light);
+	}
+	.publication-card h3 {
+		font-size: clamp(1.2rem, 2.3vw, 1.75rem);
+		line-height: 1.2;
+	}
+	.publication-card h3 a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.about-more-writing span,
+	.about-more-writing :global(svg) {
+		color: var(--first-color);
+	}
+	.about-more-writing {
+		justify-self: end;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding-block: 0.5rem;
+		color: var(--title-color);
+		font-weight: var(--font-medium);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.25em;
+	}
+	@media screen and (max-width: 767px) {
+		.publication-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	/* SAMCRO posters: title beside the image, description under the title */
+	.poster-strip {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--layout-gap, 1.25rem);
+		margin-top: var(--layout-gap, 1.25rem);
+	}
+	.poster-strip__item {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) clamp(150px, 22vw, 260px);
+		column-gap: clamp(1.25rem, 3vw, 2.5rem);
+		align-items: center;
+	}
+	.poster-strip__title {
+		color: var(--title-color);
+		font-family: var(--title-font);
+		font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+		font-weight: var(--font-semi-bold);
+	}
+	.poster-strip__description {
+		max-width: 44ch;
+		margin-top: 0.35rem;
+		color: var(--text-color);
+		line-height: 1.6;
+	}
+	.poster-strip__image {
+		width: 100%;
+		height: auto;
+		display: block;
+		border: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent);
+		border-radius: var(--radius-sm, 4px);
+		box-shadow: var(--shadow-sm);
+	}
+	@media (max-width: 767px) {
+		.poster-strip__item {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.poster-strip__image {
+			order: -1;
+			max-width: 320px;
+		}
+	}
+	/* Spark AR filters: folded in from the retired project page */
+	.spark-sub {
+		display: grid;
+		gap: 1rem;
+		margin-top: calc(var(--layout-gap, 1.25rem) * 2);
+	}
+	.spark-sub h3 {
+		font-size: clamp(1.2rem, 2.3vw, 1.75rem);
+		line-height: 1.2;
+	}
+	.spark-sub__text {
+		max-width: 60ch;
+		line-height: 1.7;
+		color: var(--text-color);
+	}
+	.spark-sub__text a {
+		color: var(--first-color);
+	}
+	.spark-sub__videos {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+		gap: var(--layout-gap, 1.25rem);
+		max-width: 42rem;
+	}
+	.spark-sub__tile {
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		box-shadow: var(--shadow-sm);
+	}
+	.spark-sub__tile video {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 9 / 16;
+		object-fit: cover;
+	}
+	blockquote.about__intro {
+		position: relative;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: clamp(0.65rem, 1.25svh, 1rem);
+		min-width: 0;
+		margin: 0;
+		padding: 2rem 1rem 1rem 1.25rem;
+		border: 1px solid color-mix(in srgb, var(--first-color) 28%, transparent);
+		border-left: 4px solid var(--first-color);
+		border-radius: 0 var(--radius-md) var(--radius-md) 0;
+		background: color-mix(in srgb, var(--container-color) 82%, transparent);
+		box-shadow: var(--shadow-sm);
+		font-style: italic;
+	}
+	blockquote.about__intro::before {
+		content: '“';
+		position: absolute;
+		top: 0.2rem;
+		left: 1rem;
+		color: var(--first-color);
+		font-family: Georgia, serif;
+		font-size: 2.75rem;
+		font-style: normal;
+		line-height: 1;
+	}
+	blockquote.about__quote-preview::before {
+		content: none;
+	}
+	.about__lead {
+		text-align: left;
+		line-height: 1.55;
+		color: var(--text-color);
+	}
+	.about__moai {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 8.5rem;
+		height: 8.5rem;
+		background: var(--container-color);
+		border: 2px solid var(--title-color);
+		box-shadow:
+			inset 0 0 0 5px var(--body-color),
+			inset 0 0 0 6px color-mix(in srgb, var(--title-color) 35%, transparent),
+			var(--shadow-md);
+	}
+	.about__moai :global(.moai) {
+		width: 5.5rem;
+	}
+	.about__gallery {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		align-items: center;
+		gap: clamp(0.75rem, 2vw, 1.5rem);
+	}
+	.about__portrait-core {
+		position: relative;
+		display: grid;
+		justify-items: center;
+		grid-column: 1 / -1;
+		padding: 0;
+	}
+	.about__portrait {
+		width: clamp(12rem, 24vw, 18rem);
+		max-width: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
+		object-position: center;
+		border-radius: 50%;
+	}
+	.about__orbit-item {
+		position: relative;
+		display: flex;
+		min-width: 0;
+		min-height: 11rem;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		padding: 1rem;
+		border: 1px solid color-mix(in srgb, var(--title-color) 16%, transparent);
+		border-radius: var(--radius-md);
+		background: color-mix(in srgb, var(--container-color) 48%, transparent);
+		text-align: center;
+		cursor: pointer;
+	}
+	.about__orbit-item:focus-visible {
+		outline: 3px solid var(--first-color);
+		outline-offset: 4px;
+	}
+	.about__orbit-note {
+		position: absolute !important;
+		width: 1px !important;
+		height: 1px !important;
+		padding: 0 !important;
+		margin: -1px !important;
+		overflow: hidden !important;
+		clip: rect(0, 0, 0, 0) !important;
+		clip-path: inset(50%) !important;
+		white-space: nowrap !important;
+		border: 0 !important;
+	}
+	.about__orbit-preview {
+		display: grid;
+		place-items: center;
+	}
+	.about__quote-mark {
+		display: grid;
+		width: 4rem;
+		aspect-ratio: 1;
+		place-items: center;
+		border: 1px solid color-mix(in srgb, var(--first-color) 45%, transparent);
+		border-radius: 50%;
+		color: var(--first-color);
+		font-family: Georgia, serif;
+		font-size: 4rem;
+		line-height: 1;
+	}
+	.about__orbit-bibs {
+		width: 100%;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.35rem;
+	}
+	.about__orbit-bibs :global(.bibs__item) {
+		min-width: 0;
+		padding-top: 0.25rem;
+	}
+	.about__orbit-bibs :global(.bibs__card) {
+		width: 100%;
+		padding: 0.3rem 0.35rem;
+	}
+	.about__orbit-bibs :global(.bibs__race) {
+		max-width: 100%;
+		overflow: hidden;
+		font-size: 0.42rem;
+		letter-spacing: 0.06em;
+		text-overflow: ellipsis;
+	}
+	.about__orbit-bibs :global(.bibs__number) {
+		font-size: 0.9rem;
+	}
+	.about__orbit-item--flag :global(.quote-container) {
+		width: max-content;
+		max-width: calc(100vw - 2rem);
+		margin: 0;
+		padding: 0.3rem 0.4rem;
+		border-width: 0.2rem;
+		font-size: clamp(0.45rem, 2vw, 0.7rem);
+		white-space: nowrap;
+	}
+
+	/* CV as a framed document hanging on the wall: nail + string + frame
+	   with the JFRA logo and text lines, slightly tilted like it was
+	   just hung. Decorative bits are aria-hidden pseudo-elements/spans
+	   inside a labelled link. */
+	.about__poster {
+		position: relative;
+		flex-shrink: 0;
 		display: flex;
 		justify-content: center;
+		padding-top: 2.5rem; /* room for the nail and string */
+		text-decoration: none;
 	}
-	.about__description__link {
-		text-decoration: underline;
+	/* the nail: sits on the wall, never moves */
+	.about__poster::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 50%;
+		width: 9px;
+		height: 9px;
+		transform: translateX(-50%);
+		border-radius: 50%;
+		background: var(--title-color);
+	}
+	.about__poster-frame {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.65rem;
+		width: 10rem;
+		padding: 1.5rem 1.1rem 1.1rem;
+		background: var(--container-color);
+		border: 2px solid var(--title-color);
+		/* inner mat, like a picture frame */
+		box-shadow:
+			inset 0 0 0 5px var(--body-color),
+			inset 0 0 0 6px color-mix(in srgb, var(--title-color) 35%, transparent),
+			var(--shadow-md);
+		/* the frame hangs from the nail: it pivots on the nail point
+		   (top of the strings, above the frame), not its own center —
+		   hover straightens the swing while the nail stays put */
+		transform-origin: 50% -2.4rem;
+		transform: rotate(2.5deg);
+		transition: transform 250ms ease-in-out;
+	}
+	.about__poster:hover .about__poster-frame {
+		transform: rotate(0deg);
+	}
+	/* the string: two lines anchored at the nail (frame top center)
+	   and rotating outward toward the frame — both start exactly at
+	   the nail so they connect */
+	.about__poster-frame::before,
+	.about__poster-frame::after {
+		content: '';
+		position: absolute;
+		top: -2.4rem;
+		left: 50%;
+		height: 2.45rem;
+		width: 1px;
+		background: var(--text-color);
+		opacity: 0.5;
+		transform-origin: top center;
+	}
+	.about__poster-frame::before {
+		transform: rotate(38deg);
+	}
+	.about__poster-frame::after {
+		transform: rotate(-38deg);
+	}
+	.about__poster-logo {
+		width: 44px;
+		height: auto;
+	}
+	/* fake document text lines: gray bars under the logo */
+	.about__poster-text {
+		width: 100%;
+		height: 0.4rem;
+		border-radius: var(--radius-pill);
+		background: color-mix(in srgb, var(--text-color) 22%, transparent);
+	}
+	.about__poster-text--short {
+		width: 65%;
+		align-self: flex-start;
+	}
+	.about__poster-hint {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding-top: 0.75rem;
+		border-top: 1px solid color-mix(in srgb, var(--title-color) 25%, transparent);
+		font-size: var(--smaller-font-size);
+		font-weight: var(--font-semi-bold);
+		letter-spacing: 0.05em;
 		color: var(--first-color);
-		font-weight: 500;
-		transition: color 0.3s ease;
+	}
+	.about__poster-hint i {
+		font-size: 0.8rem;
 	}
 
-	.about__description__link:hover,
-	.about__description__link:focus {
-		color: var(--first-color-alt);
-		text-decoration-thickness: 2px;
+	@media screen and (max-width: 767px) {
+		.about__gallery {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 1rem;
+		}
+		.about__portrait {
+			width: min(64vw, 16rem);
+		}
+		.about__orbit-item {
+			min-height: 0;
+			padding: 1.25rem;
+		}
+		.about__orbit-note {
+			position: absolute !important;
+		}
+		.about__poster-frame {
+			width: 8.5rem;
+		}
+		.about__orbit-item--flag :global(.quote-container) {
+			max-width: calc(100vw - 2rem);
+		}
 	}
 
-	.about__description__link:focus-visible {
-		outline: 2px solid var(--first-color);
-		outline-offset: 2px;
+	@media screen and (max-width: 380px) {
+		.about__orbit-item {
+			padding: 0.85rem;
+		}
+	}
+
+	@media screen and (min-width: 1024px) and (hover: hover) {
+		.about__gallery {
+			position: relative;
+			display: block;
+			min-height: 0;
+			height: clamp(40rem, 72svh, 52rem);
+		}
+		.about__portrait-core {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: clamp(12rem, 24vw, 18rem);
+			transform: translate(-50%, -50%);
+		}
+		.about__orbit-item {
+			position: absolute;
+			top: var(--orbit-y);
+			left: var(--orbit-x);
+			width: 3.5rem;
+			height: 3.5rem;
+			min-height: 0;
+			padding: 0;
+			border: 0;
+			border-radius: 50%;
+			background: transparent;
+			transform: translate(-50%, -50%);
+			animation: moodboard-float 5s ease-in-out infinite;
+			animation-delay: var(--float-delay, 0s);
+			transition: scale 180ms ease, z-index 180ms ease;
+		}
+		.about__orbit-orb {
+			position: absolute;
+			inset: 0;
+			border: 1px solid color-mix(in srgb, var(--first-color) 48%, var(--title-color));
+			border-radius: 50%;
+			background:
+				radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--body-color) 82%, white), transparent 55%),
+				color-mix(in srgb, var(--first-color) 25%, var(--container-color));
+			box-shadow: 0 0.4rem 1.2rem color-mix(in srgb, var(--title-color) 15%, transparent);
+			transition: opacity 180ms ease, scale 220ms ease;
+		}
+		.about__orbit-item > :not(.about__orbit-orb):not(.about__orbit-note):not(.about__idea-bulb) {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: min(var(--orbit-width), calc(100vw - 2rem));
+			max-width: none;
+			opacity: 0;
+			visibility: hidden;
+			transform: translate(-50%, -50%) scale(0.92);
+			transition:
+				opacity 180ms ease,
+				transform 220ms ease,
+				visibility 180ms ease;
+			pointer-events: auto;
+		}
+		.about__orbit-item--quote > :not(.about__orbit-orb):not(.about__orbit-note):not(.about__idea-bulb) {
+			z-index: 1;
+		}
+		.about__orbit-item--moai {
+			--orbit-x: 50%;
+			--orbit-y: 15%;
+			--orbit-width: 9rem;
+			--float-delay: -0.7s;
+		}
+		.about__orbit-item--type {
+			--orbit-x: 70%;
+			--orbit-y: 27%;
+			--orbit-width: 13rem;
+			--float-delay: -2.1s;
+		}
+		.about__orbit-item--bibs {
+			--orbit-x: 70%;
+			--orbit-y: 73%;
+			--orbit-width: 13rem;
+			--float-delay: -1.4s;
+		}
+		.about__orbit-item--cv {
+			--orbit-x: 30%;
+			--orbit-y: 27%;
+			--orbit-width: 10rem;
+			--float-delay: -3s;
+		}
+		.about__orbit-item--quote {
+			--orbit-x: 30%;
+			--orbit-y: 73%;
+			--orbit-width: 22rem;
+			--float-delay: -2.6s;
+		}
+		.about__orbit-item--flag {
+			--orbit-x: 50%;
+			--orbit-y: 85%;
+			--orbit-width: 18rem;
+			--float-delay: -0.2s;
+		}
+		.about__orbit-item--flag :global(.quote-container) {
+			font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+		}
+		.about__orbit-item:hover,
+		.about__orbit-item:focus-visible,
+		.about__orbit-item.is-open {
+			z-index: 6;
+			scale: 1.05;
+			animation-play-state: paused;
+		}
+		.about__orbit-item:hover .about__orbit-orb,
+		.about__orbit-item:focus-visible .about__orbit-orb,
+		.about__orbit-item.is-open .about__orbit-orb {
+			opacity: 0;
+			scale: 0.6;
+		}
+		.about__orbit-item:hover > :not(.about__orbit-orb):not(.about__orbit-note):not(.about__idea-bulb),
+		.about__orbit-item:focus-visible > :not(.about__orbit-orb):not(.about__orbit-note):not(.about__idea-bulb),
+		.about__orbit-item.is-open > :not(.about__orbit-orb):not(.about__orbit-note):not(.about__idea-bulb) {
+			opacity: 1;
+			visibility: visible;
+			transform: translate(-50%, -50%) scale(1);
+		}
+		.about__orbit-item--cv {
+			text-decoration: none;
+		}
+		.about__orbit-item--cv:focus-visible {
+			outline: 3px solid var(--first-color);
+			outline-offset: 4px;
+		}
+	}
+
+	@keyframes moodboard-float {
+		0%,
+		100% {
+			translate: 0 0;
+		}
+		50% {
+			translate: 0 -0.65rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.about__orbit-item {
+			animation: none !important;
+			transition: none;
+		}
 	}
 </style>
+
+<script>
+	const closeMoodboardItems = () => {
+		document
+			.querySelectorAll<HTMLElement>('.about__orbit-item[role="button"].is-open')
+			.forEach((item) => {
+				item.classList.remove('is-open');
+				item.setAttribute('aria-expanded', 'false');
+			});
+	};
+
+	document.addEventListener('click', (event) => {
+		const target = event.target;
+		const item = target instanceof Element
+			? target.closest<HTMLElement>('.about__orbit-item[role="button"]')
+			: null;
+
+		if (!item) {
+			closeMoodboardItems();
+			return;
+		}
+
+		const shouldOpen = item.getAttribute('aria-expanded') !== 'true';
+		closeMoodboardItems();
+		if (shouldOpen) {
+			item.classList.add('is-open');
+			item.setAttribute('aria-expanded', 'true');
+		}
+	});
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key !== 'Enter' && event.key !== ' ') return;
+		const target = event.target;
+		if (!(target instanceof Element)) return;
+		const item = target.closest<HTMLElement>('.about__orbit-item[role="button"]');
+		if (!item) return;
+		event.preventDefault();
+		item.click();
+	});
+
+	document.addEventListener('pointerout', (event) => {
+		if (!(event.target instanceof Element) || event.pointerType === 'touch') return;
+		const item = event.target.closest<HTMLElement>('.about__orbit-item[role="button"]');
+		if (!item || (event.relatedTarget instanceof Node && item.contains(event.relatedTarget))) return;
+		item.classList.remove('is-open');
+		item.setAttribute('aria-expanded', 'false');
+	});
+</script>

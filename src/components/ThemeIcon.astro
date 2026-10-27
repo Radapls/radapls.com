@@ -6,11 +6,8 @@ const t = useTranslations(Astro.currentLocale as Lang);
 
 <button
 	id="themeToggle"
-	aria-label={t({
-		en: 'Theme switch color',
-		es: 'Botón de cambio de color',
-		'pt-br': 'Botao de troca de cor',
-	})}
+	aria-label={t('themeicon.theme-switch-color')}
+	aria-pressed="false"
 >
 	<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 		<path
@@ -50,32 +47,17 @@ const t = useTranslations(Astro.currentLocale as Lang);
 <script is:inline>
 	const applyThemeFromLocalStorage = () => {
 		const theme = localStorage?.getItem('theme') ?? 'light';
-		if (theme === 'dark') {
-			document.documentElement.classList.add('dark');
-		} else {
-			document.documentElement.classList.remove('dark');
-		}
+		const isDark = theme === 'dark';
+		document.documentElement.classList.toggle('dark', isDark);
+		const btn = document.getElementById('themeToggle');
+		btn?.setAttribute('aria-pressed', String(isDark));
 	};
-
-	const getInitialTheme = () => {
-		const stored = localStorage?.getItem('theme') ?? '';
-		if (['dark', 'light'].includes(stored)) return stored;
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	};
-
-	// Initial theme application
-	const theme = getInitialTheme();
-	localStorage.setItem('theme', theme);
-	if (theme === 'dark') {
-		document.documentElement.classList.add('dark');
-	} else {
-		document.documentElement.classList.remove('dark');
-	}
 
 	const handleToggleClick = () => {
 		const html = document.documentElement;
 		const isDark = html.classList.toggle('dark');
 		localStorage.setItem('theme', isDark ? 'dark' : 'light');
+		document.getElementById('themeToggle')?.setAttribute('aria-pressed', String(isDark));
 	};
 
 	const setupThemeToggleButton = () => {
@@ -87,19 +69,27 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		btn.addEventListener('click', handleToggleClick);
 	};
 
-	// Attach theme toggle logic on initial page load
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', setupThemeToggleButton);
-	} else {
-		setupThemeToggleButton();
+	// This is:inline script re-executes on every view transition, but the
+	// header (and its button) persist via transition:persist. Registering the
+	// document listeners each run stacks them — N navigations meant the click
+	// handler fired N times, toggling the theme back on even taps (the "stuck
+	// color" bug). Guard so document-level wiring happens exactly once.
+	if (!window.__themeToggleInit) {
+		window.__themeToggleInit = true;
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', setupThemeToggleButton);
+		} else {
+			setupThemeToggleButton();
+		}
+
+		// View Transition: reapply theme & reattach toggle after DOM is swapped
+		document.addEventListener('astro:after-swap', () => {
+			applyThemeFromLocalStorage();
+			setupThemeToggleButton();
+		});
+
+		// Optional: useful for certain components being delayed
+		document.addEventListener('astro:page-load', setupThemeToggleButton);
 	}
-
-	// View Transition: Reapply theme & reattach toggle after DOM is swapped
-	document.addEventListener('astro:after-swap', () => {
-		applyThemeFromLocalStorage();
-		setupThemeToggleButton();
-	});
-
-	// Optional: useful for certain components being delayed
-	document.addEventListener('astro:page-load', setupThemeToggleButton);
 </script>

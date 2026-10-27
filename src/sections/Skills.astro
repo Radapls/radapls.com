@@ -5,34 +5,18 @@ import { useTranslations, type Lang } from 'src/i18n';
 const t = useTranslations(Astro.currentLocale as Lang);
 ---
 
-<!--==================== SKILLS ====================-->
 <section class="skills section" id="Skills">
 	<h2 class="section__title">
-		🥷🏼
 		{
-			t({
-				en: 'Skills',
-				es: 'Habilidades',
-				'pt-br': 'Habilidades',
-			})
+			t('skills.skills')
 		}
 	</h2>
-	<span class="section__subtitle">
-		{
-			t({
-				en: 'Tools and technologies I have worked with',
-				es: 'Herramientas y tecnologias con las que he trabajado',
-				'pt-br': 'Ferramentas e tecnologias com as quais trabalhei',
-			})
-		}
-	</span>
-
-	<div class="skills__container container">
+	<div class="container layout-auto-grid">
 		{
 			SkillIcons.map((item) => (
 				<div class="skl-card">
-					<a href={item.link} target="_blank" aria-label={`${item.icon} logo`}>
-						<i class={item.icon} />
+					<a href={item.link} target="_blank" aria-label={`${item.name} official site`}>
+						<i class={item.icon} aria-hidden="true" />
 					</a>
 				</div>
 			))
@@ -41,23 +25,29 @@ const t = useTranslations(Astro.currentLocale as Lang);
 </section>
 
 <style>
-	.skills__container {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		gap: 0.5rem;
+	#Skills {
+		--layout-card-min: clamp(5.25rem, 14vw, 11rem);
+		--layout-gap: 0.5rem;
 	}
 
 	.skl-card {
 		background-color: var(--container-color);
-		border-radius: 0.5rem;
+		border-radius: var(--radius-md);
 		padding: 1rem;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+		box-shadow: var(--shadow-sm);
 		font-size: 50px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
 		color: var(--first-color-second);
+		transition:
+			box-shadow 200ms ease-in-out,
+			transform 200ms ease-in-out;
+	}
+	.skl-card:hover {
+		box-shadow: var(--shadow-md);
+		transform: translateY(-3px);
 	}
 	a {
 		color: var(--first-color-second);
@@ -67,17 +57,5 @@ const t = useTranslations(Astro.currentLocale as Lang);
 		all: unset;
 		color: var(--first-color-lighter);
 		transition: 0.2s;
-	}
-
-	@media screen and (max-width: 768px) {
-		.skills__container {
-			grid-template-columns: repeat(4, 1fr);
-		}
-	}
-
-	@media screen and (max-width: 568px) {
-		.skills__container {
-			grid-template-columns: repeat(3, 1fr);
-		}
 	}
 </style>

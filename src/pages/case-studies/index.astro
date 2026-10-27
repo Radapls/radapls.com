@@ -1,0 +1,166 @@
+---
+import { DEFAULT_LOCALE, useTranslations } from 'src/i18n';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '@layouts/Layout.astro';
+import { GITHUB, LINKEDIN } from 'src/consts';
+
+const locale = DEFAULT_LOCALE;
+const t = useTranslations(locale);
+const order = ['ericsson', 'wibx', 'birdi', 'nt', 'iei', 'alcaldia', 'moe'];
+const experiences = (await getCollection('experience'))
+	.filter((entry) => entry.id.startsWith(`${locale}/`) && entry.data.kind !== 'education')
+	.sort((a, b) => {
+		const slugA = a.id.split('/')[1];
+		const slugB = b.id.split('/')[1];
+		return order.indexOf(slugA) - order.indexOf(slugB);
+	});
+
+const title = `Juan Felipe Rada | ${t('case-studies.index.my-experience')}`;
+---
+
+<Layout {title}>
+	<section class="case-studies section">
+		<div class="case-studies__inner container">
+			<header class="case-studies__header">
+				<p class="case-studies__eyebrow">{t('case-studies.index.timeline')}</p>
+				<h1>{t('case-studies.index.my-experience')}</h1>
+				<p class="case-studies__intro">A selection of teams, organizations, and projects I’ve worked with.</p>
+			</header>
+
+			<ul class="case-studies__grid" aria-label={t('case-studies.index.my-experience')}>
+				{experiences.map((experience) => {
+					const slug = experience.id.split('/')[1];
+					const organization = experience.data.title.replace(/^JFRA\s*\|\s*/, '');
+					return (
+						<li class="case-card">
+							<a class="case-card__link" href={`/case-studies/${slug}/`}>
+								<div class="case-card__image">
+									{experience.data.gif && <Image src={experience.data.gif} alt={`${organization} visual`} loading="lazy" />}
+								</div>
+								<div class="case-card__body">
+									<h2>{organization}</h2>
+									<p>{experience.data.description}</p>
+									<span class="case-card__more">Explore experience <span aria-hidden="true">→</span></span>
+								</div>
+							</a>
+						</li>
+					);
+				})}
+			</ul>
+
+			<footer class="case-studies__socials">
+				<p>Connect with me</p>
+				<a href={LINKEDIN} target="_blank" rel="noopener noreferrer" aria-label={t('home.linkedin-profile')}>
+					<i class="uil uil-linkedin" aria-hidden="true"></i><span>LinkedIn</span>
+				</a>
+				<a href={GITHUB} target="_blank" rel="noopener noreferrer" aria-label={t('home.github-profile')}>
+					<i class="uil uil-github" aria-hidden="true"></i><span>GitHub</span>
+				</a>
+			</footer>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.case-studies { padding-block: clamp(3rem, 7vw, 6rem); }
+	.case-studies__inner { max-width: 1100px; }
+	.case-studies__header {
+		max-width: 42rem;
+		margin: 0 auto clamp(2rem, 5vw, 3.5rem);
+		text-align: center;
+	}
+	.case-studies__eyebrow {
+		margin-bottom: 0.75rem;
+		color: var(--first-color);
+		font-size: var(--small-font-size);
+		font-weight: var(--font-medium);
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+	.case-studies__header h1 {
+		margin-bottom: 0.8rem;
+		font-size: clamp(2rem, 5vw, 3.5rem);
+	}
+	.case-studies__intro {
+		color: var(--text-color-light);
+		line-height: 1.65;
+	}
+	.case-studies__grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: clamp(1rem, 2.5vw, 1.75rem);
+	}
+	.case-card {
+		min-width: 0;
+		border: 1px solid color-mix(in srgb, var(--first-color) 16%, transparent);
+		border-radius: 1rem;
+		background: var(--container-color);
+		overflow: hidden;
+		transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+	}
+	.case-card:hover,
+	.case-card:focus-within {
+		transform: translateY(-3px);
+		border-color: color-mix(in srgb, var(--first-color) 48%, transparent);
+		box-shadow: var(--shadow-md);
+	}
+	.case-card__link { display: block; height: 100%; color: inherit; text-decoration: none; }
+	.case-card__image {
+		display: grid;
+		place-items: center;
+		aspect-ratio: 16 / 8;
+		padding: 1rem;
+		background: color-mix(in srgb, var(--first-color) 6%, var(--container-color));
+	}
+	.case-card__image img {
+		width: 100%;
+		height: 100%;
+		max-height: 15rem;
+		border-radius: 0.4rem;
+		object-fit: contain;
+	}
+	.case-card__body { padding: 1.25rem 1.35rem 1.4rem; }
+	.case-card__body h2 { margin-bottom: 0.5rem; font-size: 1.25rem; }
+	.case-card__body p {
+		min-height: 3.2em;
+		color: var(--text-color-light);
+		font-size: var(--small-font-size);
+		line-height: 1.6;
+	}
+	.case-card__more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		margin-top: 1rem;
+		color: var(--first-color);
+		font-size: var(--small-font-size);
+		font-weight: var(--font-medium);
+	}
+	.case-studies__socials {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: clamp(2rem, 5vw, 3.5rem);
+	}
+	.case-studies__socials p { width: 100%; text-align: center; color: var(--text-color-light); }
+	.case-studies__socials a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		padding: 0.55rem 0.85rem;
+		border: 1px solid color-mix(in srgb, var(--first-color) 25%, transparent);
+		border-radius: var(--radius-pill);
+		color: var(--title-color);
+		transition: color 180ms ease, border-color 180ms ease;
+	}
+	.case-studies__socials a:hover { color: var(--first-color); border-color: var(--first-color); }
+	.case-studies__socials i { font-size: 1.15rem; }
+	@media screen and (max-width: 680px) {
+		.case-studies__grid { grid-template-columns: 1fr; }
+		.case-card__image { aspect-ratio: 16 / 9; }
+		.case-card__body p { min-height: 0; }
+	}
+</style>

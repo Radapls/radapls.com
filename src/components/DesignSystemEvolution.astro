@@ -1,0 +1,144 @@
+---
+interface Props {
+	locale?: 'en' | 'es' | 'pt-br';
+}
+
+const { locale = 'en' } = Astro.props;
+const copy = {
+	en: {
+		before: 'Before · every screen on its own',
+		beforeNote: 'Scattered files · improvised values · repeated work',
+		after: 'After · one shared system',
+		afterNote: 'Design tokens · reusable patterns · consistent screens',
+		files: ['home-final.scss', 'home-v2.fig', 'profile-new.fig', 'buttons-copy.scss'],
+		tokens: 'Design tokens',
+		patterns: 'Reusable patterns',
+		colors: 'Color', spacing: 'Spacing', type: 'Type',
+		button: 'Button', field: 'Form field', card: 'Card',
+	},
+	es: {
+		before: 'Antes · cada pantalla por su lado',
+		beforeNote: 'Archivos dispersos · valores improvisados · trabajo repetido',
+		after: 'Después · un sistema compartido',
+		afterNote: 'Tokens de diseño · patrones reutilizables · pantallas consistentes',
+		files: ['inicio-final.scss', 'inicio-v2.fig', 'perfil-nuevo.fig', 'botones-copia.scss'],
+		tokens: 'Tokens de diseño',
+		patterns: 'Patrones reutilizables',
+		colors: 'Color', spacing: 'Espaciado', type: 'Tipografía',
+		button: 'Botón', field: 'Campo', card: 'Tarjeta',
+	},
+	'pt-br': {
+		before: 'Antes · cada tela por conta própria',
+		beforeNote: 'Arquivos dispersos · valores improvisados · trabalho repetido',
+		after: 'Depois · um sistema compartilhado',
+		afterNote: 'Tokens de design · padrões reutilizáveis · telas consistentes',
+		files: ['inicio-final.scss', 'inicio-v2.fig', 'perfil-novo.fig', 'botoes-copia.scss'],
+		tokens: 'Tokens de design',
+		patterns: 'Padrões reutilizáveis',
+		colors: 'Cor', spacing: 'Espaçamento', type: 'Tipografia',
+		button: 'Botão', field: 'Campo', card: 'Cartão',
+	},
+} satisfies Record<NonNullable<Props['locale']>, Record<string, string | string[]>>;
+const labels = copy[locale];
+
+---
+
+<figure class="system-evolution" aria-label={`${labels.beforeNote} → ${labels.afterNote}`}>
+	<section class="evolution-stage evolution-before">
+		<h4>{labels.before}</h4>
+		<p>{labels.beforeNote}</p>
+		<div class="loose-files" aria-hidden="true">
+			{labels.files.map((file, index) => <div class={`loose-file loose-file-${index + 1}`}>
+				<div class="file-preview"><span></span><span></span><i></i></div>
+				<code>{file}</code>
+			</div>)}
+			<div class="loose-swatches"><i></i><i></i><i></i><i></i></div>
+		</div>
+	</section>
+	<div class="evolution-arrow" aria-hidden="true">→</div>
+	<section class="evolution-stage evolution-after">
+		<h4>{labels.after}</h4>
+		<p>{labels.afterNote}</p>
+		<div class="system-map" aria-hidden="true">
+			<div class="system-tokens">
+				<strong>{labels.tokens}</strong>
+				<div><i></i><span>{labels.colors}</span><i></i><i></i></div>
+				<div><b>24</b><span>{labels.spacing}</span></div>
+				<div><b>Aa</b><span>{labels.type}</span></div>
+			</div>
+			<div class="system-branch"><i></i><i></i><i></i></div>
+			<div class="system-patterns">
+				<strong>{labels.patterns}</strong>
+				<div class="pattern-chip"><span class="sample-button"></span>{labels.button}</div>
+				<div class="pattern-chip"><span class="sample-field"></span>{labels.field}</div>
+				<div class="pattern-chip"><span class="sample-card"><i></i><i></i></span>{labels.card}</div>
+			</div>
+		</div>
+	</section>
+</figure>
+
+<style>
+	.system-evolution {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.12fr);
+		align-items: center;
+		gap: clamp(0.5rem, 2vw, 1.4rem);
+		max-width: 58rem;
+		margin: 1.75rem auto 2rem;
+		padding: clamp(0.85rem, 2.5vw, 1.5rem);
+		border: 1px solid color-mix(in srgb, var(--first-color) 18%, transparent);
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--first-color) 3%, var(--container-color));
+	}
+	.evolution-stage { min-width: 0; }
+	.evolution-stage h4 { margin: 0 0 0.35rem; color: var(--title-color); font-size: clamp(0.9rem, 1.5vw, 1.05rem); }
+	.evolution-stage > p { min-height: 2.2em; margin: 0 0 1rem; color: var(--text-color-light); font-size: var(--small-font-size); line-height: 1.4; }
+	.evolution-before { opacity: 0.82; }
+	.loose-files { position: relative; height: 13.2rem; }
+	.loose-file { position: absolute; display: flex; flex-direction: column; justify-content: space-between; width: 47%; height: 5.6rem; padding: 0.5rem; border: 1px solid color-mix(in srgb, var(--text-color) 18%, transparent); border-radius: 0.45rem; background: var(--container-color); box-shadow: 0 4px 14px #0000000b; }
+	.loose-file code { overflow: hidden; color: var(--text-color-light); font-size: 0.58rem; text-overflow: ellipsis; white-space: nowrap; }
+	.loose-file-1 { top: 0.2rem; left: 2%; transform: rotate(-5deg); }
+	.loose-file-2 { top: 1.4rem; right: 3%; transform: rotate(6deg); }
+	.loose-file-3 { top: 4.8rem; left: 9%; transform: rotate(4deg); }
+	.loose-file-4 { top: 5.6rem; right: 1%; transform: rotate(-4deg); }
+	.file-preview { display: grid; grid-template-columns: 1fr 1fr; gap: 0.22rem; height: 3.8rem; padding: 0.3rem; background: color-mix(in srgb, var(--first-color) 4%, var(--container-color)); }
+	.file-preview span { border-radius: 2px; background: color-mix(in srgb, var(--first-color) 28%, transparent); }
+	.file-preview span:first-child { grid-column: span 2; height: 0.35rem; }
+	.file-preview i { width: 58%; height: 0.75rem; background: color-mix(in srgb, var(--title-color) 12%, transparent); }
+	.loose-file-2 .file-preview span { background: color-mix(in srgb, #e39a51 42%, transparent); }
+	.loose-file-3 .file-preview span { background: color-mix(in srgb, #61a884 40%, transparent); }
+	.loose-swatches { position: absolute; bottom: 0.15rem; left: 50%; display: flex; gap: 0.35rem; padding: 0.25rem 0.4rem; border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent); border-radius: 999px; background: var(--container-color); transform: translateX(-50%); }
+	.loose-swatches i { width: 0.8rem; height: 0.8rem; border: 1px solid var(--container-color); border-radius: 50%; background: #e39a51; }
+	.loose-swatches i:nth-child(2) { background: #61a884; }
+	.loose-swatches i:nth-child(3) { background: #8581c7; }
+	.loose-swatches i:nth-child(4) { background: #ed7580; }
+	.evolution-arrow { color: var(--first-color); font-size: 1.7rem; }
+	.system-map { display: grid; grid-template-columns: minmax(0, 1fr) 1.5rem minmax(0, 1fr); align-items: center; gap: 0.25rem; }
+	.system-tokens, .system-patterns { display: grid; gap: 0.4rem; padding: 0.65rem; border: 1px solid color-mix(in srgb, var(--first-color) 20%, transparent); border-radius: 0.65rem; background: var(--container-color); }
+	.system-tokens > strong, .system-patterns > strong { margin-bottom: 0.15rem; color: var(--first-color); font-size: 0.66rem; line-height: 1.2; }
+	.system-tokens > div { display: flex; align-items: center; gap: 0.3rem; min-width: 0; color: var(--text-color-light); font-size: 0.58rem; }
+	.system-tokens > div > i { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--first-color); }
+	.system-tokens > div > i:nth-of-type(2) { background: color-mix(in srgb, var(--first-color) 55%, var(--container-color)); }
+	.system-tokens > div > i:nth-of-type(3) { background: color-mix(in srgb, var(--title-color) 18%, var(--container-color)); }
+	.system-tokens b { color: var(--title-color); font-size: 0.62rem; }
+	.system-branch { position: relative; display: grid; gap: 1rem; }
+	.system-branch::before { position: absolute; top: 50%; right: 0; left: 0; height: 1px; background: color-mix(in srgb, var(--first-color) 48%, transparent); content: ''; }
+	.system-branch i { z-index: 1; width: 0.35rem; height: 0.35rem; border: 1px solid var(--first-color); border-radius: 50%; background: var(--container-color); }
+	.pattern-chip { display: flex; align-items: center; gap: 0.35rem; min-width: 0; color: var(--text-color-light); font-size: 0.58rem; }
+	.sample-button { width: 1.2rem; height: 0.48rem; border-radius: 99px; background: var(--first-color); }
+	.sample-field { width: 1.2rem; height: 0.55rem; border: 1px solid color-mix(in srgb, var(--text-color) 25%, transparent); border-radius: 2px; }
+	.sample-card { display: grid; gap: 2px; width: 1.2rem; padding: 2px; border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent); border-radius: 2px; }
+	.sample-card i { height: 2px; background: color-mix(in srgb, var(--first-color) 40%, transparent); }
+	@media (max-width: 600px) {
+		.system-evolution { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+		.evolution-stage > p { min-height: auto; margin-bottom: 0.6rem; }
+		.loose-files { max-width: 22rem; margin-inline: auto; }
+		.evolution-arrow { justify-self: center; transform: rotate(90deg); line-height: 1; }
+		.system-map { max-width: 26rem; margin-inline: auto; }
+	}
+	@media (max-width: 375px) {
+		.system-evolution { padding: 0.75rem; }
+		.system-map { grid-template-columns: minmax(0, 1fr) 1rem minmax(0, 1fr); }
+		.system-tokens, .system-patterns { padding: 0.5rem; }
+	}
+</style>

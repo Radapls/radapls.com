@@ -1,11 +1,11 @@
 {
 	"name": "radapls",
 	"type": "module",
-	"version": "2.0.0",
-	"homepage": "https://radapls.com",
-	"packageManager": "pnpm@10.25.0",
+	"version": "3.0.0",
+	"homepage": "https://radapls.github.io",
+	"packageManager": "pnpm@12.9.1+sha512.06b055fff5cd20dc12781de173ced3310ce0951bf2ec620211a16045d5444d5c93a663210764ef29a653a610459ba0368f0e74f84d80c54723cf95aae7bc0d6d",
 	"engines": {
-		"node": ">=20"
+		"node": ">=24"
 	},
 	"scripts": {
 		"start": "astro dev",
@@ -13,6 +13,7 @@
 		"preview": "astro check && astro build && astro preview",
 		"astro": "astro",
 		"clean": "rimraf dist",
+		"optimize:svg": "svgo --multipass --precision=1 -f src/assets/img/brands",
 		"pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,astro}\"",
 		"test:e2e": "cypress run"
 	},
@@ -41,6 +42,7 @@
 		"cypress": "14.4.1",
 		"prettier": "3.5.3",
 		"prettier-plugin-astro": "0.14.1",
-		"rimraf": "6.0.1"
+		"rimraf": "6.0.1",
+		"svgo": "3.3.2"
 	}
 }

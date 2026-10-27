@@ -8,40 +8,28 @@ const t = useTranslations(Astro.currentLocale as Lang);
 
 <section class="project section">
 	<div class="project__bg">
-		<div class="project__container container grid">
-			<div class="project__data">
+		<div class="project__container container layout-grid">
+			<div class="project__data layout-half">
 				<h2 class="project__title">
 					{
-						t({
-							en: 'Have a new project in mind?',
-							es: '¿Tienes un proyecto en mente?',
-							'pt-br': 'Você tem um projeto em mente?',
-						})
+						t('cta.have-a-new-project-in-mind')
 					}
 				</h2>
 				<p class="project__description">
 					{
-						t({
-							en: 'Contact me now!',
-							es: '¡Contactame!',
-							'pt-br': 'Fale comigo!',
-						})
+						t('cta.contact-me-now')
 					}
 				</p>
 				<a href="https://wa.me/message/LSVUN45EBMK5B1" class="button button--white">
 					{
-						t({
-							en: 'Contact Me',
-							es: 'Escribeme',
-							'pt-br': 'Chama no zap!',
-						})
+						t('cta.contact-me')
 					}
 				</a>
 			</div>
 			<Image
 				src={Project}
 				alt="project"
-				class="project__img"
+				class="project__img layout-half"
 				draggable="false"
 				width={232}
 				height={200}

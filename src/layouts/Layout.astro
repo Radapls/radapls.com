@@ -4,12 +4,12 @@ import Header from '@components/Header.astro';
 import { SITE_CONFIG } from 'src/consts';
 
 import type { BrandType } from 'src/types/variants';
-import { getLocalePaths, LOCALES, type Lang } from 'src/i18n';
-import LatestPostBanner from '@components/LatestPostBanner.astro';
+import { getLocalePaths, LOCALES, DEFAULT_LOCALE, type Lang } from 'src/i18n';
 
 import '@styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import ScrollUp from '@components/ScrollUp.astro';
+import ContactDrawer from '@components/ContactDrawer.astro';
 
 interface Props {
 	title: string;
@@ -17,10 +17,15 @@ interface Props {
 	description?: string;
 	keywords?: string[];
 	permalink?: string;
+	/** Absolute canonical URL (used by /blog pages, which live on the subdomain) */
+	canonical?: string;
 	withHeader?: boolean;
 	withFooter?: boolean;
-	withBanner?: boolean;
 	noLinks?: boolean;
+	/** Full-viewport sections on the homepage (no scroll snapping) */
+	fullHeight?: boolean;
+	/** Overrides the page language for routes outside the [lang] tree (blog posts) */
+	lang?: Lang;
 }
 
 const {
@@ -30,11 +35,14 @@ const {
 	keywords = SITE_CONFIG.keywords,
 	withFooter = true,
 	withHeader = true,
-	withBanner = false,
-	noLinks,
+	fullHeight = false,
+	canonical,
+	lang,
 } = Astro.props;
 
-const locale = Astro.currentLocale as Lang;
+const locale = lang ?? (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
+const currentPath = Astro.url.pathname.replace(/\/+$/, '');
+const showHeaderBack = !['', '/', '/en', '/es', '/pt-br'].includes(currentPath);
 ---
 
 <!doctype html>
@@ -48,19 +56,51 @@ const locale = Astro.currentLocale as Lang;
 		<link rel="sitemap" href="/sitemap-index.xml" />
 
 		{
-			getLocalePaths(Astro.url).map((props) => (
-				<link
-					rel="alternate"
-					hreflang={LOCALES[props.lang].lang || props.lang}
-					href={Astro.site?.origin + props.path}
-				/>
-			))
+			canonical && (
+				<>
+					<link rel="canonical" href={canonical} />
+					<meta property="og:type" content="article" />
+					<meta property="og:title" content={title} />
+					<meta property="og:description" content={description} />
+					<meta property="og:url" content={canonical} />
+				</>
+			)
 		}
-		<!--==================== UNICONS ====================-->
-		<link rel="icon" type="image/x-icon" href="/favicon.svg" />
-		<link rel="icon" sizes="192x192" href="/android-chrome-192x192.png" />
-		<link rel="icon" sizes="512x512" href="/android-chrome-512x512.png" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+		{
+			!canonical &&
+				getLocalePaths(Astro.url).map((props) => (
+					<link
+						rel="alternate"
+						hreflang={LOCALES[props.lang].lang || props.lang}
+						href={Astro.site?.origin + props.path}
+					/>
+				))
+		}
+		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144x144.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="60x60" href="/apple-touch-icon-60x60.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="76x76" href="/apple-touch-icon-76x76.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+		<link rel="apple-touch-icon" sizes="167x167" href="/apple-touch-icon-167x167.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+		<link rel="icon" type="image/png" href="/favicon-196x196.png" sizes="196x196" />
+		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+		<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+		<link rel="icon" type="image/png" href="/favicon-128x128.png" sizes="128x128" />
+		<link rel="manifest" href="/site.webmanifest" />
+		<meta name="application-name" content={SITE_CONFIG.title} />
+		<meta name="msapplication-TileColor" content="#FFFFFF" />
+		<meta name="msapplication-TileImage" content="/mstile-144x144.png" />
+		<meta name="msapplication-square70x70logo" content="/mstile-70x70.png" />
+		<meta name="msapplication-square150x150logo" content="/mstile-150x150.png" />
+		<meta name="msapplication-wide310x150logo" content="/mstile-310x150.png" />
+		<meta name="msapplication-square310x310logo" content="/mstile-310x310.png" />
+		<meta name="theme-color" content="#FFFFFF" />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -70,10 +110,13 @@ const locale = Astro.currentLocale as Lang;
 			rel="stylesheet"
 			media="print"
 			onload={`this.media='all'`}
-			href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Limelight&family=Share+Tech+Mono&family=Poppins:wght@400;500;600&display=swap"
 		/>
 		<noscript>
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" />
+			<link
+				rel="stylesheet"
+				href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Limelight&family=Share+Tech+Mono&family=Poppins:wght@400;500;600&display=swap"
+			/>
 		</noscript>
 
 		<link
@@ -90,83 +133,96 @@ const locale = Astro.currentLocale as Lang;
 			}
 		</style>
 		<title>{title}</title>
+		<script is:inline>
+			// Apply theme before first paint to avoid flash of wrong theme (FOUC)
+			(() => {
+				const stored = localStorage.getItem('theme');
+				const theme =
+					stored === 'dark' || stored === 'light'
+						? stored
+						: window.matchMedia('(prefers-color-scheme: dark)').matches
+							? 'dark'
+							: 'light';
+				localStorage.setItem('theme', theme);
+				document.documentElement.classList.toggle('dark', theme === 'dark');
+			})();
+		</script>
 		<ClientRouter />
 	</head>
 	<body>
-		{withBanner && <LatestPostBanner />}
-		{withHeader && <Header {variant} noLinks={noLinks} />}
-		<main class="main" transition:animate="fade">
+		{withHeader && <Header {variant} hideLocaleSelect={Boolean(canonical)} showBack={showHeaderBack} />}
+		<main
+			class:list={['main', { 'full-page': fullHeight }]}
+			id="main"
+			tabindex="-1"
+			transition:animate={canonical ? 'none' : 'fade'}
+		>
 			<slot />
 		</main>
 		{withFooter && <Footer {variant} />}
 		<ScrollUp />
-	</body>
+		<ContactDrawer />
+	<script>
+	import '../scripts/i18n-client';
+</script>
+</body>
 </html>
 
 <script>
-	async function initScrollAnimations() {
-		const { default: gsap } = await import('gsap');
-		const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-		gsap.registerPlugin(ScrollTrigger);
-
-		ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-
-		if (isLangSwitch) {
-			isLangSwitch = false;
-			ScrollTrigger.refresh();
-			return;
-		}
-
-		gsap.utils.toArray('.section').forEach((section: any, index: number) => {
-			gsap.from(section, {
-				opacity: 0,
-				y: 150,
-				duration: 1,
-				ease: 'power2.out',
-				scrollTrigger: {
-					trigger: section,
-					start: 'top 75%',
-					end: 'top 25%',
-					toggleActions: 'play none none none',
-				},
-			});
-		});
-
-		gsap.utils.toArray('.section__title').forEach((title: any) => {
-			gsap.from(title, {
-				opacity: 0,
-				scale: 0.5,
-				duration: 0.8,
-				ease: 'back.out(1.7)',
-				scrollTrigger: {
-					trigger: title,
-					start: 'top 80%',
-					toggleActions: 'play none none none',
-				},
-			});
-		});
-	}
-
-	document.addEventListener('astro:page-load', initScrollAnimations);
-
-	// Preserve scroll position on language switch
-	let savedScroll: number | null = null;
-	let isLangSwitch = false;
-	document.addEventListener('astro:before-preparation', (e: any) => {
-		const from = new URL(e.from);
-		const to = new URL(e.to);
-		const stripLang = (p: string) => p.replace(/^\/(en|es|pt-br)/, '');
-		if (stripLang(from.pathname) === stripLang(to.pathname)) {
-			savedScroll = window.scrollY;
-			isLangSwitch = true;
-		} else {
-			isLangSwitch = false;
-		}
+	// Suppress global smooth-scroll during route navigation so the router's
+	// scroll-to-top doesn't animate before the swap (the "scroll up then
+	// navigate" glitch). Re-enabled once the new page is ready.
+	document.addEventListener('astro:before-preparation', () => {
+		document.documentElement.classList.add('is-navigating');
 	});
-	document.addEventListener('astro:after-swap', () => {
-		if (savedScroll !== null) {
-			window.scrollTo(0, savedScroll);
-			savedScroll = null;
-		}
+	document.addEventListener('astro:page-load', () => {
+		document.documentElement.classList.remove('is-navigating');
 	});
+
+	// Page scrollbar: same treatment as the timeline's — the native bar is
+	// hidden (no layout shift) and a thin overlay indicator fades in while
+	// scrolling, out after a short idle. Attached to <html> so it survives
+	// the router's body swaps.
+	(() => {
+		const bar = document.createElement('div');
+		bar.className = 'page-scrollbar';
+		const thumb = document.createElement('span');
+		bar.appendChild(thumb);
+
+		let hideTimer: ReturnType<typeof setTimeout>;
+		const update = () => {
+			if (!bar.isConnected) document.documentElement.appendChild(bar);
+			const max = document.documentElement.scrollHeight - window.innerHeight;
+			bar.style.display = max <= 0 ? 'none' : '';
+			if (max <= 0) return;
+			const height = Math.max(
+				(window.innerHeight / document.documentElement.scrollHeight) * bar.clientHeight,
+				48,
+			);
+			thumb.style.height = `${height}px`;
+			thumb.style.transform = `translateY(${(window.scrollY / max) * (bar.clientHeight - height)}px)`;
+		};
+		const show = () => {
+			bar.classList.add('is-visible');
+			clearTimeout(hideTimer);
+			hideTimer = setTimeout(() => bar.classList.remove('is-visible'), 900);
+		};
+
+		window.addEventListener(
+			'scroll',
+			() => {
+				update();
+				show();
+			},
+			{ passive: true },
+		);
+		window.addEventListener('resize', update);
+		// Recalc for the new page's height after route/images/fonts settle.
+		document.addEventListener('astro:page-load', () => setTimeout(update, 200));
+		update();
+	})();
+</script>
+
+<script>
+	import '../scripts/i18n-client';
 </script>

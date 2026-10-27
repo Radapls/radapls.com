@@ -30,3 +30,6 @@ pnpm-debug.log*
 .kiro
 .claude
 .amazonq
+.agents
+# cloudflare wrangler local state
+.wrangler/

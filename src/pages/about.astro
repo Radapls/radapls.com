@@ -1,0 +1,11 @@
+---
+import About from '@sections/About.astro';
+import Layout from '@layouts/Layout.astro';
+import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
+
+const t = useTranslations(DEFAULT_LOCALE as Lang);
+---
+
+<Layout title={t('about.page-title')}>
+	<About />
+</Layout>

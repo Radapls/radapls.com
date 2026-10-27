@@ -1,7 +1,4 @@
 ---
-import Pokedex from '@assets/img/pokedex.webp';
-import World from '@assets/img/world.webp';
-import CasaNostra from '@assets/img/casa-nostra.webp';
 import SpaceInvaders from '@assets/img/space-invaders.webp';
 import Roulette from '@assets/img/roulette.webp';
 
@@ -14,141 +11,119 @@ import { useTranslations, type Lang } from 'src/i18n';
 const t = useTranslations(Astro.currentLocale as Lang);
 ---
 
-<!--==================== PORTFOLIO ====================-->
 <section class="portfolio section" id="Portfolio" aria-labelledby="portfolio-title">
 	<h2 class="section__title" id="portfolio-title">
-		<span aria-hidden="true">📚</span>
 		{
-			t({
-				en: 'Portfolio',
-				es: 'Portafolio',
-				'pt-br': 'Portfólio',
-			})
+			t('portfolio.projects')
 		}
 	</h2>
-	<span class="section__subtitle" aria-roledescription="doc-subtitle">
-		{
-			t({
-				en: 'Some recent work',
-				es: 'Algunos trabajos recientes',
-				'pt-br': 'Alguns trabalhos recentes',
-			})
-		}
-	</span>
-	<div class="portafolio__container container">
+	<div class="portfolio__container container">
 		<div class="card-grid">
 			<PortfolioCard
+				variant="feature"
 				bgImage={Roulette}
-				title={t({
-					en: 'Roulette Runner',
-					es: 'Ruleta de corredores',
-					'pt-br': 'Roleta de corrida',
-				})}
-				description={t({
-					en: 'Win your next run distance!. Project in Monkey C for Garmin Devices',
-					es: 'Gana tu proxima distancia de carrera!. Projecto es Monkey C para dispositivos Garmin',
-					'pt-br':
-						'Ganhe sua proxima distancia de carreira!. Projeto em Monkey C para dispositivos Garmin',
-				})}
+				title={t('portfolio.roulette-runner')}
+				description={t('portfolio.win-your-next-run-distance-project-in-mo')}
 				link="https://github.com/Radapls/roulette"
 			/>
 			<PortfolioCard
+				variant="side"
 				bgImage={Cunctae}
-				title={t({
-					en: 'Cunctum UI',
-					es: 'Cunctum UI',
-					'pt-br': 'Cunctum UI',
-				})}
-				description={t({
-					en: 'An Open Source Design system for Cunctae.com',
-					es: 'Un sistema de diseño de código abierto para Cunctae.com',
-					'pt-br': 'Um sistema de design de código aberto para Cunctae.com',
-				})}
+				title={t('portfolio.cunctum-ui')}
+				description={t('portfolio.an-open-source-design-system-for-cunctae')}
 				link="https://cunctae.github.io/cunctum-ui/"
 			/>
 			<PortfolioCard
-				bgImage={CasaNostra}
-				title={t({
-					en: 'A casa nostra',
-					es: 'A casa nostra',
-					'pt-br': 'A casa nostra',
-				})}
-				description={t({
-					en: 'A real estate agency for the home of your dreams, built with React, Firebase and Tailwindcss',
-					es: 'Una agencia inmobiliaria para la casa de tus sueños, construida con React, Firebase y Tailwindcss',
-					'pt-br':
-						'Uma agência imobiliária para a casa dos seus sonhos, construída com React, Firebase e Tailwindcss',
-				})}
-				link="https://a-casa-nostra.vercel.app/"
-			/>
-			<PortfolioCard
+				variant="side"
 				bgImage={SpaceInvaders}
-				title={t({
-					en: 'Space Invaders',
-					es: 'Space Invaders',
-					'pt-br': 'Space Invaders',
-				})}
-				description={t({
-					en: 'Space Invaders project created with JavaScript and HTML Canvas',
-					es: 'Proyecto Space Invaders creado con JavaScript y HTML Canvas',
-					'pt-br': 'Projeto Space Invaders criado com JavaScript e HTML Canvas',
-				})}
+				title={t('portfolio.space-invaders')}
+				description={t('portfolio.space-invaders-project-created-with-java')}
 				link="https://radapls.github.io/space-invaders/"
-			/>
-			<PortfolioCard
-				bgImage={World}
-				title={t({
-					en: 'Country Wiki',
-					es: 'Wiki de Países',
-					'pt-br': 'Wiki de Países',
-				})}
-				description={t({
-					en: 'A country encyclopedia built with Angular 21, explore stats and details of every country',
-					es: 'Una enciclopedia de países construida con Angular 21, explora estadísticas y detalles de cada país',
-					'pt-br': 'Uma enciclopédia de países construída com Angular 21, explore estatísticas e detalhes de cada país',
-				})}
-				link="https://radapls.github.io/country-stats/"
 			/>
 		</div>
 	</div>
 </section>
 
 <style>
-	.portafolio__container {
-		overflow: initial;
+	.portfolio.section {
+		height: 100vh;
+		height: 100svh;
+		min-height: 100svh;
+		padding-block: clamp(1rem, 3svh, 2.25rem);
+		--layout-gap: clamp(0.75rem, 1.5vw, 1.25rem);
 	}
-	.portafolio__title {
-		opacity: 0;
-		transition: opacity 500ms ease-in-out;
-		font-size: var(--h3-font-size);
-		margin-bottom: var(--mb-0-5);
-		color: var(--body-color);
-		font-size: var(--h3-font-size);
-		line-height: 1.4;
+	@media screen and (min-width: 768px) {
+		.portfolio.section {
+			padding-top: calc(clamp(1rem, 3svh, 2.25rem) + var(--header-height) + 1.5rem);
+		}
 	}
-	.portafolio__description {
-		opacity: 0;
-		transition: opacity 500ms ease-in;
-		margin-bottom: var(--mb-0-75);
-		color: var(--body-color);
-		font-size: var(--normal-font-size);
-		margin-bottom: 8px;
+	@media screen and (max-width: 767px) {
+		.portfolio.section {
+			padding-bottom: calc(clamp(0.75rem, 2svh, 1rem) + 5rem);
+		}
+	}
+	.portfolio .section__title {
+		flex: 0 0 auto;
+		margin-bottom: clamp(0.75rem, 2.5svh, 1.75rem);
+		font-size: clamp(1.5rem, 4svh, 2.25rem);
+	}
+	.portfolio__container {
+		display: flex;
+		flex: 1 1 auto;
+		min-height: 0;
 	}
 
 	.card-grid {
 		display: grid;
-		grid-column-gap: 24px;
-		grid-row-gap: 24px;
-		max-width: 1200px;
+		flex: 1 1 auto;
+		min-height: 0;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-rows: auto;
+		align-content: center;
+		gap: var(--layout-gap);
 		width: 100%;
-		grid-template-columns: 1fr 1fr;
-		justify-content: center;
-		justify-items: center;
+	}
+	/* Equal cells: neutralize the feature/side spans from PortfolioCard. */
+	.card-grid :global(.card) {
+		grid-column: auto;
+		grid-row: auto;
 	}
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 900px) {
 		.card-grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media screen and (max-width: 560px), (max-height: 640px) {
+		.portfolio.section {
+			--layout-gap: clamp(0.5rem, 1.5svh, 0.75rem);
+		}
+		.portfolio .section__title {
+			margin-bottom: clamp(0.5rem, 1.5svh, 0.75rem);
+		}
+	}
+	@media screen and (max-width: 560px) {
+		.card-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.portfolio.section {
+			padding-top: clamp(0.75rem, 2svh, 1rem);
+		}
+	}
+	@media screen and (min-width: 768px) and (max-width: 900px) {
+		.portfolio.section {
+			padding-top: calc(clamp(0.75rem, 2svh, 1rem) + var(--header-height) + 1.5rem);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.portfolio.section {
+			height: auto;
+			min-height: auto;
+		}
+		.card-grid {
+			grid-template-rows: auto;
 		}
 	}
 </style>

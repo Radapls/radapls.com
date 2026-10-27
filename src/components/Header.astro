@@ -1,263 +1,247 @@
 ---
-import Logo from '@assets/img/JFR.webp';
+import RadaplsLogo from '@assets/img/JFRA.svg';
 import type { BrandType } from 'src/types/variants';
 
-import Birdi from '@assets/img/brands/birdi.webp';
-import Wibx from '@assets/img/brands/wibx.webp';
+import Birdi from '@assets/img/brands/birdi.svg';
+import Wibx from '@assets/img/brands/wibx.svg';
+import Ericsson from '@assets/img/brands/ericsson.svg';
+import NT from '@assets/img/brands/nt.svg';
+import IEI from '@assets/img/brands/iei.svg';
+import Alcaldia from '@assets/img/brands/alcaldia-cali.svg';
+import MOE from '@assets/img/brands/moe.svg';
+import Icesi from '@assets/img/brands/icesi.webp';
+import Javeriana from '@assets/img/brands/javeriana.webp';
 import LocaleSelect from './i18n/LocaleSelect.astro';
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
+import { useTranslations, type Lang } from 'src/i18n';
 import { Image } from 'astro:assets';
 import ThemeIcon from './ThemeIcon.astro';
+import HeaderMenuLinks from './HeaderMenuLinks.astro';
 
 const t = useTranslations(Astro.currentLocale as Lang);
 
-const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
-
 interface Props {
 	variant?: BrandType;
-	noLinks?: boolean;
+	/** Blog pages are single-locale: the switcher has nothing to switch to */
+	hideLocaleSelect?: boolean;
+	/** Show a compact return-to-portfolio arrow in the brand slot */
+	showBack?: boolean;
 }
 
-const { variant, noLinks = false } = Astro.props;
+const { variant, hideLocaleSelect = false, showBack = false } = Astro.props;
+
+/**
+ * Co-brand registry. Add a partner here and the header picks it up — no
+ * nested ternaries, no silent fallthrough to the wrong logo.
+ * Use `logo` for an inline SVG component or `src` for a raster image.
+ * `tone` is an optional modifier class for currentColor-based SVG marks.
+ */
+const coBrands = {
+	wibx: {
+		url: 'https://wibx.io/',
+		label: 'Wibx Company',
+		logo: Wibx,
+		src: undefined,
+		tone: undefined,
+	},
+	birdi: {
+		url: 'https://www.birdirx.com/',
+		label: 'BirdiRx',
+		logo: Birdi,
+		src: undefined,
+		tone: 'co-brand-logo--birdi',
+	},
+	ericsson: {
+		url: 'https://www.ericsson.com/',
+		label: 'Ericsson',
+		logo: Ericsson,
+		src: undefined,
+		tone: 'co-brand-logo--ericsson',
+	},
+	nt: {
+		url: 'https://ntconsult.com.br/',
+		label: 'NT Consult',
+		logo: NT,
+		src: undefined,
+		tone: undefined,
+	},
+	iei: {
+		url: 'https://iei.javeriana.edu.co/',
+		label: 'Instituto de Estudios Interculturales',
+		logo: IEI,
+		src: undefined,
+		tone: 'co-brand-logo--multicolor',
+	},
+	alcaldia: {
+		url: 'https://www.cali.gov.co/',
+		label: 'Alcaldía de Santiago de Cali',
+		logo: Alcaldia,
+		src: undefined,
+		tone: 'co-brand-logo--multicolor',
+	},
+	moe: {
+		url: 'https://moe.org.co/',
+		label: 'Misión de Observación Electoral',
+		logo: MOE,
+		src: undefined,
+		tone: 'co-brand-logo--multicolor',
+	},
+	icesi: {
+		url: 'https://www.icesi.edu.co/',
+		label: 'Universidad Icesi',
+		logo: undefined,
+		src: Icesi,
+		tone: undefined,
+	},
+	javeriana: {
+		url: 'https://www.javeriana.edu.co/',
+		label: 'Pontificia Universidad Javeriana',
+		logo: undefined,
+		src: Javeriana,
+		tone: undefined,
+	},
+} as const;
+
+const coBrand =
+	variant && variant !== 'radapls' ? coBrands[variant as keyof typeof coBrands] : undefined;
+const CoBrandLogo = coBrand?.logo;
+const coBrandSrc = coBrand?.src;
+const coBrandClass = ['co-brand-logo', coBrand?.tone].filter(Boolean).join(' ');
+
+/* The persisted header is reused across view transitions. Encode the
+   locale-switcher state in the key so a header WITH the switcher is never
+   reused on a page that should hide it (and vice versa) — otherwise the
+   switcher appears/disappears depending on the page you came from. */
+const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}-${showBack ? 'back' : 'home'}`;
 ---
 
 {
 	variant === 'radapls' ? (
-		<header class="header" id="header">
-			<nav class="nav container">
-				<a href={getRelativeLocaleUrl(currentLocale, '/')} class="nav__logo">
-					<Image
-						class="radapls-brand"
-						src={Logo}
-						draggable="false"
-						alt="Logo Juan Felipe Rada"
+		<header class="header" id="header" transition:persist={headerKey}>
+			<nav class:list={['nav', 'nav--portfolio', 'container', { 'nav--with-back': showBack }]}>
+				{showBack && (
+					<a
+						href="/"
+						class="nav__back"
+						aria-label={t('header.back-to-portfolio')}
+						onclick="if (history.length > 1) { history.back(); return false; }"
+					>
+						<span aria-hidden="true">←</span>
+					</a>
+				)}
+				<button
+					class="nav__toggle"
+					id="nav-toggle"
+					type="button"
+					aria-label={t('header.open-menu')}
+					aria-expanded="false"
+					aria-controls="nav-menu"
+					data-open-label={t('header.open-menu')}
+					data-close-label={t('header.close-menu')}
+				>
+					<svg
+						class="nav__toggle-icon nav__toggle-icon--open"
+						width="20"
+						height="20"
+						viewBox="0 0 15 15"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						aria-hidden="true"
+					>
+						<path d="M1 3.5h13M1 7.5h13M1 11.5h13" stroke="currentColor" stroke-width="1.5" />
+					</svg>
+					<span class="nav__toggle-icon nav__toggle-icon--close" aria-hidden="true">×</span>
+				</button>
+				<a href="/" class="nav__logo">
+					<RadaplsLogo
+						class="nav__brand"
+						role="img"
+						aria-label="Juan Felipe Rada"
 						width={40}
 						height={40}
 					/>
 				</a>
 
-				{!noLinks && (
-					<div class="nav__menu" id="nav-menu">
-						<ul class="nav__list grid">
-							<li class="nav__item">
-								<a href="#About" class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M7.5 0.875C5.49797 0.875 3.875 2.49797 3.875 4.5C3.875 6.15288 4.98124 7.54738 6.49373 7.98351C5.2997 8.12901 4.27557 8.55134 3.50407 9.31167C2.52216 10.2794 2.02502 11.72 2.02502 13.5999C2.02502 13.8623 2.23769 14.0749 2.50002 14.0749C2.76236 14.0749 2.97502 13.8623 2.97502 13.5999C2.97502 11.8799 3.42786 10.7206 4.17091 9.9883C4.91536 9.25463 6.02674 8.87499 7.49995 8.87499C8.97317 8.87499 10.0846 9.25463 10.8291 9.98831C11.5721 10.7206 12.025 11.8799 12.025 13.5999C12.025 13.8623 12.2376 14.0749 12.5 14.0749C12.7623 14.075 12.975 13.8623 12.975 13.6C12.975 11.72 12.4778 10.2794 11.4959 9.31166C10.7244 8.55135 9.70025 8.12903 8.50625 7.98352C10.0187 7.5474 11.125 6.15289 11.125 4.5C11.125 2.49797 9.50203 0.875 7.5 0.875ZM4.825 4.5C4.825 3.02264 6.02264 1.825 7.5 1.825C8.97736 1.825 10.175 3.02264 10.175 4.5C10.175 5.97736 8.97736 7.175 7.5 7.175C6.02264 7.175 4.825 5.97736 4.825 4.5Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>
-										{t({
-											en: 'About',
-											es: 'Acerca',
-											'pt-br': 'Acerca',
-										})}
-									</p>
-								</a>
-							</li>
-							<li class="nav__item">
-								<a href="#Skills" class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M3 2.5C3 2.22386 3.22386 2 3.5 2H9.08579C9.21839 2 9.34557 2.05268 9.43934 2.14645L11.8536 4.56066C11.9473 4.65443 12 4.78161 12 4.91421V12.5C12 12.7761 11.7761 13 11.5 13H3.5C3.22386 13 3 12.7761 3 12.5V2.5ZM3.5 1C2.67157 1 2 1.67157 2 2.5V12.5C2 13.3284 2.67157 14 3.5 14H11.5C12.3284 14 13 13.3284 13 12.5V4.91421C13 4.51639 12.842 4.13486 12.5607 3.85355L10.1464 1.43934C9.86514 1.15804 9.48361 1 9.08579 1H3.5ZM4.5 4C4.22386 4 4 4.22386 4 4.5C4 4.77614 4.22386 5 4.5 5H7.5C7.77614 5 8 4.77614 8 4.5C8 4.22386 7.77614 4 7.5 4H4.5ZM4.5 7C4.22386 7 4 7.22386 4 7.5C4 7.77614 4.22386 8 4.5 8H10.5C10.7761 8 11 7.77614 11 7.5C11 7.22386 10.7761 7 10.5 7H4.5ZM4.5 10C4.22386 10 4 10.2239 4 10.5C4 10.7761 4.22386 11 4.5 11H10.5C10.7761 11 11 10.7761 11 10.5C11 10.2239 10.7761 10 10.5 10H4.5Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>
-										{t({
-											en: 'Skills',
-											es: 'Habilidades',
-											'pt-br': 'Habilidades',
-										})}
-									</p>
-								</a>
-							</li>
-							<li class="nav__item">
-								<a href="#Portfolio" class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M2.5 1H12.5C13.3284 1 14 1.67157 14 2.5V12.5C14 13.3284 13.3284 14 12.5 14H2.5C1.67157 14 1 13.3284 1 12.5V2.5C1 1.67157 1.67157 1 2.5 1ZM2.5 2C2.22386 2 2 2.22386 2 2.5V8.3636L3.6818 6.6818C3.76809 6.59551 3.88572 6.54797 4.00774 6.55007C4.12975 6.55216 4.24568 6.60372 4.32895 6.69293L7.87355 10.4901L10.6818 7.6818C10.8575 7.50607 11.1425 7.50607 11.3182 7.6818L13 9.3636V2.5C13 2.22386 12.7761 2 12.5 2H2.5ZM2 12.5V9.6364L3.98887 7.64753L7.5311 11.4421L8.94113 13H2.5C2.22386 13 2 12.7761 2 12.5ZM12.5 13H10.155L8.48336 11.153L11 8.6364L13 10.6364V12.5C13 12.7761 12.7761 13 12.5 13ZM6.64922 5.5C6.64922 5.03013 7.03013 4.64922 7.5 4.64922C7.96987 4.64922 8.35078 5.03013 8.35078 5.5C8.35078 5.96987 7.96987 6.35078 7.5 6.35078C7.03013 6.35078 6.64922 5.96987 6.64922 5.5ZM7.5 3.74922C6.53307 3.74922 5.74922 4.53307 5.74922 5.5C5.74922 6.46693 6.53307 7.25078 7.5 7.25078C8.46693 7.25078 9.25078 6.46693 9.25078 5.5C9.25078 4.53307 8.46693 3.74922 7.5 3.74922Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>
-										{t({
-											en: 'Portfolio',
-											es: 'Portafolio',
-											'pt-br': 'Portfólio',
-										})}
-									</p>
-								</a>
-							</li>
-							<li class="nav__item">
-								<a href="#Contact" class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M12.5 3L2.5 3.00002C1.67157 3.00002 1 3.6716 1 4.50002V9.50003C1 10.3285 1.67157 11 2.5 11H7.50003C7.63264 11 7.75982 11.0527 7.85358 11.1465L10 13.2929V11.5C10 11.2239 10.2239 11 10.5 11H12.5C13.3284 11 14 10.3285 14 9.50003V4.5C14 3.67157 13.3284 3 12.5 3ZM2.49999 2.00002L12.5 2C13.8807 2 15 3.11929 15 4.5V9.50003C15 10.8807 13.8807 12 12.5 12H11V14.5C11 14.7022 10.8782 14.8845 10.6913 14.9619C10.5045 15.0393 10.2894 14.9965 10.1464 14.8536L7.29292 12H2.5C1.11929 12 0 10.8807 0 9.50003V4.50002C0 3.11931 1.11928 2.00003 2.49999 2.00002Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>
-										{t({
-											en: 'Contact',
-											es: 'Contacto',
-											'pt-br': 'Contato',
-										})}
-									</p>
-								</a>
-							</li>
-							<li class="nav__item">
-								<a href={getRelativeLocaleUrl(currentLocale, 'blog')} class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M3 2.5C3 2.22386 3.22386 2 3.5 2H11.5C11.7761 2 12 2.22386 12 2.5V13.5C12 13.6818 11.9014 13.8492 11.7424 13.9373C11.5834 14.0254 11.3891 14.0203 11.235 13.924L7.5 11.5896L3.765 13.924C3.61087 14.0203 3.41659 14.0254 3.25762 13.9373C3.09864 13.8492 3 13.6818 3 13.5V2.5ZM4 3V12.5979L6.97 10.7416C7.29427 10.539 7.70573 10.539 8.03 10.7416L11 12.5979V3H4Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>{t('Blog')}</p>
-								</a>
-							</li>
-						</ul>
-						<svg
-							class="nav__close"
-							id="nav-close"
-							width="20"
-							height="20"
-							viewBox="0 0 15 15"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z"
-								fill="currentColor"
-								fill-rule="evenodd"
-								clip-rule="evenodd"
-							/>
-						</svg>
-					</div>
-				)}
-				<div class="nav__btns">
-					<div class="nav__btns">
-						<ThemeIcon />
-					</div>
-					{!noLinks && (
-						<svg
-							class="nav__toggle"
-							id="nav-toggle"
-							width="20"
-							height="20"
-							viewBox="0 0 15 15"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								d="M4.5 2C3.11929 2 2 3.11929 2 4.5C2 5.88072 3.11929 7 4.5 7C5.88072 7 7 5.88072 7 4.5C7 3.11929 5.88072 2 4.5 2ZM3 4.5C3 3.67157 3.67157 3 4.5 3C5.32843 3 6 3.67157 6 4.5C6 5.32843 5.32843 6 4.5 6C3.67157 6 3 5.32843 3 4.5ZM10.5 2C9.11929 2 8 3.11929 8 4.5C8 5.88072 9.11929 7 10.5 7C11.8807 7 13 5.88072 13 4.5C13 3.11929 11.8807 2 10.5 2ZM9 4.5C9 3.67157 9.67157 3 10.5 3C11.3284 3 12 3.67157 12 4.5C12 5.32843 11.3284 6 10.5 6C9.67157 6 9 5.32843 9 4.5ZM2 10.5C2 9.11929 3.11929 8 4.5 8C5.88072 8 7 9.11929 7 10.5C7 11.8807 5.88072 13 4.5 13C3.11929 13 2 11.8807 2 10.5ZM4.5 9C3.67157 9 3 9.67157 3 10.5C3 11.3284 3.67157 12 4.5 12C5.32843 12 6 11.3284 6 10.5C6 9.67157 5.32843 9 4.5 9ZM10.5 8C9.11929 8 8 9.11929 8 10.5C8 11.8807 9.11929 13 10.5 13C11.8807 13 13 11.8807 13 10.5C13 9.11929 11.8807 8 10.5 8ZM9 10.5C9 9.67157 9.67157 9 10.5 9C11.3284 9 12 9.67157 12 10.5C12 11.3284 11.3284 12 10.5 12C9.67157 12 9 11.3284 9 10.5Z"
-								fill="currentColor"
-								fill-rule="evenodd"
-								clip-rule="evenodd"
-							/>
-						</svg>
-					)}
+				<div class="nav__menu" id="nav-menu">
+					<HeaderMenuLinks>
+						<div class="nav__settings" id="nav-settings">
+							<ThemeIcon />
+							{!hideLocaleSelect && <LocaleSelect />}
+						</div>
+					</HeaderMenuLinks>
 				</div>
-
-				<LocaleSelect />
 			</nav>
 		</header>
 	) : (
-		<header class="header" id="header">
-			<nav class="nav container">
+		<header class="header" id="header" transition:persist={headerKey}>
+			<nav class="nav nav--cobrand container">
+				{showBack && (
+					<a
+						href="/"
+						class="nav__back"
+						aria-label={t('header.back-to-portfolio')}
+						onclick="if (history.length > 1) { history.back(); return false; }"
+					>
+						<span aria-hidden="true">←</span>
+					</a>
+				)}
 				<div class="co-brand">
-					<a href={getRelativeLocaleUrl(currentLocale, '/')}>
-						<Image
-							class="radapls-brand"
-							src={Logo}
-							draggable="false"
-							alt="Logo Juan Felipe Rada"
+					<a href="/">
+						<RadaplsLogo
+							class="nav__brand co-brand__logo"
+							role="img"
+							aria-label="Juan Felipe Rada"
 							width={35}
 							height={35}
 						/>
 					</a>
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" viewBox="0 0 20 48">
-						<g>
-							<path
-								fill="none"
-								stroke="rgb(172,185,200)"
-								stroke-linecap="square"
-								stroke-linejoin="miter"
-								stroke-width="1"
-								d="M10 2.35231505v50"
-							/>
-						</g>
-					</svg>
-					{variant === 'wibx' ? (
-						<a href="https://wibx.io/" class="nav__logo">
-							<Image
-								src={Wibx}
-								draggable="false"
-								alt="Wibx Company"
-								width={35}
-								height={35}
-							/>
-						</a>
-					) : (
-						<a href="https://www.birdirx.com/" class="nav__logo">
-							<Image src={Birdi} draggable="false" alt="BirdiRx" width={35} height={35} />
+					<span class="co-brand__separator" aria-hidden="true">×</span>
+					{coBrand && (
+						<a href={coBrand.url} class="nav__logo" target="_blank" rel="noopener noreferrer">
+							{coBrandSrc ? (
+								<Image
+									class={coBrandClass}
+									src={coBrandSrc}
+									alt={coBrand.label}
+									width={35}
+									height={35}
+									draggable="false"
+								/>
+							) : (
+								CoBrandLogo && (
+									<CoBrandLogo
+										class={coBrandClass}
+										role="img"
+										aria-label={coBrand.label}
+										width={35}
+										height={35}
+									/>
+								)
+							)}
 						</a>
 					)}
 				</div>
-				<div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem">
-					<div class="nav__btns">
-						<ThemeIcon />
-					</div>
-
-					<LocaleSelect />
+				<button
+					class="nav__toggle"
+					id="nav-toggle"
+					type="button"
+					aria-label={t('header.open-menu')}
+					aria-expanded="false"
+					aria-controls="nav-menu"
+					data-open-label={t('header.open-menu')}
+					data-close-label={t('header.close-menu')}
+				>
+					<svg class="nav__toggle-icon nav__toggle-icon--open" width="20" height="20" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+						<path d="M1 3.5h13M1 7.5h13M1 11.5h13" stroke="currentColor" stroke-width="1.5" />
+					</svg>
+					<span class="nav__toggle-icon nav__toggle-icon--close" aria-hidden="true">×</span>
+				</button>
+				<div class="nav__menu" id="nav-menu">
+					<HeaderMenuLinks>
+						<div class="nav__settings">
+							<div class="nav__btns"><ThemeIcon /></div>
+							{!hideLocaleSelect && <LocaleSelect />}
+						</div>
+					</HeaderMenuLinks>
 				</div>
 			</nav>
 		</header>
@@ -265,67 +249,192 @@ const { variant, noLinks = false } = Astro.props;
 }
 
 <script>
-	/*==================== CHANGE BACKGROUND HEADER ====================*/
-	function scrollHeader() {
-		const nav = (document.getElementById('header') as HTMLElement) || null;
-		if (window.scrollY >= 80) nav.classList.add('scroll-header');
-		else nav.classList.remove('scroll-header');
-	}
-	window.addEventListener('scroll', scrollHeader);
+	function setupHeader() {
+		const header = document.getElementById('header');
 
-	/*==================== MENU SHOW Y HIDDEN ====================*/
-	const navMenu = document.getElementById('nav-menu') as HTMLElement,
-		navToggle = document.getElementById('nav-toggle'),
-		navClose = document.getElementById('nav-close');
+		/* Blog lives on blog.radapls.com in production, but the link is
+		   rendered relative (/blog/) so dev and the *.workers.dev preview
+		   stay on-origin. Promote to the absolute subdomain URL only when
+		   actually on the production apex — never on preview/dev, which have
+		   no blog.* host and would bounce the user off the preview. */
+		const blogLink = document.querySelector<HTMLAnchorElement>('[data-blog-link]');
+		if (blogLink && location.hostname.replace(/^www\./, '') === 'radapls.com') {
+			blogLink.href = blogLink.dataset.blogUrl ?? blogLink.href;
+		}
 
-	/*===== MENU SHOW =====*/
-	/* Validate if constant exists */
-	if (navToggle) {
-		navToggle.addEventListener('click', () => {
-			navMenu.classList.add('show-menu');
+		/*==================== CHANGE BACKGROUND HEADER ====================*/
+		const navMenu = document.getElementById('nav-menu');
+		let directionStartY = window.scrollY;
+		const onScroll = () => {
+			if (!header) return;
+			const currentY = window.scrollY;
+			header.classList.toggle('scroll-header', currentY >= 80);
+
+			if (currentY <= 16) {
+				header.classList.remove('header-hidden');
+				directionStartY = currentY;
+			} else if (currentY < directionStartY - 4) {
+				header.classList.remove('header-hidden');
+				directionStartY = currentY;
+			} else if (currentY > directionStartY + 4) {
+				if (currentY > 80 && !navMenu?.classList.contains('show-menu')) {
+					header.classList.add('header-hidden');
+				}
+				directionStartY = currentY;
+			}
+		};
+		// Replace any listener from a previous page to avoid stacking.
+		const w = window as any;
+		if (w.__headerScroll) window.removeEventListener('scroll', w.__headerScroll);
+		if (w.__headerReveal) window.removeEventListener('mousemove', w.__headerReveal);
+		w.__headerScroll = onScroll;
+		window.addEventListener('scroll', onScroll);
+		// Re-hide the hover-revealed header after 5s unless it's being used.
+		let hideTimer: number | undefined;
+		const scheduleHide = () => {
+			window.clearTimeout(hideTimer);
+			hideTimer = window.setTimeout(() => {
+				// Only auto-hide in scroll-hide territory: never at page top or
+				// with the menu open, where the header must stay visible.
+				if (
+					header &&
+					!header.matches(':hover') &&
+					window.scrollY > 80 &&
+					!navMenu?.classList.contains('show-menu')
+				) {
+					header.classList.add('header-hidden');
+				}
+			}, 5000);
+		};
+		const onHeaderEdge = (event: MouseEvent) => {
+			if (!header) return;
+			const headerTop = Number.parseFloat(getComputedStyle(header).top);
+			const revealBottom = Number.isFinite(headerTop) ? Math.max(64, headerTop + 48) : 64;
+			if (event.clientY > revealBottom) return;
+			header.classList.remove('header-hidden');
+			scheduleHide();
+		};
+		w.__headerReveal = onHeaderEdge;
+		window.addEventListener('mousemove', onHeaderEdge, { passive: true });
+		header?.addEventListener('mouseleave', scheduleHide);
+		onScroll();
+
+		/*==================== MOBILE MENU SHOW / HIDE ====================*/
+		const navToggle = document.getElementById('nav-toggle');
+
+		const openMenu = (open: boolean) => {
+			navMenu?.classList.toggle('show-menu', open);
+			navToggle?.setAttribute('aria-expanded', String(open));
+			navToggle?.setAttribute(
+				'aria-label',
+				(navToggle.dataset[open ? 'closeLabel' : 'openLabel'] as string) ??
+					navToggle.getAttribute('aria-label')!
+			);
+		};
+		// The header persists across view transitions, so clear any open state
+		// carried over from the page we just left.
+		openMenu(false);
+		if (navToggle) navToggle.onclick = () => openMenu(!navMenu?.classList.contains('show-menu'));
+
+		// Close the mobile menu after tapping a nav link.
+		document.querySelectorAll('.nav__link, .nav-menu-pill[href^="/"], .nav-menu-case, .nav-menu-panel__all-cases').forEach((link) => {
+			link.addEventListener('click', () => openMenu(false));
+		});
+
+		/* Don't re-navigate when the destination is the current page
+		   (e.g. tapping the logo while already at the top of the home
+		   page): the router swap re-decodes the logo and looks like a
+		   refresh. Section links keep their hash — scroll to the section,
+		   not the top. */
+		document.querySelectorAll('.nav__logo, .nav__link, .nav-menu-pill[href^="/"], .nav-menu-case, .nav-menu-panel__all-cases').forEach((link) => {
+			link.addEventListener('click', (e) => {
+				const href = link.getAttribute('href');
+				if (!href || href.startsWith('#')) return;
+				const url = new URL(href, location.href);
+				if (url.pathname === location.pathname) {
+					e.preventDefault();
+					if (url.hash) {
+						document.querySelector(url.hash)?.scrollIntoView({ behavior: 'smooth' });
+					} else {
+						window.scrollTo({ top: 0, behavior: 'smooth' });
+					}
+				}
+			});
 		});
 	}
 
-	/*===== MENU HIDDEN =====*/
-	if (navClose) {
-		navClose.addEventListener('click', () => {
-			navMenu.classList.remove('show-menu');
-		});
-	}
-
-	/*==================== REMOVE MENU MOBILE ====================*/
-	const navLink = document.querySelectorAll('.nav__link');
-
-	function linkAction() {
-		const navMenu = document.getElementById('nav-menu') as HTMLElement;
-		// When we click on each nav__link, we remove the show-menu class
-		navMenu.classList.remove('show-menu');
-	}
-	navLink.forEach((n) => n.addEventListener('click', linkAction));
+	document.addEventListener('astro:page-load', setupHeader);
 </script>
 
 <style>
-	.show-menu {
-		bottom: 0;
-	}
-
 	.active-link {
 		color: var(--first-color);
 	}
 
-	.radapls-brand {
-		width: 35px;
-		display: grid;
-		place-content: center;
+	/* Menu toggle is a real <button> now; strip native chrome.
+	   (No display rule here — media-queries.css hides it on desktop.) */
+	.nav__toggle {
+		background: none;
+		border: 0;
+		padding: 0;
 	}
 
-	:global(.dark) .radapls-brand {
-		filter: grayscale(1) contrast(0.5) brightness(3.5);
+	/* Brand portrait: circular crop like the About page portrait. */
+	.nav__brand {
+		width: 40px;
+		height: 40px;
+		object-fit: contain;
+	}
+	.co-brand__logo {
+		width: 35px;
+		height: 35px;
+		object-fit: contain;
+		object-position: center;
 	}
 
 	.co-brand {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		gap: 0.75rem;
+	}
+
+	/* Inline <a> leaves an img on the text baseline; blockify to center. */
+	.co-brand > a {
+		display: grid;
+		place-content: center;
+	}
+
+	.co-brand__separator {
+		color: var(--text-color-light);
+		font-family: var(--title-font);
+		font-size: 1.75rem;
+		font-weight: var(--font-semi-bold);
+		line-height: 1;
+	}
+
+	/* Inline co-brand SVG logos render as-is (no wrapping container). Logos
+	   whose shield uses currentColor adapt their color to the theme. */
+	.co-brand-logo {
+		width: auto;
+		height: 35px;
+		display: block;
+	}
+	/* Birdi: navy shield in light mode, light tint in dark mode so it stays
+	   legible against the dark page (the inner "b" stays white in the SVG). */
+	.co-brand-logo--birdi {
+		color: #243746;
+	}
+	:global(.dark) .co-brand-logo--birdi {
+		color: var(--marker-color-birdi);
+	}
+	/* Ericsson mark is monochrome (currentColor): black in light, white in dark. */
+	.co-brand-logo--ericsson {
+		color: var(--title-color);
+	}
+	/* Multi-color marks (IEI, Alcaldía, MOE): as-is in light, solid white
+	   silhouette in dark so they stay legible against the dark page. */
+	:global(.dark) .co-brand-logo--multicolor {
+		filter: brightness(0) invert(1);
 	}
 </style>

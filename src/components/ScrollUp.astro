@@ -1,90 +1,116 @@
 ---
+import { useTranslations, type Lang } from 'src/i18n';
 
+const t = useTranslations(Astro.currentLocale as Lang);
 ---
 
-<div class="scrollup" id="scroll-up" aria-label="Scroll to top" role="button">
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 18.256 18.256"
-		style="transition:.3s"
-		class="scrollup__icon"
+<div class="float-stack">
+	<button
+		class="scrollup"
+		id="scroll-up"
+		type="button"
+		aria-label={t('scrollup.scroll-to-top')}
 	>
-		<g transform="translate(5.363 5.325)">
-			<path
-				d="M14.581,7.05,7.05,14.581"
-				transform="translate(-7.05 -7.012)"
-				fill="none"
-				stroke="var(--container-color)"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="1.5"></path>
-			<path
-				d="M10,7l5.287.037.038,5.287"
-				transform="translate(-7.756 -7)"
-				fill="none"
-				stroke="var(--container-color)"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="1.5"></path>
-		</g>
-		<path d="M0,0H18.256V18.256H0Z" fill="none"></path>
-	</svg>
+		<span class="scrollup__icon" aria-hidden="true">↑</span>
+	</button>
+
+	<button
+		class="float-stack__contact"
+		type="button"
+		data-contact-open
+		aria-label={t('header.contact')}
+	>
+		<svg
+			viewBox="0 0 24 24"
+			width="20"
+			height="20"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<rect x="2" y="4" width="20" height="16" rx="2"></rect>
+			<path d="m22 7-10 6L2 7"></path>
+		</svg>
+	</button>
 </div>
 
 <script>
-	window.addEventListener('scroll', () => {
-		const scrollUp = document.getElementById('scroll-up') as HTMLDivElement | null;
+	function setupScrollUp() {
+		const scrollUp = document.getElementById('scroll-up') as HTMLButtonElement | null;
 		if (!scrollUp) return;
 
-		scrollUp.addEventListener('click', () => {
-			window.scrollTo({ top: 0 });
-		});
-
-		if (window.scrollY >= 200) {
-			scrollUp.classList.add('show-scroll');
-		} else {
-			scrollUp.classList.remove('show-scroll');
+		// Attach the click handler once (guard against re-init duplicates).
+		if (!scrollUp.dataset.bound) {
+			scrollUp.addEventListener('click', () => {
+				window.scrollTo({ top: 0 });
+			});
+			scrollUp.dataset.bound = 'true';
 		}
-	});
+
+		const onScroll = () => {
+			scrollUp.classList.toggle('show-scroll', window.scrollY >= 200);
+		};
+		// Replace any listener from a previous page to avoid stacking.
+		const w = window as any;
+		if (w.__scrollUpHandler) window.removeEventListener('scroll', w.__scrollUpHandler);
+		w.__scrollUpHandler = onScroll;
+		window.addEventListener('scroll', onScroll);
+		onScroll();
+	}
+
+	document.addEventListener('astro:page-load', setupScrollUp);
 </script>
 
 <style>
-	.scrollup {
+	/* Fixed stack, bottom right: scroll-up on top, contact FAB below. */
+	.float-stack {
 		position: fixed;
-		right: 1rem;
-		bottom: -20%;
-		background-color: var(--first-color);
-		opacity: 0;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
+		right: max(1rem, env(safe-area-inset-right));
+		bottom: max(1rem, env(safe-area-inset-bottom));
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
 		z-index: var(--z-tooltip);
-		transition: 0.4s;
+	}
+	.scrollup,
+	.float-stack__contact {
+		background-color: var(--first-color);
+		border: 0;
+		padding: 0.5rem 0.55rem;
+		border-radius: var(--radius-pill);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
+		transition: 0.3s;
 	}
-
-	.scrollup:hover {
+	.scrollup:hover,
+	.float-stack__contact:hover {
 		background-color: var(--first-color-alt);
 	}
-
-	.scrollup__icon {
-		font-size: 1.5rem;
+	.float-stack__contact {
 		color: var(--container-color);
-		rotate: 315deg;
 	}
 
+	.scrollup {
+		opacity: 0;
+		transform: translateY(0.5rem);
+		pointer-events: none;
+	}
+	.scrollup__icon {
+		font-family: var(--title-font);
+		font-weight: 200;
+		font-size: 1.5rem;
+		line-height: 1;
+		color: var(--container-color);
+	}
 	.show-scroll {
-		bottom: 6rem;
 		opacity: 1;
-	}
-
-	@media screen and (min-width: 768px) {
-		.show-scroll {
-			bottom: 1rem;
-		}
+		transform: none;
+		pointer-events: auto;
 	}
 </style>

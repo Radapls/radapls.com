@@ -1,60 +1,63 @@
 ---
-import Logo from '@assets/img/JFR.webp';
+import Logo from '@assets/img/JFRA.svg';
+import WcagBadge from '@assets/img/wcag21-aa-blue.svg';
+import CcBadge from '@assets/img/license-cc-by-sa.svg';
+import AgplBadge from '@assets/img/license-agpl.svg';
 import { Image } from 'astro:assets';
 import type { BrandType } from 'src/types/variants';
 import { useTranslations, type Lang } from 'src/i18n';
 
-const t = useTranslations(Astro.currentLocale as Lang);
-
 interface Props {
 	variant?: BrandType;
 }
+
+const t = useTranslations(Astro.currentLocale as Lang);
+const creditsUrl = '/credits';
 ---
 
 <footer class="footer__bg">
 	<div class="footer__container">
 		<div class="footer__brand-container">
-			<Image
+			<Logo
 				class="brand-image"
-				src={Logo}
-				alt="Logo Juan Felipe Rada"
-				draggable="false"
+				role="img"
+				aria-label="Logo Juan Felipe Rada"
 				height={30}
 				width={30}
 			/>
-			<h6 class="footer__title">
-				<span>
-					&copy; {new Date().getFullYear() + ' '}
-				</span>
-				Juan Felipe Rada
-			</h6>
+			<p class="footer__title">
+				<span>{t('footer.since-1997')}</span>
+			</p>
 		</div>
 	</div>
-	<p class="licenses">
-		{
-			t({
-				en: 'Posts:',
-				es: 'Publicaciones:',
-				'pt-br': 'Publicações:',
-			})
-		}
-		<a href="https://creativecommons.org/licenses/by-sa/4.0/" aria-label="Posts license type link"
-			>CC-BY-SA</a
-		> |
-		{
-			t({
-				en: 'Source code:',
-				es: 'Código fuente:',
-				'pt-br': 'Código fonte:',
-			})
-		}
+	<div class="footer__badges">
+		<a
+			href="https://creativecommons.org/licenses/by-sa/4.0/"
+			aria-label={t('footer.posts-licensed-under-cc-by-sa-4-0')}
+		>
+			<Image src={CcBadge} alt="CC BY-SA 4.0" width={88} height={31} loading="lazy" />
+		</a>
 		<a
 			href="https://github.com/Radapls/radapls.github.io/blob/main/LICENSE"
-			aria-label="Source code license type link"
+			aria-label={t('footer.source-code-licensed-under-agpl-3-0')}
 		>
-			AGPL-3.0
+			<Image src={AgplBadge} alt="AGPL-3.0" width={94} height={31} loading="lazy" />
 		</a>
-	</p>
+		<a
+			href="https://www.w3.org/WAI/WCAG2AA-Conformance"
+			rel="noopener noreferrer"
+			aria-label={t('footer.wcag-2-1-level-aa-conformance-claim')}
+		>
+			<Image src={WcagBadge} alt="WCAG 2.1 Level AA" width={88} height={31} loading="lazy" />
+		</a>
+	</div>
+	<div class="footer__credits-row">
+		<a class="footer__credits" href={creditsUrl}>
+			{
+				t('footer.third-party-credits')
+			}
+		</a>
+	</div>
 </footer>
 
 <style>
@@ -85,9 +88,35 @@ interface Props {
 		gap: 0.5rem;
 	}
 
-	.licenses {
-		text-align: center;
-		font-size: var(--small-font-size);
+	.footer__badges {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 1.5rem;
+	}
+	.footer__credits-row {
+		display: flex;
+		justify-content: center;
+		margin-top: 1.25rem;
+	}
+	.footer__credits {
+		display: inline-flex;
+		align-items: center;
+		min-height: 31px;
+		padding: 0.35rem 0.7rem;
+		border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent);
+		border-radius: var(--radius-sm);
+		color: var(--text-color-light);
+		font-size: var(--smaller-font-size);
+		text-decoration: none;
+		transition: color 180ms ease, border-color 180ms ease;
+	}
+	.footer__credits:hover,
+	.footer__credits:focus-visible {
+		color: var(--first-color);
+		border-color: var(--first-color);
 	}
 
 	:global(.dark) .brand-image {

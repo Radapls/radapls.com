@@ -3,7 +3,7 @@ import { LINKEDIN, GITHUB } from 'src/consts';
 import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
 
 const t = useTranslations(Astro.currentLocale as Lang);
-const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
+
 // Flightboard phrases per locale; the animation follows the client-side switcher
 const flightPhrases: Record<string, string[]> = {
 	en: ['Curious Coder', 'Political Scientist', 'Digital Business Strategist', 'Poet?', 'Runner?'],
@@ -170,7 +170,6 @@ const flightPhrases: Record<string, string[]> = {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: var(--mb-1-5);
 		flex-wrap: wrap;
 	}
 	.home__about-button {
@@ -189,6 +188,15 @@ const flightPhrases: Record<string, string[]> = {
 	}
 	.home__about-button:hover .home__about-arrow {
 		transform: translateX(4px);
+	}
+	@media screen and (max-width: 767px) {
+		.home__about-button {
+			padding: 0.625rem 1.125rem;
+			font-size: var(--small-font-size);
+		}
+		.home__about-arrow {
+			font-size: 1rem;
+		}
 	}
 	.home__social {
 		display: flex;

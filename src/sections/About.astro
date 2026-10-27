@@ -194,26 +194,6 @@ const funFacts = [
 				aria-label={t('about.a-note-about-my-work-and-writing')}
 			>
 				<span class="about__orbit-orb" aria-hidden="true"></span>
-				<svg
-					class="about__idea-bulb"
-					viewBox="0 0 48 48"
-					fill="none"
-					aria-hidden="true"
-				>
-					<path
-						d="M16.5 29.5a13 13 0 1 1 15 0c-2 1.4-3 3.1-3.2 5.5h-8.6c-.2-2.4-1.2-4.1-3.2-5.5ZM20 39h8m-7 4h6"
-						stroke="currentColor"
-						stroke-width="2.5"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-					<path
-						d="M24 8v4m12 1.5-3 3M12 13.5l3 3"
-						stroke="currentColor"
-						stroke-width="2.5"
-						stroke-linecap="round"
-					/>
-				</svg>
 				<blockquote class="about__intro about__quote-preview" id="about-preview-quote">
 					<p class="about__lead">
 						{
@@ -912,26 +892,6 @@ const funFacts = [
 		}
 		.about__orbit-item--quote > :not(.about__orbit-orb):not(.about__orbit-note):not(.about__idea-bulb) {
 			z-index: 1;
-		}
-		.about__idea-bulb {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			width: 2.25rem;
-			height: 2.25rem;
-			color: var(--first-color);
-			opacity: 1;
-			visibility: visible;
-			transform: translate(-50%, -50%);
-			filter: drop-shadow(0 0 0.5rem color-mix(in srgb, var(--first-color) 38%, transparent));
-			transition: opacity 180ms ease, transform 220ms ease;
-			pointer-events: none;
-		}
-		.about__orbit-item--quote:hover .about__idea-bulb,
-		.about__orbit-item--quote:focus-visible .about__idea-bulb,
-		.about__orbit-item--quote.is-open .about__idea-bulb {
-			opacity: 0;
-			transform: translate(-50%, -50%) scale(0.65);
 		}
 		.about__orbit-item--moai {
 			--orbit-x: 50%;

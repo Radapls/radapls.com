@@ -1,0 +1,295 @@
+---
+// Platform map: Wibx at the center, its areas (Web / Mobile / UX-UI) as
+// clickable nodes — each reveals its projects in a panel below the map.
+export interface MapProject {
+	title: string;
+	url?: string;
+	image?: ImageMetadata;
+}
+
+export interface MapArea {
+	id: string;
+	title: string;
+	/** Small line under the label, e.g. the repo name */
+	sub?: string;
+	url?: string;
+	image?: ImageMetadata;
+	/** Position in the viewBox */
+	x: number;
+	y: number;
+	r?: number;
+	projects: MapProject[];
+}
+
+interface Props {
+	/** Center node the areas connect to */
+	center: { title: string; url?: string; image?: ImageMetadata; x: number; y: number; r?: number };
+	areas: MapArea[];
+	viewBox?: string;
+}
+
+const { center, areas, viewBox = '0 0 960 520' } = Astro.props;
+const cr = center.r ?? 56;
+---
+
+<div class="pmap">
+	<svg class="pmap__svg" viewBox={viewBox} role="group" aria-label={center.title}>
+		{
+			areas.map((a) => (
+				<g class="pmap__link" aria-hidden="true">
+					<line x1={center.x} y1={center.y} x2={a.x} y2={a.y} />
+					<circle cx={(center.x + a.x) / 2} cy={(center.y + a.y) / 2} r="4" />
+				</g>
+			))
+		}
+		<a
+			class="pmap__node pmap__node--link"
+			href={center.url}
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label={center.title}
+		>
+			<circle cx={center.x} cy={center.y} r={cr + 4} class="pmap__halo" />
+			<clipPath id="pmap-clip-center">
+				<circle cx={center.x} cy={center.y} r={cr} />
+			</clipPath>
+			{center.image && (
+				<image
+					href={center.image.src}
+					x={center.x - cr * 0.9}
+					y={center.y - cr * 0.9}
+					width={cr * 1.8}
+					height={cr * 1.8}
+					clip-path="url(#pmap-clip-center)"
+					preserveAspectRatio="xMidYMid meet"
+				/>
+			)}
+			<text x={center.x} y={center.y + cr + 22} class="pmap__label">{center.title}</text>
+		</a>
+		{
+			areas.map((a, i) => {
+				const r = a.r ?? 44;
+				return (
+					<g
+						class="pmap__area"
+						data-area={a.id}
+						role="button"
+						tabindex="0"
+						aria-pressed={i === 0 ? 'true' : 'false'}
+					>
+						<circle cx={a.x} cy={a.y} r={r + 4} class="pmap__halo" />
+						<clipPath id={`pmap-clip-${a.id}`}>
+							<circle cx={a.x} cy={a.y} r={r} />
+						</clipPath>
+						{a.image ? (
+							<image
+								href={a.image.src}
+								x={a.x - r * 0.9}
+								y={a.y - r * 0.9}
+								width={r * 1.8}
+								height={r * 1.8}
+								clip-path={`url(#pmap-clip-${a.id})`}
+								preserveAspectRatio="xMidYMid meet"
+							/>
+						) : (
+							<g clip-path={`url(#pmap-clip-${a.id})`}>
+								<circle cx={a.x} cy={a.y} r={r} class="pmap__placeholder" />
+								<text x={a.x} y={a.y + r * 0.35} class="pmap__initial">
+									{a.title.charAt(0)}
+								</text>
+							</g>
+						)}
+						<text x={a.x} y={a.y + r + (a.sub ? 16 : 22)} class="pmap__label">
+							{a.title}
+						</text>
+						{a.sub && (
+							<text x={a.x} y={a.y + r + 34} class="pmap__sub">
+								{a.sub}
+							</text>
+						)}
+					</g>
+				);
+			})
+		}
+	</svg>
+
+	{
+		areas.map((a, i) => (
+			<div class:list={['pmap__panel', { 'is-active': i === 0 }]} data-area={a.id}>
+				<ul class="pmap__projects" aria-label={a.title}>
+					{a.projects.map((p) => {
+						const item = (
+							<span class="pmap__project">
+								{p.image ? (
+									<img src={p.image.src} alt={p.title} width="96" height="96" loading="lazy" />
+								) : (
+									<span class="pmap__project-initial" aria-hidden="true">
+										{p.title.charAt(0)}
+									</span>
+								)}
+								<span class="pmap__project-name">{p.title}</span>
+							</span>
+						);
+						return (
+							<li>
+								{p.url ? (
+									<a href={p.url} target="_blank" rel="noopener noreferrer">
+										{item}
+									</a>
+								) : item}
+							</li>
+						);
+					})}
+				</ul>
+			</div>
+		))
+	}
+</div>
+
+<script>
+	// Clicking (or keyboard-activating) an area node swaps the panel below.
+	const activate = (btn: Element) => {
+		const map = btn.closest('.pmap');
+		if (!map) return;
+		const id = (btn as HTMLElement).dataset.area;
+		map.querySelectorAll('.pmap__area').forEach((b) => {
+			b.setAttribute('aria-pressed', String(b === btn));
+		});
+		map.querySelectorAll('.pmap__panel').forEach((p) => {
+			p.classList.toggle('is-active', (p as HTMLElement).dataset.area === id);
+		});
+	};
+	const onClick = (e: Event) => {
+		const btn = (e.target as HTMLElement).closest('.pmap__area');
+		if (btn) activate(btn);
+	};
+	const onKey = (e: KeyboardEvent) => {
+		if (e.key !== 'Enter' && e.key !== ' ') return;
+		const btn = (e.target as HTMLElement).closest('.pmap__area');
+		if (btn) {
+			e.preventDefault();
+			activate(btn);
+		}
+	};
+	document.addEventListener('click', onClick);
+	document.addEventListener('keydown', onKey);
+</script>
+
+<style>
+	.pmap__svg {
+		width: 100%;
+		height: auto;
+		display: block;
+		margin-block: var(--mb-1-5);
+	}
+	.pmap__link line {
+		stroke: color-mix(in srgb, var(--first-color) 35%, transparent);
+		stroke-width: 1.5;
+		stroke-dasharray: 4 6;
+	}
+	.pmap__link circle {
+		fill: color-mix(in srgb, var(--first-color) 55%, transparent);
+	}
+	.pmap__node--link {
+		cursor: pointer;
+		&:hover .pmap__halo,
+		&:focus-visible .pmap__halo {
+			stroke: var(--first-color);
+		}
+	}
+	.pmap__area {
+		cursor: pointer;
+		&:hover .pmap__halo,
+		&:focus-visible .pmap__halo {
+			stroke: var(--first-color);
+		}
+		&:focus-visible {
+			outline: none;
+		}
+	}
+	.pmap__area[aria-pressed='true'] .pmap__halo {
+		stroke: var(--first-color);
+		stroke-width: 3;
+	}
+	.pmap__halo {
+		fill: transparent;
+		stroke: color-mix(in srgb, var(--first-color) 30%, transparent);
+		stroke-width: 2;
+		transition: stroke 200ms ease;
+	}
+	.pmap__placeholder {
+		fill: color-mix(in srgb, var(--first-color) 12%, var(--container-color));
+	}
+	.pmap__initial {
+		text-anchor: middle;
+		font-family: var(--title-font);
+		font-size: 30px;
+		fill: var(--text-color-light);
+	}
+	.pmap__label {
+		text-anchor: middle;
+		font-family: var(--title-font);
+		font-size: 15px;
+		fill: var(--title-color);
+	}
+	.pmap__sub {
+		text-anchor: middle;
+		font-size: 11px;
+		font-family: var(--body-font);
+		fill: var(--text-color-light);
+	}
+
+	.pmap__panel {
+		display: none;
+	}
+	.pmap__panel.is-active {
+		display: block;
+	}
+	.pmap__projects {
+		list-style: none;
+		padding: 0;
+		margin-block: var(--mb-1) 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+		gap: var(--mb-1);
+	}
+	.pmap__project {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.pmap__projects a {
+		text-decoration: none;
+		display: block;
+		transition: transform 200ms ease;
+	}
+	.pmap__projects a:hover,
+	.pmap__projects a:focus-visible {
+		transform: scale(1.08);
+	}
+	.pmap__projects img,
+	.pmap__project-initial {
+		width: 5.5rem;
+		height: 5.5rem;
+		/* Launcher icons are square — treat them like home-screen app icons. */
+		border-radius: 22%;
+		object-fit: contain;
+		padding: 0.4rem;
+		background: color-mix(in srgb, var(--first-color) 8%, var(--container-color));
+		border: 1px solid color-mix(in srgb, var(--first-color) 18%, transparent);
+	}
+	.pmap__project-initial {
+		display: grid;
+		place-content: center;
+		font-family: var(--title-font);
+		font-size: 1.75rem;
+		color: var(--text-color-light);
+	}
+	.pmap__project-name {
+		font-family: var(--title-font);
+		font-size: var(--small-font-size);
+		color: var(--title-color);
+		text-align: center;
+	}
+</style>

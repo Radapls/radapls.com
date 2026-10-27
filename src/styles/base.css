@@ -456,6 +456,9 @@ html:has(.snap-page).footer-active .header {
 	cursor: pointer;
 	width: 1.1rem;
 	height: 1.1rem;
+	/* Keep the X clickable above the open overlay menu (it paints later in the DOM). */
+	position: relative;
+	z-index: 1;
 }
 .nav__toggle:hover {
 	color: var(--first-color);
@@ -465,13 +468,14 @@ html:has(.snap-page).footer-active .header {
 	.nav__menu {
 		position: fixed;
 		top: calc(5rem + var(--banner-height, 0px));
-		bottom: auto;
+		bottom: 0;
 		left: 0;
 		width: 100%;
 		background-color: var(--body-color);
+		display: flex;
 		padding: 2rem 1.5rem 4rem;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-		border-radius: 0 0 1.5rem 1.5rem;
+		overflow-y: auto;
 		transform: translateY(-120%);
 		visibility: hidden;
 		transition:
@@ -488,11 +492,17 @@ html:has(.snap-page).footer-active .header {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: 1rem;
+		gap: 1.5rem;
+		width: 100%;
+		/* Centers when short, stays scrollable when taller than the overlay. */
+		margin: auto 0;
 	}
 	.nav--portfolio .nav__link {
 		flex-direction: row;
+		align-items: center;
 		gap: 0.75rem;
+		font-size: var(--h2-font-size);
+		font-family: var(--title-font);
 	}
 }
 .nav__list {
@@ -513,18 +523,18 @@ html:has(.snap-page).footer-active .header {
 .nav__icon {
 	font-size: 1.2rem;
 }
-.nav__close {
-	position: absolute;
-	right: 1.3rem;
-	top: 1.5rem;
-	bottom: auto;
-	font-size: 1.5rem;
-	cursor: pointer;
-	color: var(--first-color);
-	transition: 0.2s;
+/* Hamburger/X swap on the single toggle button (aria-expanded drives it). */
+.nav__toggle-icon--close {
+	display: none;
+	font-family: var(--title-font);
+	font-size: 1.75rem;
+	line-height: 1;
 }
-.nav__close:hover {
-	color: var(--first-color-alt);
+.nav__toggle[aria-expanded='true'] .nav__toggle-icon--open {
+	display: none;
+}
+.nav__toggle[aria-expanded='true'] .nav__toggle-icon--close {
+	display: block;
 }
 
 .nav__translate,
@@ -778,7 +788,7 @@ html::-webkit-scrollbar {
 .page-scrollbar {
 	position: fixed;
 	top: 0;
-	right: 0.5rem;
+	right: 0;
 	bottom: 0;
 	width: 4px;
 	z-index: 100;

@@ -1,26 +1,87 @@
 ---
 title: "JFRA | Wibx"
 variant: "wibx"
-description: "Mi primer rol tras el cambio de carrera: filtros AR, diseño de sistemas, back-office y landing pages."
+description: "Primer rol tras el cambio de carrera: el primer design system de la empresa, módulos como SmartForms, filtros AR, back-office y landing pages."
 gif: "../../../../assets/gifs/wbx-token.gif"
 ---
 import TechList from '../../../../components/TechList.astro';
 import Slider from '../../../../components/Slider.astro';
+import ProjectMap from '../../../../components/ProjectMap.astro';
+import wibxLogo from '../../../../assets/img/brands/wibx.svg';
+import wlLuperyum from '../../../../assets/img/brands/wl-luperyum.png';
+import speedzinLogo from '../../../../assets/img/brands/speedzin.svg';
+import wlPrimecircle from '../../../../assets/img/brands/wl-primecircle.png';
+import wlMusicLovers from '../../../../assets/img/brands/wl-music-lovers.png';
+import wlSambaLovers from '../../../../assets/img/brands/wl-samba-lovers.png';
+import wlJovemPan from '../../../../assets/img/brands/wl-jovem-pan.png';
+import wlEsgx from '../../../../assets/img/brands/wl-esgx.png';
+import wlWinex from '../../../../assets/img/brands/wl-winex.png';
+import wlWomanx from '../../../../assets/img/brands/wl-womanx.png';
+import wlAmplifyq from '../../../../assets/img/brands/wl-amplifyq.png';
+import wlBoostzone from '../../../../assets/img/brands/wl-boostzone.png';
+import wlBora from '../../../../assets/img/brands/wl-bora.png';
+import wlGate0 from '../../../../assets/img/brands/wl-gate0.png';
 import { wibxPhotos } from '../../../../data/slider';
-
-
 
 # Mi experiencia en Wibx Company
 
 Mi experiencia en Wibx fue un giro de ciento ochenta grados. Fue la primera empresa a la que llegué después de hacer mi transición de carrera. En Wibx, aprendí muchísimo, no solo sobre tecnología, sino también sobre relaciones, vivir en un nuevo país, aprender un nuevo idioma y, por supuesto, programar en esta década.
 
-Wibx para mí fue un espacio de co-creación. Nunca hubo un 'no' para intentar algo nuevo. Desde filtros con Realidad Aumentada, pasando por el diseño de sistemas, hasta el backoffice administrativo, la refactorización de la aplicación y varias, por no decir muchas, landing pages.
+> Wibx para mí fue un espacio de co-creación. Nunca hubo un 'no' para intentar algo nuevo.
+
+Desde filtros con Realidad Aumentada, pasando por el diseño de sistemas, hasta el backoffice administrativo, la refactorización de la aplicación y varias, por no decir muchas, landing pages.
+
+## Aprender a construir software, por el camino difícil
 
 Mi experiencia como desarrollador frontend se basó en entender el funcionamiento de Angular como framework y en optimizar su desarrollo para trabajar con TypeScript y SCSS como preprocesador de CSS. Fue un gran desafío, especialmente porque no estaba familiarizado con frameworks y tenía más experiencia con HTML, CSS y JavaScript. Este reto fue de gran escalabilidad, más aún cuando venía de un área completamente ajena.
 
 Sin embargo, creo que la proximidad a conceptos tan complejos como el estado reactivo, la asincronía, la gestión del estado y el clean code para la arquitectura hicieron de ese camino una experiencia amena. Siempre estuve acompañado del trabajo en equipo, que considero crucial al inicio de la carrera como programador. Si bien la curiosidad inherente es grande, el poder tener un enfoque guiado por un grupo siempre será grato.
 
-### Entre mis principales responsabilidades estuvieron:
+## De traducciones al core de la plataforma
+
+Nadie llega a construir design systems. Mis primeras tareas fueron **traducciones y ajustes de CSS** — pequeñas, poco glamorosas y perfectas: me permitían tocar el código sin el riesgo de romperlo, y entender cómo estaba armada la plataforma archivo por archivo. Las primeras entregas reales fueron branding de whitelabels: cambiar logos, iconos y drawables para que cada socio tuviera su propia app.
+
+De ahí en adelante, la responsabilidad creció con la confianza:
+
+- **El giro hacia el design system** — tomar el lado de Figma, convertir pantallas sueltas en una librería compartida de verdad (la familia de componentes `wui-`) y empezar a construir UI para escritorio y móvil a partir de ella.
+- **Escritorio: el backoffice Business** — el configurador principal de Wibx, donde se opera toda la plataforma: campañas, challenges, el home configurator, roles y permisos por whitelabel.
+- **Móvil: la app multiplataforma** — la app de Android e iOS donde vive toda la lógica de Wibx: wallet, shopping, rewards, onboarding. El lugar donde el design system se paga solo cada día, en cada tamaño de pantalla.
+
+Mirando atrás, cada paso hizo posible el siguiente: no se puede construir un backoffice sin un design system, y no se puede lanzar un whitelabel sin ambos.
+
+### La fábrica de whitelabels
+
+Como el sistema se construyó sobre tokens y configuración, lanzar un socio dejó de significar "reescribir la app" y pasó a significar "configurarla". Trabajé en la implementación de muchos whitelabels, entre ellos:
+
+[Luperyum](https://luperyum.com.br/), [Speedzin](https://speedzin.com.br/), PrimeCircle, Music Lovers, Samba Lovers, Jovem Pan, EsgX, WineX, WomanX, Amplifyq, Boostzone, Bora y Gate0.
+
+Cada uno con su propio branding, módulos y tienda — todos nacidos de la misma base.
+
+## El diseño, mi manera de volver
+
+Antes del código estuvo el diseño — y ese fue el puente que hizo posible mi cambio de carrera. En Wibx no solo implementaba interfaces: ayudé a decidir cómo debían verse, comportarse y escalar. Poco a poco, esa sensibilidad se convirtió en mi principal aporte al producto.
+
+### El primer design system
+
+Cuando llegué, cada pantalla resolvía los mismos problemas de una manera ligeramente diferente. Creé el **primer design system** de la empresa: un lenguaje compartido de tokens, tipografía, espaciado y componentes de Angular que permitió a diseñadores y desarrolladores hablar el mismo idioma — y evitó que cada nueva funcionalidad reinventara la rueda.
+
+<details>
+	<summary>Qué cubría el design system</summary>
+
+- Tokens de color y tipografía compartidos entre Figma y SCSS
+- Una librería base de componentes reutilizables de Angular
+- Convenciones de espaciado y layout para el backoffice y la app
+- Documentación para que el sistema pudiera sobrevivir sin mí
+
+</details>
+
+### SmartForms
+
+El módulo del que estoy más orgulloso. Los formularios eran la parte más repetitiva y propensa a errores del backoffice, así que construí **SmartForms**: un módulo que genera formularios a partir de una configuración, con la validación y el layout resueltos una sola vez, de forma central, en lugar de copiados y pegados en decenas de pantallas. Hoy vive tanto en el backoffice como en la app móvil.
+
+Lo que empezó como una conveniencia interna se convirtió en un patrón que el equipo siguió extendiendo — que es el mejor cumplido que un módulo puede recibir.
+
+## Mis responsabilidades
 
 - La creación de nuevas funcionalidades, así como el mantenimiento del código base para el backoffice (Business) y la aplicación (Wibx App).
 - Trabajo conjunto con el equipo de diseño para la entrega eficiente de nuevas funcionalidades al core del negocio.
@@ -29,15 +90,42 @@ Sin embargo, creo que la proximidad a conceptos tan complejos como el estado rea
 - Creación de landing pages en alineamiento con el equipo de marketing para el lanzamiento de estrategias y campañas.
 - Gestión de la migración de Angular 15 a Angular 20.
 
-### Algunos proyectos
-- [Luperyum](https://luperyum.com.br/)
-- [Wibx](https://wibx.io/)
-- [Speedzin](https://speedzin.com.br/)
-- [WBCS](https://account.wibx.io/)
-- [Wibx App IOS](https://apps.apple.com/co/app/wibx/id1477739020)
+## Algunos proyectos
 
-### Principales herramientas:
+<ProjectMap
+	center={{ title: 'Wibx', url: 'https://wibx.io/', image: wibxLogo, x: 480, y: 260, r: 56 }}
+	areas={[
+		{ id: 'web', title: 'Web', sub: 'wiboo.frontends', x: 190, y: 130, r: 44, projects: [
+			{ title: 'Backoffice Business', url: 'https://account.wibx.io/' },
+			{ title: 'Sitio Luperyum', url: 'https://luperyum.com.br/', image: wlLuperyum },
+			{ title: 'Speedzin', url: 'https://speedzin.com.br/', image: speedzinLogo },
+		] },
+		{ id: 'mobile', title: 'Mobile', sub: 'wiboo.mobile', x: 770, y: 130, r: 44, projects: [
+			{ title: 'Wibx App', url: 'https://apps.apple.com/co/app/wibx/id1477739020', image: wibxLogo },
+				{ title: 'Luperyum', image: wlLuperyum },
+				{ title: 'PrimeCircle', image: wlPrimecircle },
+				{ title: 'Music Lovers', image: wlMusicLovers },
+				{ title: 'Samba Lovers', image: wlSambaLovers },
+				{ title: 'Jovem Pan', image: wlJovemPan },
+				{ title: 'EsgX', image: wlEsgx },
+				{ title: 'WineX', image: wlWinex },
+				{ title: 'WomanX', image: wlWomanx },
+				{ title: 'Amplifyq', image: wlAmplifyq },
+				{ title: 'Boostzone', image: wlBoostzone },
+				{ title: 'Bora', image: wlBora },
+				{ title: 'Gate0', image: wlGate0 }
+		] },
+		{ id: 'ux', title: 'UX/UI', x: 480, y: 440, r: 44, projects: [
+			{ title: 'Figma Design System' },
+			{ title: 'SmartForms' },
+		] },
+	]}
+/>
+
+## El stack:
 
 <TechList company="wibx"/>
+
+## En imágenes
 
 <Slider format="image" data={wibxPhotos} type="wibx"/>

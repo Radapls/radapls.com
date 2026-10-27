@@ -1,5 +1,5 @@
 ---
-import Logo from '@assets/img/JFRA.svg';
+import Illustration from '@assets/img/illustration.webp';
 import type { BrandType } from 'src/types/variants';
 
 import Birdi from '@assets/img/brands/birdi.svg';
@@ -122,8 +122,11 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 						aria-label={t('header.open-menu')}
 						aria-expanded="false"
 						aria-controls="nav-menu"
+						data-open-label={t('header.open-menu')}
+						data-close-label={t('header.close-menu')}
 					>
 						<svg
+							class="nav__toggle-icon nav__toggle-icon--open"
 							width="20"
 							height="20"
 							viewBox="0 0 15 15"
@@ -133,10 +136,17 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 						>
 							<path d="M1 3.5h13M1 7.5h13M1 11.5h13" stroke="currentColor" stroke-width="1.5" />
 						</svg>
+						<span class="nav__toggle-icon nav__toggle-icon--close" aria-hidden="true">×</span>
 					</button>
 				)}
 				<a href="/" class="nav__logo">
-					<Logo class="radapls-brand" role="img" aria-label="Logo Juan Felipe Rada" width={40} height={40} />
+					<Image
+						class="nav__brand"
+						src={Illustration}
+						alt="Juan Felipe Rada"
+						width={40}
+						height={40}
+					/>
 				</a>
 
 				{!noLinks && (
@@ -231,27 +241,6 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 								</a>
 							</li>
 						</ul>
-						<button
-							class="nav__close"
-							id="nav-close"
-							type="button"
-							aria-label={t('header.close-menu')}
-						>
-							<svg
-								width="20"
-								height="20"
-								viewBox="0 0 15 15"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z"
-									fill="currentColor"
-									fill-rule="evenodd"
-									clip-rule="evenodd"
-								/>
-							</svg>
-						</button>
 					</div>
 				)}
 				<div class="nav__btns">
@@ -274,10 +263,10 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 				)}
 				<div class="co-brand">
 					<a href="/">
-						<Logo
-							class="radapls-brand"
-							role="img"
-							aria-label="Logo Juan Felipe Rada"
+						<Image
+							class="nav__brand"
+							src={Illustration}
+							alt="Juan Felipe Rada"
 							width={35}
 							height={35}
 						/>
@@ -361,27 +350,51 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 		if (w.__headerReveal) window.removeEventListener('mousemove', w.__headerReveal);
 		w.__headerScroll = onScroll;
 		window.addEventListener('scroll', onScroll);
+		// Re-hide the hover-revealed header after 5s unless it's being used.
+		let hideTimer: number | undefined;
+		const scheduleHide = () => {
+			window.clearTimeout(hideTimer);
+			hideTimer = window.setTimeout(() => {
+				// Only auto-hide in scroll-hide territory: never at page top or
+				// with the menu open, where the header must stay visible.
+				if (
+					header &&
+					!header.matches(':hover') &&
+					window.scrollY > 80 &&
+					!navMenu?.classList.contains('show-menu')
+				) {
+					header.classList.add('header-hidden');
+				}
+			}, 5000);
+		};
 		const onHeaderEdge = (event: MouseEvent) => {
 			if (!header) return;
 			const headerTop = Number.parseFloat(getComputedStyle(header).top);
 			const revealBottom = Number.isFinite(headerTop) ? Math.max(64, headerTop + 48) : 64;
 			if (event.clientY > revealBottom) return;
 			header.classList.remove('header-hidden');
+			scheduleHide();
 		};
 		w.__headerReveal = onHeaderEdge;
 		window.addEventListener('mousemove', onHeaderEdge, { passive: true });
+		header?.addEventListener('mouseleave', scheduleHide);
 		onScroll();
 
 		/*==================== MOBILE MENU SHOW / HIDE ====================*/
 		const navToggle = document.getElementById('nav-toggle');
-		const navClose = document.getElementById('nav-close');
 
 		const openMenu = (open: boolean) => {
 			navMenu?.classList.toggle('show-menu', open);
 			navToggle?.setAttribute('aria-expanded', String(open));
+			navToggle?.setAttribute(
+				'aria-label',
+				(navToggle.dataset[open ? 'closeLabel' : 'openLabel'] as string) ??
+					navToggle.getAttribute('aria-label')!
+			);
 		};
-		navToggle?.addEventListener('click', () => openMenu(true));
-		navClose?.addEventListener('click', () => openMenu(false));
+		navToggle?.addEventListener('click', () =>
+			openMenu(!navMenu?.classList.contains('show-menu'))
+		);
 
 		// Close the mobile menu after tapping a nav link.
 		document.querySelectorAll('.nav__link').forEach((link) => {
@@ -414,31 +427,24 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 </script>
 
 <style>
-	.show-menu {
-		bottom: 0;
-	}
-
 	.active-link {
 		color: var(--first-color);
 	}
 
-	/* Menu toggle/close are real <button>s now; strip native chrome.
-	   (No display rule here — media-queries.css hides them on desktop.) */
-	.nav__toggle,
-	.nav__close {
+	/* Menu toggle is a real <button> now; strip native chrome.
+	   (No display rule here — media-queries.css hides it on desktop.) */
+	.nav__toggle {
 		background: none;
 		border: 0;
 		padding: 0;
 	}
 
-	.radapls-brand {
-		width: 35px;
-		display: grid;
-		place-content: center;
-	}
-
-	:global(.dark) .radapls-brand {
-		filter: grayscale(1) contrast(0.5) brightness(3.5);
+	/* Brand portrait: circular crop like the About page portrait. */
+	.nav__brand {
+		width: 40px;
+		height: 40px;
+		object-fit: cover;
+		border-radius: 50%;
 	}
 
 	.co-brand {
@@ -446,6 +452,12 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 		align-items: center;
 		justify-content: center;
 		gap: 0.75rem;
+	}
+
+	/* Inline <a> leaves an img on the text baseline; blockify to center. */
+	.co-brand > a {
+		display: grid;
+		place-content: center;
 	}
 
 	.co-brand__separator {

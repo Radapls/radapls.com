@@ -1,30 +1,74 @@
 ---
 import { getCollection, render } from 'astro:content';
 import WorkLayout from '@layouts/WorkLayout.astro';
+import { DEFAULT_LOCALE } from 'src/i18n';
+
+const LOCALES = [DEFAULT_LOCALE, 'es', 'pt-br'];
 
 export async function getStaticPaths() {
 	const work = await getCollection('experience');
-	// ponytail: single-path i18n — render default-locale entries only
+	// ponytail: single-path i18n — paths come from default-locale entries only;
+	// translations are rendered below and swapped client-side.
 	return work
 		.filter((post) => post.id.startsWith('en/'))
-		.map((post) => ({ params: { id: post.id.replace(/^en\//, '') }, props: post }));
+		.map((post) => ({ params: { id: post.id.replace(/^en\//, '') }, props: { post } }));
 }
 
-const post = Astro.props;
+const { post } = Astro.props;
+const id = post.id.replace(/^en\//, '');
+const all = await getCollection('experience');
 
-const { Content } = await render(post);
-const title = post.data.title;
-const description = post.data.description;
-const variant = post.data.variant;
-const alt = `Animated image ${post.data.variant}`;
+const variants = (
+	await Promise.all(
+		LOCALES.map(async (loc) => {
+			const entry = loc === DEFAULT_LOCALE ? post : all.find((p) => p.id === `${loc}/${id}`);
+			if (!entry) return null; // missing translation falls back to default locale
+			const { Content } = await render(entry);
+			return { loc, Content, data: entry.data };
+		})
+	)
+).filter((v) => v !== null);
+
+const { title, description, variant } = post.data;
+const alt = `Animated image ${variant}`;
 ---
 
 <WorkLayout {variant} {title} {description} noLinks>
 	<div class="animated-image">
 		<img {alt} src={post.data.gif?.src} draggable="false" />
 	</div>
-	<Content class="material-icons" />
+	{variants.map(({ loc, Content, data }) => (
+		<div
+			class:list={['case-locale', { 'is-active': loc === DEFAULT_LOCALE }]}
+			data-locale={loc}
+			data-title={data.title}
+			data-description={data.description}
+		>
+			<Content />
+		</div>
+	))}
 </WorkLayout>
+
+<script>
+	// MDX bodies aren't in the i18n dict swap — whole pre-rendered variants
+	// are in the DOM; show the one matching the active locale.
+	function applyCaseLocale(lang: string) {
+		document.querySelectorAll<HTMLElement>('.case-locale').forEach((el) => {
+			const active = el.dataset.locale === lang;
+			el.classList.toggle('is-active', active);
+			if (active) {
+				document.title = el.dataset.title || document.title;
+				document
+					.querySelector('meta[name="description"]')
+					?.setAttribute('content', el.dataset.description || '');
+			}
+		});
+	}
+	const stored = localStorage.getItem('lang');
+	if (stored) applyCaseLocale(stored);
+	// i18n-client dispatches on window — document listeners never see it.
+	window.addEventListener('locale-change', (e) => applyCaseLocale((e as CustomEvent).detail));
+</script>
 
 <style>
 	.animated-image {
@@ -38,5 +82,12 @@ const alt = `Animated image ${post.data.variant}`;
 		max-height: 300px;
 		height: auto;
 		width: auto;
+	}
+
+	.case-locale {
+		display: none;
+	}
+	.case-locale.is-active {
+		display: block;
 	}
 </style>

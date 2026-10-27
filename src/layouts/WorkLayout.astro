@@ -258,7 +258,11 @@ const { title, description, noLinks, variant } = Astro.props;
 				}
 			}
 
-			&[open] summary {
+			/* :global — Astro adds its scope attribute to nested selectors with
+			   a compound like [open], but slotted MDX content carries no scope,
+			   so a bare `summary` here never matched and the open-state styles
+			   silently didn't apply. */
+			&[open] :global(summary) {
 				text-overflow: unset;
 				white-space: unset;
 				margin-block-end: var(--mb-1);

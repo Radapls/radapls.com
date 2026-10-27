@@ -19,6 +19,10 @@ function applyLang(from: string, to: string) {
 	const reverse: Record<string, string> = {};
 	for (const [k, v] of Object.entries(fromTable)) reverse[v] ??= k;
 	if (from === to) return;
+	// <title> lives in <head>, outside the body walk below.
+	const titleKey = reverse[document.title.trim()];
+	const titleHit = titleKey && toTable[titleKey];
+	if (titleHit) document.title = titleHit;
 	const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
 	// ponytail: skip generated content collections rendered per-locale later
 	const skip = /^(SCRIPT|STYLE)$/;

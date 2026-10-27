@@ -1,0 +1,293 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+	locale?: 'en' | 'es' | 'pt-br';
+}
+
+const { locale = 'en' } = Astro.props;
+const copy = {
+	en: {
+		title: 'How the frontend is structured',
+		intro: 'One Angular foundation supports the web products and is reused to build the mobile app.',
+		framework: 'Framework',
+		angularDescription: 'The application framework that organizes the interface and its features.',
+		buildingBlocks: 'The Angular app is built with',
+		language: 'Language',
+		languageDescription: 'Types and application logic',
+		markup: 'Markup',
+		markupDescription: 'Semantic page and component structure',
+		styles: 'Styles',
+		stylesDescription: 'Component and layout styling',
+		state: 'Global state',
+		stateDescription: 'Shared data used across features',
+		mobileTitle: 'Mobile app',
+		mobileDescription: 'NativeScript wraps the Angular application for native iOS and Android apps, reusing the same frontend foundation.',
+	},
+	es: {
+		title: 'Cómo se estructura el frontend',
+		intro: 'Una misma base Angular impulsa los productos web y se reutiliza para crear la app móvil.',
+		framework: 'Framework',
+		angularDescription: 'El framework que organiza la interfaz y sus funcionalidades.',
+		buildingBlocks: 'La app Angular se construye con',
+		language: 'Lenguaje',
+		languageDescription: 'Tipos y lógica de la aplicación',
+		markup: 'Marcado',
+		markupDescription: 'Estructura semántica de páginas y componentes',
+		styles: 'Estilos',
+		stylesDescription: 'Estilos de componentes y layout',
+		state: 'Estado global',
+		stateDescription: 'Datos compartidos entre funcionalidades',
+		mobileTitle: 'App móvil',
+		mobileDescription: 'NativeScript envuelve la aplicación Angular para crear apps nativas de iOS y Android, reutilizando la misma base frontend.',
+	},
+	'pt-br': {
+		title: 'Como o frontend é estruturado',
+		intro: 'Uma base Angular compartilhada atende aos produtos web e é reutilizada na criação do app mobile.',
+		framework: 'Framework',
+		angularDescription: 'O framework que organiza a interface e suas funcionalidades.',
+		buildingBlocks: 'O app Angular é construído com',
+		language: 'Linguagem',
+		languageDescription: 'Tipos e lógica da aplicação',
+		markup: 'Marcação',
+		markupDescription: 'Estrutura semântica de páginas e componentes',
+		styles: 'Estilos',
+		stylesDescription: 'Estilos de componentes e layout',
+		state: 'Estado global',
+		stateDescription: 'Dados compartilhados entre funcionalidades',
+		mobileTitle: 'App mobile',
+		mobileDescription: 'NativeScript envolve a aplicação Angular para criar apps nativos de iOS e Android, reutilizando a mesma base frontend.',
+	},
+} satisfies Record<NonNullable<Props['locale']>, Record<string, string>>;
+const labels = copy[locale];
+---
+
+<section class="frontend-architecture" aria-labelledby="frontend-architecture-title">
+	<header class="architecture-intro">
+		<h3 id="frontend-architecture-title">{labels.title}</h3>
+		<p>{labels.intro}</p>
+	</header>
+
+	<h4 class="architecture-building-blocks">{labels.buildingBlocks}</h4>
+	<div class="architecture-web">
+		<div class="architecture-core">
+			<div class="architecture-tech">
+				<Icon icon="angular" size="42" />
+				<div>
+					<span class="architecture-role">{labels.framework}</span>
+					<strong>Angular</strong>
+				</div>
+			</div>
+			<p>{labels.angularDescription}</p>
+		</div>
+
+		<div class="architecture-branch" aria-hidden="true"><span></span><i></i><i></i><i></i><i></i></div>
+
+		<div class="architecture-tools">
+			<article class="architecture-card">
+				<div class="architecture-tech"><Icon icon="typescript" size="34" /><strong>TypeScript</strong></div>
+				<span class="architecture-role">{labels.language}</span>
+				<p>{labels.languageDescription}</p>
+			</article>
+			<article class="architecture-card">
+				<div class="architecture-tech"><Icon icon="scss" size="34" /><strong>SCSS</strong></div>
+				<span class="architecture-role">{labels.styles}</span>
+				<p>{labels.stylesDescription}</p>
+			</article>
+			<article class="architecture-card">
+				<div class="architecture-tech"><Icon icon="ngrx" size="34" /><strong>NgRx</strong></div>
+				<span class="architecture-role">{labels.state}</span>
+				<p>{labels.stateDescription}</p>
+			</article>
+			<article class="architecture-card">
+				<div class="architecture-tech"><Icon icon="html" size="34" /><strong>HTML</strong></div>
+				<span class="architecture-role">{labels.markup}</span>
+				<p>{labels.markupDescription}</p>
+			</article>
+		</div>
+	</div>
+
+	<div class="architecture-mobile-connector"><span aria-hidden="true"></span><strong>{labels.mobileTitle}</strong></div>
+	<article class="architecture-mobile">
+		<div class="architecture-mobile-tech"><Icon icon="nativescript" size="38" /><strong>NativeScript</strong></div>
+		<p>{labels.mobileDescription}</p>
+	</article>
+</section>
+
+<style>
+	.frontend-architecture {
+		width: min(1100px, calc(100vw - 2rem));
+		max-width: none;
+		margin-inline-start: calc(50% - min(550px, calc(50vw - 1rem)));
+		margin-block: 1.5rem 2rem;
+	}
+	.architecture-intro { margin-bottom: 1.25rem; text-align: center; }
+	.architecture-intro h3 {
+		margin: 0 0 0.35rem;
+		color: var(--title-color);
+		font-family: var(--title-font);
+		font-size: clamp(1.1rem, 2vw, 1.4rem);
+	}
+	.architecture-intro p,
+	.architecture-core p,
+	.architecture-card p,
+	.architecture-mobile p {
+		margin: 0.35rem 0 0;
+		color: var(--text-color-light);
+		font-size: var(--small-font-size);
+		line-height: 1.5;
+	}
+	.architecture-building-blocks {
+		margin: 0 auto 0.75rem;
+		color: var(--text-color-light);
+		font-size: var(--small-font-size);
+		font-weight: 500;
+		text-align: center;
+	}
+	.architecture-web {
+		--architecture-gap: clamp(1rem, 2vw, 1.75rem);
+		display: grid;
+		grid-template-columns: minmax(16rem, 0.8fr) 3rem minmax(0, 2fr);
+		align-items: stretch;
+		gap: var(--architecture-gap);
+		padding: clamp(1.1rem, 3vw, 2rem);
+		border: 1px solid color-mix(in srgb, var(--first-color) 24%, transparent);
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--first-color) 4%, var(--container-color));
+	}
+	.architecture-core,
+	.architecture-card {
+		min-width: 0;
+		padding: 0.85rem;
+		border: 1px solid color-mix(in srgb, var(--first-color) 22%, transparent);
+		border-radius: 0.75rem;
+		background: var(--container-color);
+	}
+	.architecture-core { align-self: center; border-color: color-mix(in srgb, var(--first-color) 48%, transparent); }
+	.architecture-tech { display: flex; align-items: center; gap: 0.65rem; }
+	.architecture-tech :global(svg),
+	.architecture-mobile-tech :global(svg) { flex: 0 0 auto; }
+	.architecture-tech strong,
+	.architecture-mobile-tech strong { display: block; color: var(--title-color); font-family: var(--title-font); }
+	.architecture-core .architecture-tech strong { font-size: 1.2rem; }
+	.architecture-role { display: block; color: var(--text-color-light); font-size: var(--small-font-size); }
+	.architecture-core .architecture-role { margin-bottom: 0.1rem; }
+	.architecture-branch {
+		position: relative;
+		display: grid;
+		grid-template-rows: repeat(4, minmax(0, 1fr));
+		align-self: stretch;
+		justify-items: end;
+		gap: 0.55rem;
+	}
+	.architecture-branch::before {
+		position: absolute;
+		top: 0.22rem;
+		bottom: 0.22rem;
+		left: 0.2rem;
+		width: 1px;
+		background: color-mix(in srgb, var(--first-color) 48%, transparent);
+		content: '';
+	}
+	.architecture-branch span {
+		position: absolute;
+		top: 50%;
+		left: calc(-1 * var(--architecture-gap));
+		width: calc(var(--architecture-gap) + 0.2rem);
+		height: 1px;
+		background: color-mix(in srgb, var(--first-color) 48%, transparent);
+	}
+	.architecture-branch i {
+		position: relative;
+		z-index: 1;
+		width: 0.45rem;
+		height: 0.45rem;
+		border: 1px solid var(--first-color);
+		border-radius: 50%;
+		background: var(--container-color);
+	}
+	.architecture-branch i::before {
+		position: absolute;
+		top: 50%;
+		right: 100%;
+		width: calc(3rem - 0.65rem);
+		height: 1px;
+		background: color-mix(in srgb, var(--first-color) 48%, transparent);
+		content: '';
+	}
+	.architecture-tools { display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: minmax(5.75rem, auto); gap: 0.55rem; }
+	.architecture-card {
+		display: grid;
+		grid-template-columns: minmax(9rem, 0.7fr) minmax(6rem, 0.55fr) minmax(0, 1fr);
+		align-items: center;
+		gap: 0.5rem 1rem;
+		padding: 0.7rem 1rem;
+	}
+	.architecture-card .architecture-tech { gap: 0.55rem; }
+	.architecture-card .architecture-tech strong { font-size: 1rem; }
+	.architecture-card p { margin: 0; font-size: var(--small-font-size); }
+	.architecture-mobile-connector {
+		position: relative;
+		display: grid;
+		place-items: center;
+		height: 2.75rem;
+		margin-inline: auto;
+		color: var(--text-color-light);
+		font-size: var(--small-font-size);
+		text-align: center;
+	}
+	.architecture-mobile-connector span {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		width: 1px;
+		background: color-mix(in srgb, var(--first-color) 48%, transparent);
+	}
+	.architecture-mobile-connector strong {
+		z-index: 1;
+		padding: 0.2rem 0.5rem;
+		background: var(--body-color);
+	}
+	.architecture-mobile {
+		max-width: 30rem;
+		margin: 0 auto;
+		padding: 0.85rem 1rem;
+		border: 1px solid color-mix(in srgb, var(--first-color) 30%, transparent);
+		border-radius: 0.75rem;
+		background: color-mix(in srgb, var(--first-color) 5%, var(--container-color));
+		text-align: center;
+	}
+	.architecture-mobile-tech { display: flex; justify-content: center; align-items: center; gap: 0.6rem; }
+	@media screen and (max-width: 650px) {
+		.frontend-architecture { width: 100%; margin-inline: 0; }
+		.architecture-web { grid-template-columns: minmax(0, 1fr); gap: 0; }
+		.architecture-core { max-width: 22rem; width: 100%; margin-inline: auto; }
+		.architecture-branch {
+			display: block;
+			height: 1.4rem;
+		}
+		.architecture-branch::before { top: 0; bottom: 0.35rem; left: 50%; width: 1px; }
+		.architecture-branch span {
+			top: auto;
+			bottom: 0;
+			left: 50%;
+			width: 0.5rem;
+			height: 0.5rem;
+			border-right: 1px solid color-mix(in srgb, var(--first-color) 48%, transparent);
+			border-bottom: 1px solid color-mix(in srgb, var(--first-color) 48%, transparent);
+			background: transparent;
+			transform: translateX(-50%) rotate(45deg);
+		}
+		.architecture-branch i { display: none; }
+		.architecture-tools { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(0, auto); gap: 0.55rem; }
+		.architecture-card { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 0.35rem; padding: 0.75rem; }
+		.architecture-card .architecture-tech { flex-direction: row; align-items: center; margin-bottom: 0.2rem; }
+		.architecture-card .architecture-role { font-size: var(--small-font-size); }
+		.architecture-card p { font-size: var(--small-font-size); }
+	}
+	@media screen and (max-width: 375px) {
+		.architecture-card .architecture-tech :global(svg) { width: 28px; height: 28px; }
+		.architecture-card .architecture-tech strong { font-size: 0.82rem; }
+	}
+</style>

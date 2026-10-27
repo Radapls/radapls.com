@@ -1,0 +1,137 @@
+---
+import { getCollection, render } from 'astro:content';
+import WorkLayout from '@layouts/WorkLayout.astro';
+import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
+
+interface Props {
+	post: any;
+	backHref: string;
+	backLabelKey: string;
+}
+
+const { post, backHref, backLabelKey } = Astro.props;
+
+const LOCALES = [DEFAULT_LOCALE, 'es', 'pt-br'];
+const labelForLocale = (locale: string) => useTranslations(locale as Lang)(backLabelKey);
+
+const id = post.id.replace(/^en\//, '');
+const all = await getCollection('experience');
+
+const variants = (
+	await Promise.all(
+		LOCALES.map(async (loc) => {
+			const entry = loc === DEFAULT_LOCALE ? post : all.find((p) => p.id === `${loc}/${id}`);
+			if (!entry) return null; // missing translation falls back to default locale
+			const { Content } = await render(entry);
+			return { loc, Content, data: entry.data };
+		})
+	)
+).filter((v) => v !== null);
+
+const { title, description, variant, video } = post.data;
+const alt = `Animated image ${variant}`;
+const bannerSrc =
+	variant === 'iei'
+		? '/iei-entrance.svg'
+		: variant === 'moe'
+			? '/moe-entrance.svg'
+			: variant === 'alcaldia'
+				? '/alcaldia-entrance.svg'
+				: variant === 'ericsson'
+					? '/ericsson-hero.webp'
+				: post.data.gif?.src;
+---
+
+<WorkLayout {variant} {title} {description} noLinks>
+	<div class:list={['animated-image', { 'animated-image--spaced': ['iei', 'moe', 'alcaldia', 'ericsson'].includes(variant) }]}>
+		{video ? (
+			<video src={video} poster={bannerSrc} autoplay loop muted playsinline aria-label={alt}></video>
+		) : (
+			<img {alt} src={bannerSrc} draggable="false" />
+		)}
+	</div>
+	{variants.map(({ loc, Content, data }) => (
+		<div
+			class:list={['case-locale', { 'is-active': loc === DEFAULT_LOCALE }]}
+			data-locale={loc}
+			data-title={data.title}
+			data-description={data.description}
+		>
+			<a class="case-studies-back" href={backHref}>
+				<span class="case-studies-back__wrapper">{labelForLocale(loc)}</span>
+			</a>
+			<Content />
+		</div>
+	))}
+</WorkLayout>
+
+<script>
+	// MDX bodies aren't in the i18n dict swap — whole pre-rendered variants
+	// are in the DOM; show the one matching the active locale.
+	function applyCaseLocale(lang: string) {
+		document.querySelectorAll<HTMLElement>('.case-locale').forEach((el) => {
+			const active = el.dataset.locale === lang;
+			el.classList.toggle('is-active', active);
+			if (active) {
+				document.title = el.dataset.title || document.title;
+				document
+					.querySelector('meta[name="description"]')
+					?.setAttribute('content', el.dataset.description || '');
+			}
+		});
+	}
+	const stored = localStorage.getItem('lang');
+	if (stored) applyCaseLocale(stored);
+	// i18n-client dispatches on window — document listeners never see it.
+	window.addEventListener('locale-change', (e) => applyCaseLocale((e as CustomEvent).detail));
+</script>
+
+<style>
+	.animated-image {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.animated-image--spaced {
+		padding-block-end: 2rem;
+	}
+
+	.animated-image > img,
+	.animated-image > video {
+		max-width: 100%;
+		max-height: 300px;
+		height: auto;
+		width: auto;
+	}
+	.case-studies-back {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: fit-content;
+		margin: 0 auto 0.5rem;
+		padding: 0.35rem 0.55rem;
+		border: 3px double var(--first-color);
+		border-radius: 0;
+		background: color-mix(in srgb, var(--first-color) 12%, var(--container-color));
+		color: var(--tag-fg, var(--first-color));
+		font-family: var(--title-font);
+		font-size: max(0.72em, 0.9vw);
+		font-weight: 600;
+		line-height: 1em;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		text-decoration: none;
+		text-align: center;
+		transition: color 160ms ease;
+	}
+	.case-studies-back:hover {
+		color: var(--title-color);
+	}
+
+	.case-locale {
+		display: none;
+	}
+	.case-locale.is-active {
+		display: block;
+	}
+</style>

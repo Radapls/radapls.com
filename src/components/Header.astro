@@ -1,5 +1,5 @@
 ---
-import Illustration from '@assets/img/illustration.webp';
+import RadaplsLogo from '@assets/img/JFRA.svg';
 import type { BrandType } from 'src/types/variants';
 
 import Birdi from '@assets/img/brands/birdi.svg';
@@ -9,26 +9,25 @@ import NT from '@assets/img/brands/nt.svg';
 import IEI from '@assets/img/brands/iei.svg';
 import Alcaldia from '@assets/img/brands/alcaldia-cali.svg';
 import MOE from '@assets/img/brands/moe.svg';
+import Icesi from '@assets/img/brands/icesi.webp';
+import Javeriana from '@assets/img/brands/javeriana.webp';
 import LocaleSelect from './i18n/LocaleSelect.astro';
-import { DEFAULT_LOCALE, useTranslations, type Lang } from 'src/i18n';
-import { BLOG_URL } from 'src/consts';
+import { useTranslations, type Lang } from 'src/i18n';
 import { Image } from 'astro:assets';
 import ThemeIcon from './ThemeIcon.astro';
+import HeaderMenuLinks from './HeaderMenuLinks.astro';
 
 const t = useTranslations(Astro.currentLocale as Lang);
 
-const currentLocale = (Astro.currentLocale as Lang | undefined) ?? DEFAULT_LOCALE;
-
 interface Props {
 	variant?: BrandType;
-	noLinks?: boolean;
 	/** Blog pages are single-locale: the switcher has nothing to switch to */
 	hideLocaleSelect?: boolean;
 	/** Show a compact return-to-portfolio arrow in the brand slot */
 	showBack?: boolean;
 }
 
-const { variant, noLinks = false, hideLocaleSelect = false, showBack = false } = Astro.props;
+const { variant, hideLocaleSelect = false, showBack = false } = Astro.props;
 
 /**
  * Co-brand registry. Add a partner here and the header picks it up — no
@@ -86,6 +85,20 @@ const coBrands = {
 		src: undefined,
 		tone: 'co-brand-logo--multicolor',
 	},
+	icesi: {
+		url: 'https://www.icesi.edu.co/',
+		label: 'Universidad Icesi',
+		logo: undefined,
+		src: Icesi,
+		tone: undefined,
+	},
+	javeriana: {
+		url: 'https://www.javeriana.edu.co/',
+		label: 'Pontificia Universidad Javeriana',
+		logo: undefined,
+		src: Javeriana,
+		tone: undefined,
+	},
 } as const;
 
 const coBrand =
@@ -114,138 +127,46 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 						<span aria-hidden="true">←</span>
 					</a>
 				)}
-				{!noLinks && (
-					<button
-						class="nav__toggle"
-						id="nav-toggle"
-						type="button"
-						aria-label={t('header.open-menu')}
-						aria-expanded="false"
-						aria-controls="nav-menu"
-						data-open-label={t('header.open-menu')}
-						data-close-label={t('header.close-menu')}
+				<button
+					class="nav__toggle"
+					id="nav-toggle"
+					type="button"
+					aria-label={t('header.open-menu')}
+					aria-expanded="false"
+					aria-controls="nav-menu"
+					data-open-label={t('header.open-menu')}
+					data-close-label={t('header.close-menu')}
+				>
+					<svg
+						class="nav__toggle-icon nav__toggle-icon--open"
+						width="20"
+						height="20"
+						viewBox="0 0 15 15"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						aria-hidden="true"
 					>
-						<svg
-							class="nav__toggle-icon nav__toggle-icon--open"
-							width="20"
-							height="20"
-							viewBox="0 0 15 15"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-							aria-hidden="true"
-						>
-							<path d="M1 3.5h13M1 7.5h13M1 11.5h13" stroke="currentColor" stroke-width="1.5" />
-						</svg>
-						<span class="nav__toggle-icon nav__toggle-icon--close" aria-hidden="true">×</span>
-					</button>
-				)}
+						<path d="M1 3.5h13M1 7.5h13M1 11.5h13" stroke="currentColor" stroke-width="1.5" />
+					</svg>
+					<span class="nav__toggle-icon nav__toggle-icon--close" aria-hidden="true">×</span>
+				</button>
 				<a href="/" class="nav__logo">
-					<Image
+					<RadaplsLogo
 						class="nav__brand"
-						src={Illustration}
-						alt="Juan Felipe Rada"
+						role="img"
+						aria-label="Juan Felipe Rada"
 						width={40}
 						height={40}
 					/>
 				</a>
 
-				{!noLinks && (
-					<div class="nav__menu" id="nav-menu">
-						<ul class="nav__list grid">
-							<li class="nav__item">
-								<a href="/about" class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M7.5 0.875C5.49797 0.875 3.875 2.49797 3.875 4.5C3.875 6.15288 4.98124 7.54738 6.49373 7.98351C5.2997 8.12901 4.27557 8.55134 3.50407 9.31167C2.52216 10.2794 2.02502 11.72 2.02502 13.5999C2.02502 13.8623 2.23769 14.0749 2.50002 14.0749C2.76236 14.0749 2.97502 13.8623 2.97502 13.5999C2.97502 11.8799 3.42786 10.7206 4.17091 9.9883C4.91536 9.25463 6.02674 8.87499 7.49995 8.87499C8.97317 8.87499 10.0846 9.25463 10.8291 9.98831C11.5721 10.7206 12.025 11.8799 12.025 13.5999C12.025 13.8623 12.2376 14.0749 12.5 14.0749C12.7623 14.075 12.975 13.8623 12.975 13.6C12.975 11.72 12.4778 10.2794 11.4959 9.31166C10.7244 8.55135 9.70025 8.12903 8.50625 7.98352C10.0187 7.5474 11.125 6.15289 11.125 4.5C11.125 2.49797 9.50203 0.875 7.5 0.875ZM4.825 4.5C4.825 3.02264 6.02264 1.825 7.5 1.825C8.97736 1.825 10.175 3.02264 10.175 4.5C10.175 5.97736 8.97736 7.175 7.5 7.175C6.02264 7.175 4.825 5.97736 4.825 4.5Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>
-										{t('header.about')}
-									</p>
-								</a>
-							</li>
-							<li class="nav__item">
-								<a href={`/#Portfolio`} class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M2.5 1H12.5C13.3284 1 14 1.67157 14 2.5V12.5C14 13.3284 13.3284 14 12.5 14H2.5C1.67157 14 1 13.3284 1 12.5V2.5C1 1.67157 1.67157 1 2.5 1ZM2.5 2C2.22386 2 2 2.22386 2 2.5V8.3636L3.6818 6.6818C3.76809 6.59551 3.88572 6.54797 4.00774 6.55007C4.12975 6.55216 4.24568 6.60372 4.32895 6.69293L7.87355 10.4901L10.6818 7.6818C10.8575 7.50607 11.1425 7.50607 11.3182 7.6818L13 9.3636V2.5C13 2.22386 12.7761 2 12.5 2H2.5ZM2 12.5V9.6364L3.98887 7.64753L7.5311 11.4421L8.94113 13H2.5C2.22386 13 2 12.7761 2 12.5ZM12.5 13H10.155L8.48336 11.153L11 8.6364L13 10.6364V12.5C13 12.7761 12.7761 13 12.5 13ZM6.64922 5.5C6.64922 5.03013 7.03013 4.64922 7.5 4.64922C7.96987 4.64922 8.35078 5.03013 8.35078 5.5C8.35078 5.96987 7.96987 6.35078 7.5 6.35078C7.03013 6.35078 6.64922 5.96987 6.64922 5.5ZM7.5 3.74922C6.53307 3.74922 5.74922 4.53307 5.74922 5.5C5.74922 6.46693 6.53307 7.25078 7.5 7.25078C8.46693 7.25078 9.25078 6.46693 9.25078 5.5C9.25078 4.53307 8.46693 3.74922 7.5 3.74922Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>
-										{t('header.projects')}
-									</p>
-								</a>
-							</li>
-							<li class="nav__item">
-								<a href={`/#Contact`} class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M12.5 3L2.5 3.00002C1.67157 3.00002 1 3.6716 1 4.50002V9.50003C1 10.3285 1.67157 11 2.5 11H7.50003C7.63264 11 7.75982 11.0527 7.85358 11.1465L10 13.2929V11.5C10 11.2239 10.2239 11 10.5 11H12.5C13.3284 11 14 10.3285 14 9.50003V4.5C14 3.67157 13.3284 3 12.5 3ZM2.49999 2.00002L12.5 2C13.8807 2 15 3.11929 15 4.5V9.50003C15 10.8807 13.8807 12 12.5 12H11V14.5C11 14.7022 10.8782 14.8845 10.6913 14.9619C10.5045 15.0393 10.2894 14.9965 10.1464 14.8536L7.29292 12H2.5C1.11929 12 0 10.8807 0 9.50003V4.50002C0 3.11931 1.11928 2.00003 2.49999 2.00002Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>
-										{t('header.contact')}
-									</p>
-								</a>
-							</li>
-							<li class="nav__item">
-								<a href="/blog/" data-blog-link data-blog-url={BLOG_URL} class="nav__link">
-									<svg
-										class="nav__icon"
-										width="20"
-										height="20"
-										viewBox="0 0 15 15"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M3.25 1H11.75C12.4404 1 13 1.55964 13 2.25V9.06066C13 9.35898 12.8815 9.64522 12.6705 9.85616L10.1065 12.4202C9.89556 12.6311 9.60932 12.7497 9.311 12.7497H3.25C2.55964 12.7497 2 12.1901 2 11.4997V2.25C2 1.55964 2.55964 1 3.25 1ZM3 2.25C3 2.11193 3.11193 2 3.25 2H11.75C11.8881 2 12 2.11193 12 2.25V8.99966H9.811C9.08868 8.99966 8.50295 9.58538 8.50295 10.3077V11.7497H3.25C3.11193 11.7497 3 11.6377 3 11.4997V2.25ZM9.50295 11.5563L11.3066 9.75266C11.2138 9.70654 11.109 9.68066 10.9984 9.68066H9.50295V11.5563Z"
-											fill="currentColor"
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<p>
-										{t('header.blog')}
-									</p>
-								</a>
-							</li>
-						</ul>
-					</div>
-				)}
-				<div class="nav__btns">
-					<ThemeIcon />
-					{!hideLocaleSelect && <LocaleSelect />}
+				<div class="nav__menu" id="nav-menu">
+					<HeaderMenuLinks>
+						<div class="nav__settings" id="nav-settings">
+							<ThemeIcon />
+							{!hideLocaleSelect && <LocaleSelect />}
+						</div>
+					</HeaderMenuLinks>
 				</div>
 			</nav>
 		</header>
@@ -263,10 +184,10 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 				)}
 				<div class="co-brand">
 					<a href="/">
-						<Image
-							class="nav__brand"
-							src={Illustration}
-							alt="Juan Felipe Rada"
+						<RadaplsLogo
+							class="nav__brand co-brand__logo"
+							role="img"
+							aria-label="Juan Felipe Rada"
 							width={35}
 							height={35}
 						/>
@@ -297,12 +218,28 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 						</a>
 					)}
 				</div>
-				<div class="nav__actions">
-					<div class="nav__btns">
-						<ThemeIcon />
-					</div>
-
-					{!hideLocaleSelect && <LocaleSelect />}
+				<button
+					class="nav__toggle"
+					id="nav-toggle"
+					type="button"
+					aria-label={t('header.open-menu')}
+					aria-expanded="false"
+					aria-controls="nav-menu"
+					data-open-label={t('header.open-menu')}
+					data-close-label={t('header.close-menu')}
+				>
+					<svg class="nav__toggle-icon nav__toggle-icon--open" width="20" height="20" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+						<path d="M1 3.5h13M1 7.5h13M1 11.5h13" stroke="currentColor" stroke-width="1.5" />
+					</svg>
+					<span class="nav__toggle-icon nav__toggle-icon--close" aria-hidden="true">×</span>
+				</button>
+				<div class="nav__menu" id="nav-menu">
+					<HeaderMenuLinks>
+						<div class="nav__settings">
+							<div class="nav__btns"><ThemeIcon /></div>
+							{!hideLocaleSelect && <LocaleSelect />}
+						</div>
+					</HeaderMenuLinks>
 				</div>
 			</nav>
 		</header>
@@ -392,12 +329,13 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 					navToggle.getAttribute('aria-label')!
 			);
 		};
-		navToggle?.addEventListener('click', () =>
-			openMenu(!navMenu?.classList.contains('show-menu'))
-		);
+		// The header persists across view transitions, so clear any open state
+		// carried over from the page we just left.
+		openMenu(false);
+		if (navToggle) navToggle.onclick = () => openMenu(!navMenu?.classList.contains('show-menu'));
 
 		// Close the mobile menu after tapping a nav link.
-		document.querySelectorAll('.nav__link').forEach((link) => {
+		document.querySelectorAll('.nav__link, .nav-menu-pill[href^="/"], .nav-menu-case, .nav-menu-panel__all-cases').forEach((link) => {
 			link.addEventListener('click', () => openMenu(false));
 		});
 
@@ -406,7 +344,7 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 		   page): the router swap re-decodes the logo and looks like a
 		   refresh. Section links keep their hash — scroll to the section,
 		   not the top. */
-		document.querySelectorAll('.nav__logo, .nav__link').forEach((link) => {
+		document.querySelectorAll('.nav__logo, .nav__link, .nav-menu-pill[href^="/"], .nav-menu-case, .nav-menu-panel__all-cases').forEach((link) => {
 			link.addEventListener('click', (e) => {
 				const href = link.getAttribute('href');
 				if (!href || href.startsWith('#')) return;
@@ -443,8 +381,13 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 	.nav__brand {
 		width: 40px;
 		height: 40px;
-		object-fit: cover;
-		border-radius: 50%;
+		object-fit: contain;
+	}
+	.co-brand__logo {
+		width: 35px;
+		height: 35px;
+		object-fit: contain;
+		object-position: center;
 	}
 
 	.co-brand {

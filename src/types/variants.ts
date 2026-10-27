@@ -6,4 +6,6 @@ export type BrandType =
 	| 'ericsson'
 	| 'iei'
 	| 'alcaldia'
-	| 'moe';
+	| 'moe'
+	| 'icesi'
+	| 'javeriana';

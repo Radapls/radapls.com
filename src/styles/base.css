@@ -126,12 +126,6 @@
 	gap: 0.75rem;
 }
 /* Co-brand header: groups the theme toggle and language switcher */
-.nav__actions {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 1rem;
-}
 .change-theme {
 	font-size: 1.25rem;
 	color: var(--title-color);
@@ -355,6 +349,7 @@ html:has(.snap-page).footer-active .header {
 
 /*==================== NAV ====================*/
 .nav {
+	position: relative;
 	max-width: none;
 	height: 5rem;
 	display: flex;
@@ -380,11 +375,6 @@ html:has(.snap-page).footer-active .header {
 	grid-column: 2;
 	grid-row: 1;
 }
-.nav.nav--cobrand .nav__actions {
-	grid-column: 3;
-	grid-row: 1;
-	justify-self: end;
-}
 .nav__back {
 	grid-column: 1;
 	grid-row: 1;
@@ -393,33 +383,20 @@ html:has(.snap-page).footer-active .header {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 2.5rem;
-	height: 2.5rem;
+	width: 28px;
+	height: 28px;
 	color: var(--title-color);
 	border-radius: 50%;
 	transition: color 0.2s ease, background-color 0.2s ease;
 }
 .nav__back span {
-	font-family: var(--title-font);
-	font-size: 1.75rem;
+	font-family: 'PP Gatwick Jumbo', 'Poppins', sans-serif;
+	font-size: 1.5rem;
 	line-height: 1;
 }
 .nav__back:hover {
 	color: var(--first-color);
 	background-color: color-mix(in srgb, var(--first-color) 10%, transparent);
-}
-.nav--with-back .nav__toggle {
-	margin-left: 2.5rem;
-}
-@media screen and (min-width: 768px) {
-	.nav--with-back .nav__menu {
-		padding-left: 3rem;
-	}
-}
-.nav--portfolio .nav__toggle {
-	grid-column: 1;
-	grid-row: 1;
-	justify-self: start;
 }
 .nav--portfolio .nav__logo {
 	grid-column: 2;
@@ -429,11 +406,6 @@ html:has(.snap-page).footer-active .header {
 	grid-column: 1;
 	grid-row: 1;
 	justify-self: start;
-}
-.nav--portfolio .nav__btns {
-	grid-column: 3;
-	grid-row: 1;
-	justify-self: end;
 }
 .nav__logo,
 .nav__toggle {
@@ -454,55 +426,65 @@ html:has(.snap-page).footer-active .header {
 .nav__toggle {
 	font-size: 1.1rem;
 	cursor: pointer;
-	width: 1.1rem;
-	height: 1.1rem;
-	/* Keep the X clickable above the open overlay menu (it paints later in the DOM). */
-	position: relative;
-	z-index: 1;
+	width: 2.5rem;
+	height: 2.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	position: absolute;
+	/* Keep the X clickable above the open overlay menu. */
+	z-index: calc(var(--z-modal) + 1);
+}
+.nav__settings {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+}
+.nav__menu {
+	position: fixed;
+	inset: 0;
+	z-index: var(--z-modal);
+	width: 100vw;
+	height: 100vh;
+	height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+	gap: 2rem;
+	padding: clamp(6rem, 11vh, 8rem) clamp(1.5rem, 6vw, 6rem) 2rem;
+	background: var(--body-color);
+	box-shadow: var(--shadow-md);
+	overflow-y: auto;
+	transform: translateY(-100%);
+	visibility: hidden;
+	transition: transform 0.3s, visibility 0.3s;
+}
+.nav__menu .nav__list {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.5rem;
+	width: min(100%, 32rem);
+}
+.nav__menu .nav__link {
+	flex-direction: row;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: var(--h2-font-size);
+	font-family: var(--title-font);
 }
 .nav__toggle:hover {
 	color: var(--first-color);
 }
 
 @media screen and (max-width: 767px) {
-	.nav__menu {
-		position: fixed;
-		top: calc(5rem + var(--banner-height, 0px));
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		background-color: var(--body-color);
-		display: flex;
-		padding: 2rem 1.5rem 4rem;
-		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-		overflow-y: auto;
-		transform: translateY(-120%);
-		visibility: hidden;
-		transition:
-			transform 0.3s,
-			visibility 0.3s;
-	}
 	.nav--portfolio .nav__logo {
 		justify-self: center;
-	}
-	.nav--portfolio .nav__btns {
-		gap: 0.5rem;
-	}
-	.nav--portfolio .nav__list {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 1.5rem;
-		width: 100%;
-		/* Centers when short, stays scrollable when taller than the overlay. */
-		margin: auto 0;
-	}
-	.nav--portfolio .nav__link {
-		flex-direction: row;
-		align-items: center;
-		gap: 0.75rem;
-		font-size: var(--h2-font-size);
-		font-family: var(--title-font);
 	}
 }
 .nav__list {
@@ -551,6 +533,10 @@ html:has(.snap-page).footer-active .header {
 .show-menu {
 	transform: translateY(0);
 	visibility: visible;
+}
+html:has(.nav__menu.show-menu),
+body:has(.nav__menu.show-menu) {
+	overflow: hidden;
 }
 
 /* Active link */

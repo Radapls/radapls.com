@@ -4,7 +4,8 @@ variant: "wibx"
 description: "First role after my career change: the company's first design system, modules like SmartForms, AR filters, back-office tooling and landing pages."
 gif: "../../../../assets/gifs/wbx-token.gif"
 ---
-import TechList from '../../../../components/TechList.astro';
+import FrontendArchitecture from '../../../../components/FrontendArchitecture.astro';
+import DesignSystemEvolution from '../../../../components/DesignSystemEvolution.astro';
 import Slider from '../../../../components/Slider.astro';
 import ProjectMap from '../../../../components/ProjectMap.astro';
 import wibxLogo from '../../../../assets/img/brands/wibx.svg';
@@ -49,21 +50,11 @@ From there, the responsibility grew with the trust:
 
 Looking back, each step made the next one possible: you can't build a backoffice without a design system, and you can't ship a whitelabel without both.
 
-### The whitelabel factory
-
-Because the system was built on tokens and configuration, launching a partner stopped meaning "rewrite the app" and started meaning "configure it". I worked on the implementation of many whitelabels, among them:
-
-[Luperyum](https://luperyum.com.br/), [Speedzin](https://speedzin.com.br/), PrimeCircle, Music Lovers, Samba Lovers, Jovem Pan, EsgX, WineX, WomanX, Amplifyq, Boostzone, Bora and Gate0.
-
-Each one with its own branding, modules, and store — all born from the same base.
-
-## Design, my way back in
-
-Before code, there was design — and that was the bridge that made my career change possible. At Wibx I didn't just implement interfaces: I helped decide how they should look, behave, and scale. Little by little, that sensitivity turned into my main contribution to the product.
-
-### The first design system
+## The first design system
 
 When I arrived, every screen solved the same problems in a slightly different way. I created the company's **first design system**: a shared language of tokens, typography, spacing, and Angular components that let designers and developers speak the same language — and stopped each new feature from reinventing the wheel.
+
+<DesignSystemEvolution locale="en" />
 
 <details>
 	<summary>What the design system covered</summary>
@@ -75,12 +66,6 @@ When I arrived, every screen solved the same problems in a slightly different wa
 
 </details>
 
-### SmartForms
-
-The module I'm proudest of. Forms were the most repetitive and error-prone part of the backoffice, so I built **SmartForms**: a module that generates forms from a configuration, with validation and layout handled once, centrally, instead of copy-pasted across dozens of screens. It now lives on both the backoffice and the mobile app.
-
-What started as an internal convenience became a pattern the team kept extending — which is the best compliment a module can get.
-
 ## My responsibilities
 
 - Creating new functionalities, as well as maintaining the base code for the backoffice (Business) and the application (Wibx App).
@@ -90,41 +75,43 @@ What started as an internal convenience became a pattern the team kept extending
 - Creating landing pages in alignment with the marketing team for the launch of strategies and campaigns.
 - Managing the migration from Angular 15 to Angular 20.
 
-## Some Projects
+## Projects & Features
 
 <ProjectMap
 	center={{ title: 'Wibx', url: 'https://wibx.io/', image: wibxLogo, x: 480, y: 260, r: 56 }}
 	areas={[
-		{ id: 'web', title: 'Web', sub: 'wiboo.frontends', x: 190, y: 130, r: 44, projects: [
+		{ id: 'projects', title: 'Projects', x: 190, y: 130, r: 44, projects: [
 			{ title: 'Business backoffice', url: 'https://account.wibx.io/' },
-			{ title: 'Luperyum site', url: 'https://luperyum.com.br/', image: wlLuperyum },
-			{ title: 'Speedzin', url: 'https://speedzin.com.br/', image: speedzinLogo },
-		] },
-		{ id: 'mobile', title: 'Mobile', sub: 'wiboo.mobile', x: 770, y: 130, r: 44, projects: [
 			{ title: 'Wibx App', url: 'https://apps.apple.com/co/app/wibx/id1477739020', image: wibxLogo },
-				{ title: 'Luperyum', image: wlLuperyum },
-				{ title: 'PrimeCircle', image: wlPrimecircle },
-				{ title: 'Music Lovers', image: wlMusicLovers },
-				{ title: 'Samba Lovers', image: wlSambaLovers },
-				{ title: 'Jovem Pan', image: wlJovemPan },
-				{ title: 'EsgX', image: wlEsgx },
-				{ title: 'WineX', image: wlWinex },
-				{ title: 'WomanX', image: wlWomanx },
-				{ title: 'Amplifyq', image: wlAmplifyq },
-				{ title: 'Boostzone', image: wlBoostzone },
-				{ title: 'Bora', image: wlBora },
-				{ title: 'Gate0', image: wlGate0 }
+			{ title: 'Wibx Docs', url: 'https://docs.wibx.io/' },
 		] },
-		{ id: 'ux', title: 'UX/UI', x: 480, y: 440, r: 44, projects: [
-			{ title: 'Figma Design System' },
-			{ title: 'SmartForms' },
+		{ id: 'whitelabels', title: 'Whitelabels', panelTitle: 'The whitelabel factory', panelIntro: 'Built on shared tokens and configuration, launching a partner meant configuring the app instead of rewriting it.', panelOutro: 'Each one has its own branding, modules, and store — all born from the same base.', x: 480, y: 130, r: 44, projects: [
+			{ title: 'Luperyum', url: 'https://luperyum.com.br/', image: wlLuperyum },
+			{ title: 'Speedzin', url: 'https://speedzin.com.br/', image: speedzinLogo },
+			{ title: 'PrimeCircle', image: wlPrimecircle },
+			{ title: 'Music Lovers', image: wlMusicLovers },
+			{ title: 'Samba Lovers', image: wlSambaLovers },
+			{ title: 'Jovem Pan', image: wlJovemPan },
+			{ title: 'EsgX', image: wlEsgx },
+			{ title: 'WineX', image: wlWinex },
+			{ title: 'WomanX', image: wlWomanx },
+			{ title: 'Amplifyq', image: wlAmplifyq },
+			{ title: 'Boostzone', image: wlBoostzone },
+			{ title: 'Bora', image: wlBora },
+			{ title: 'Gate0', image: wlGate0 }
+		] },
+		{ id: 'features', title: 'Features', x: 770, y: 130, r: 44, projects: [
+			{ title: 'SmartForms', description: 'Generates validated forms from a shared configuration, reducing repetitive form work across the backoffice and app.' },
+			{ title: 'Streamings', description: 'Streaming experiences integrated into the Wibx platform.' },
+			{ title: 'Mercado Pago', description: 'Payment integration for Mercado Pago checkout flows.' },
+			{ title: 'AR filters', description: 'Augmented reality filters created for campaigns and brand experiences.' }
 		] },
 	]}
 />
 
 ## The Stack:
 
-<TechList company="wibx"/>
+<FrontendArchitecture locale="en" />
 
 ## In pictures
 

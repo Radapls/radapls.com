@@ -9,7 +9,9 @@ const experience = defineCollection({
 			title: z.string(),
 			variant: z.string(),
 			description: z.string(),
+			kind: z.enum(['work', 'education']).optional(),
 			gif: image().optional(),
+			video: z.string().optional(),
 		}),
 });
 

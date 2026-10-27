@@ -4,7 +4,8 @@ variant: "wibx"
 description: "Primeiro papel após a mudança de carreira: o primeiro design system da empresa, módulos como o SmartForms, filtros de RA, back-office e landing pages."
 gif: "../../../../assets/gifs/wbx-token.gif"
 ---
-import TechList from '../../../../components/TechList.astro';
+import FrontendArchitecture from '../../../../components/FrontendArchitecture.astro';
+import DesignSystemEvolution from '../../../../components/DesignSystemEvolution.astro';
 import Slider from '../../../../components/Slider.astro';
 import ProjectMap from '../../../../components/ProjectMap.astro';
 import wibxLogo from '../../../../assets/img/brands/wibx.svg';
@@ -49,21 +50,11 @@ Daí em diante, a responsabilidade cresceu junto com a confiança:
 
 Olhando para trás, cada passo tornou o próximo possível: não se constrói um backoffice sem um design system, e não se lança um whitelabel sem os dois.
 
-### A fábrica de whitelabels
-
-Como o sistema foi construído sobre tokens e configuração, lançar um parceiro deixou de significar "reescrever o app" e passou a significar "configurá-lo". Trabalhei na implementação de muitos whitelabels, entre eles:
-
-[Luperyum](https://luperyum.com.br/), [Speedzin](https://speedzin.com.br/), PrimeCircle, Music Lovers, Samba Lovers, Jovem Pan, EsgX, WineX, WomanX, Amplifyq, Boostzone, Bora e Gate0.
-
-Cada um com seu próprio branding, módulos e loja — todos nascidos da mesma base.
-
-## O design, minha maneira de voltar
-
-Antes do código veio o design — e essa foi a ponte que tornou possível minha mudança de carreira. Na Wibx eu não só implementava interfaces: ajudei a decidir como elas deveriam parecer, se comportar e escalar. Pouco a pouco, essa sensibilidade se tornou minha principal contribuição para o produto.
-
-### O primeiro design system
+## O primeiro design system
 
 Quando cheguei, cada tela resolvia os mesmos problemas de um jeito ligeiramente diferente. Criei o **primeiro design system** da empresa: uma linguagem compartilhada de tokens, tipografia, espaçamento e componentes Angular que deixou designers e desenvolvedores falando a mesma língua — e impediu que cada nova funcionalidade reinventasse a roda.
+
+<DesignSystemEvolution locale="pt-br" />
 
 <details>
 	<summary>O que o design system cobria</summary>
@@ -75,12 +66,6 @@ Quando cheguei, cada tela resolvia os mesmos problemas de um jeito ligeiramente 
 
 </details>
 
-### SmartForms
-
-O módulo de que me orgulho mais. Formulários eram a parte mais repetitiva e propensa a erros do backoffice, então construí o **SmartForms**: um módulo que gera formulários a partir de uma configuração, com validação e layout resolvidos uma única vez, de forma central, em vez de copiados e colados em dezenas de telas. Hoje ele vive tanto no backoffice quanto no app.
-
-O que começou como uma conveniência interna virou um padrão que o time continuou estendendo — que é o melhor elogio que um módulo pode receber.
-
 ## Minhas responsabilidades
 
 - Criação de novas funcionalidades, bem como a manutenção da base de código para o backoffice (Business) e a aplicação (Wibx App).
@@ -90,41 +75,43 @@ O que começou como uma conveniência interna virou um padrão que o time contin
 - Criação de landing pages em alinhamento com a equipe de marketing para o lançamento de estratégias e campanhas.
 - Gerenciamento da migração de Angular 15 para Angular 20.
 
-## Alguns projetos
+## Projetos e funcionalidades
 
 <ProjectMap
 	center={{ title: 'Wibx', url: 'https://wibx.io/', image: wibxLogo, x: 480, y: 260, r: 56 }}
 	areas={[
-		{ id: 'web', title: 'Web', sub: 'wiboo.frontends', x: 190, y: 130, r: 44, projects: [
+		{ id: 'projects', title: 'Projetos', x: 190, y: 130, r: 44, projects: [
 			{ title: 'Backoffice Business', url: 'https://account.wibx.io/' },
-			{ title: 'Site Luperyum', url: 'https://luperyum.com.br/', image: wlLuperyum },
-			{ title: 'Speedzin', url: 'https://speedzin.com.br/', image: speedzinLogo },
-		] },
-		{ id: 'mobile', title: 'Mobile', sub: 'wiboo.mobile', x: 770, y: 130, r: 44, projects: [
 			{ title: 'Wibx App', url: 'https://apps.apple.com/co/app/wibx/id1477739020', image: wibxLogo },
-				{ title: 'Luperyum', image: wlLuperyum },
-				{ title: 'PrimeCircle', image: wlPrimecircle },
-				{ title: 'Music Lovers', image: wlMusicLovers },
-				{ title: 'Samba Lovers', image: wlSambaLovers },
-				{ title: 'Jovem Pan', image: wlJovemPan },
-				{ title: 'EsgX', image: wlEsgx },
-				{ title: 'WineX', image: wlWinex },
-				{ title: 'WomanX', image: wlWomanx },
-				{ title: 'Amplifyq', image: wlAmplifyq },
-				{ title: 'Boostzone', image: wlBoostzone },
-				{ title: 'Bora', image: wlBora },
-				{ title: 'Gate0', image: wlGate0 }
+			{ title: 'Wibx Docs', url: 'https://docs.wibx.io/' },
 		] },
-		{ id: 'ux', title: 'UX/UI', x: 480, y: 440, r: 44, projects: [
-			{ title: 'Figma Design System' },
-			{ title: 'SmartForms' },
+		{ id: 'whitelabels', title: 'Whitelabels', panelTitle: 'A fábrica de whitelabels', panelIntro: 'Com tokens e configuração compartilhados, lançar um parceiro passou a significar configurar o app em vez de reescrevê-lo.', panelOutro: 'Cada app tem seu próprio branding, módulos e loja — todos nascidos da mesma base.', x: 480, y: 130, r: 44, projects: [
+			{ title: 'Luperyum', url: 'https://luperyum.com.br/', image: wlLuperyum },
+			{ title: 'Speedzin', url: 'https://speedzin.com.br/', image: speedzinLogo },
+			{ title: 'PrimeCircle', image: wlPrimecircle },
+			{ title: 'Music Lovers', image: wlMusicLovers },
+			{ title: 'Samba Lovers', image: wlSambaLovers },
+			{ title: 'Jovem Pan', image: wlJovemPan },
+			{ title: 'EsgX', image: wlEsgx },
+			{ title: 'WineX', image: wlWinex },
+			{ title: 'WomanX', image: wlWomanx },
+			{ title: 'Amplifyq', image: wlAmplifyq },
+			{ title: 'Boostzone', image: wlBoostzone },
+			{ title: 'Bora', image: wlBora },
+			{ title: 'Gate0', image: wlGate0 }
+		] },
+		{ id: 'features', title: 'Funcionalidades', x: 770, y: 130, r: 44, projects: [
+			{ title: 'SmartForms', description: 'Gera formulários validados a partir de uma configuração compartilhada e reduz o trabalho repetitivo no backoffice e no app.' },
+			{ title: 'Streamings', description: 'Experiências de streaming integradas à plataforma Wibx.' },
+			{ title: 'Mercado Pago', description: 'Integração de pagamentos para os fluxos de checkout do Mercado Pago.' },
+			{ title: 'Filtros de RA', description: 'Filtros de realidade aumentada criados para campanhas e experiências de marca.' }
 		] },
 	]}
 />
 
 ## O stack:
 
-<TechList company="wibx"/>
+<FrontendArchitecture locale="pt-br" />
 
 ## Em imagens
 

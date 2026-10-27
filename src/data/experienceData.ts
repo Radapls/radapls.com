@@ -43,6 +43,7 @@ export const educationData = [
 			'pt-br': 'Mestrado em Estratégia de Negócios Digitais',
 		},
 		organization: 'Universidad ICESI',
+		link: '/education/icesi',
 		relativeTime: {
 			en: '2021 - 2022',
 			es: '2021 - 2022',
@@ -62,6 +63,7 @@ export const educationData = [
 			'pt-br': 'Ciência Política',
 		},
 		organization: 'Pontificia Universidad Javeriana',
+		link: '/education/javeriana',
 		relativeTime: {
 			en: '2014 - 2019',
 			es: '2014 - 2019',

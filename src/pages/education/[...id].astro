@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import CasePage from '@components/CasePage.astro';
+
+export async function getStaticPaths() {
+	const education = await getCollection('experience');
+	// Same single-path i18n pattern as case-studies; back link returns to
+	// the education section on the home page.
+	return education
+		.filter((post) => post.id.startsWith('en/') && post.data.kind === 'education')
+		.map((post) => ({ params: { id: post.id.replace(/^en\//, '') }, props: { post } }));
+}
+---
+
+<CasePage post={Astro.props.post} backHref="/#education" backLabelKey="education.back-to-all" />

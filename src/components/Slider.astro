@@ -100,8 +100,8 @@ const loopData = format === 'image' ? Array.from({ length: SETS }, () => data).f
 <style>
 	/* ===== Right-to-left marquee that pauses on hover ===== */
 	.marquee {
-		--card-w: 640px;
-		--card-h: 420px;
+		--card-w: min(82vw, 640px);
+		--card-h: min(62vw, 420px);
 		--gap: 1rem;
 		/* Clip the loop horizontally (off-screen cards hidden, edge cards cut
 		   at the viewport like interrapidisimo's full-bleed carousel). No

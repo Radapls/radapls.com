@@ -1,15 +1,18 @@
 ---
-// Platform map: Wibx at the center, its areas (Web / Mobile / UX-UI) as
-// clickable nodes — each reveals its projects in a panel below the map.
+// Wibx brand header with selectable project and feature groups.
 export interface MapProject {
 	title: string;
 	url?: string;
 	image?: ImageMetadata;
+	description?: string;
 }
 
 export interface MapArea {
 	id: string;
 	title: string;
+	panelTitle?: string;
+	panelIntro?: string;
+	panelOutro?: string;
 	/** Small line under the label, e.g. the repo name */
 	sub?: string;
 	url?: string;
@@ -113,9 +116,25 @@ const cr = center.r ?? 56;
 		}
 	</svg>
 
+	<nav class="pmap__mobile-areas" aria-label="Project categories">
+		{areas.map((a, i) => (
+			<button
+				class="pmap__area-button"
+				data-area={a.id}
+				aria-pressed={i === 0 ? 'true' : 'false'}
+				type="button"
+			>
+				<span>{a.title}</span>
+				{a.sub && <small>{a.sub}</small>}
+			</button>
+		))}
+	</nav>
+
 	{
 		areas.map((a, i) => (
 			<div class:list={['pmap__panel', { 'is-active': i === 0 }]} data-area={a.id}>
+				{a.panelTitle && <h3 class="pmap__panel-title">{a.panelTitle}</h3>}
+				{a.panelIntro && <p class="pmap__panel-intro">{a.panelIntro}</p>}
 				<ul class="pmap__projects" aria-label={a.title}>
 					{a.projects.map((p) => {
 						const item = (
@@ -132,7 +151,17 @@ const cr = center.r ?? 56;
 						);
 						return (
 							<li>
-								{p.url ? (
+								{p.description ? (
+									<button
+										class="pmap__feature-button"
+										type="button"
+										data-title={p.title}
+										data-description={p.description}
+										aria-pressed="false"
+									>
+										{item}
+									</button>
+								) : p.url ? (
 									<a href={p.url} target="_blank" rel="noopener noreferrer">
 										{item}
 									</a>
@@ -141,6 +170,13 @@ const cr = center.r ?? 56;
 						);
 					})}
 				</ul>
+				{a.panelOutro && <p class="pmap__panel-outro">{a.panelOutro}</p>}
+				{a.projects.some((p) => p.description) && (
+					<div class="pmap__feature-description" aria-live="polite" hidden>
+						<strong></strong>
+						<p></p>
+					</div>
+				)}
 			</div>
 		))
 	}
@@ -152,20 +188,39 @@ const cr = center.r ?? 56;
 		const map = btn.closest('.pmap');
 		if (!map) return;
 		const id = (btn as HTMLElement).dataset.area;
-		map.querySelectorAll('.pmap__area').forEach((b) => {
+		map.querySelectorAll('.pmap__area, .pmap__area-button').forEach((b) => {
 			b.setAttribute('aria-pressed', String(b === btn));
 		});
 		map.querySelectorAll('.pmap__panel').forEach((p) => {
 			p.classList.toggle('is-active', (p as HTMLElement).dataset.area === id);
+			const description = p.querySelector('.pmap__feature-description') as HTMLElement | null;
+			if (description) description.hidden = true;
+			p.querySelectorAll('.pmap__feature-button').forEach((feature) => feature.setAttribute('aria-pressed', 'false'));
 		});
 	};
 	const onClick = (e: Event) => {
-		const btn = (e.target as HTMLElement).closest('.pmap__area');
+		const target = e.target as HTMLElement;
+		const feature = target.closest('.pmap__feature-button') as HTMLButtonElement | null;
+		if (feature) {
+			const panel = feature.closest('.pmap__panel');
+			const description = panel?.querySelector('.pmap__feature-description') as HTMLElement | null;
+			if (!panel || !description) return;
+			panel.querySelectorAll('.pmap__feature-button').forEach((button) => {
+				button.setAttribute('aria-pressed', String(button === feature));
+			});
+			const title = description.querySelector('strong');
+			const text = description.querySelector('p');
+			if (title) title.textContent = feature.dataset.title ?? '';
+			if (text) text.textContent = feature.dataset.description ?? '';
+			description.hidden = false;
+			return;
+		}
+		const btn = target.closest('.pmap__area, .pmap__area-button');
 		if (btn) activate(btn);
 	};
 	const onKey = (e: KeyboardEvent) => {
 		if (e.key !== 'Enter' && e.key !== ' ') return;
-		const btn = (e.target as HTMLElement).closest('.pmap__area');
+		const btn = (e.target as HTMLElement).closest('.pmap__area, .pmap__area-button');
 		if (btn) {
 			e.preventDefault();
 			activate(btn);
@@ -177,10 +232,34 @@ const cr = center.r ?? 56;
 
 <style>
 	.pmap__svg {
-		width: 100%;
-		height: auto;
-		display: block;
-		margin-block: var(--mb-1-5);
+		display: none;
+	}
+	.pmap__mobile-areas {
+		display: flex;
+		justify-content: center;
+		gap: clamp(1rem, 5vw, 3rem);
+		margin-block: 0.5rem var(--mb-1-5);
+		border-bottom: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent);
+	}
+	.pmap__area-button {
+		min-width: 8.5rem;
+		min-height: 3rem;
+		padding: 0.55rem 0.8rem;
+		border: 0;
+		border-bottom: 2px solid transparent;
+		margin-bottom: -1px;
+		background: transparent;
+		color: var(--text-color-light);
+		font: inherit;
+		cursor: pointer;
+	}
+	.pmap__area-button:hover,
+	.pmap__area-button:focus-visible { color: var(--title-color); }
+	.pmap__area-button:focus-visible { outline: 2px solid var(--first-color); outline-offset: 2px; }
+	.pmap__area-button[aria-pressed='true'] {
+		border-bottom-color: var(--first-color);
+		color: var(--title-color);
+		font-weight: 600;
 	}
 	.pmap__link line {
 		stroke: color-mix(in srgb, var(--first-color) 35%, transparent);
@@ -245,6 +324,21 @@ const cr = center.r ?? 56;
 	.pmap__panel.is-active {
 		display: block;
 	}
+	.pmap__panel-title {
+		margin: 0 0 0.4rem;
+		color: var(--title-color);
+		font-family: var(--title-font);
+		font-size: 1.2rem;
+		text-align: center;
+	}
+	.pmap__panel-intro,
+	.pmap__panel-outro {
+		max-width: 48rem;
+		margin: 0.5rem auto;
+		color: var(--text-color-light);
+		line-height: 1.55;
+		text-align: center;
+	}
 	.pmap__projects {
 		list-style: none;
 		padding: 0;
@@ -267,6 +361,44 @@ const cr = center.r ?? 56;
 	.pmap__projects a:hover,
 	.pmap__projects a:focus-visible {
 		transform: scale(1.08);
+	}
+	.pmap__feature-button {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		font: inherit;
+		cursor: pointer;
+	}
+	.pmap__feature-button:focus-visible {
+		border-radius: 0.5rem;
+		outline: 2px solid var(--first-color);
+		outline-offset: 3px;
+	}
+	.pmap__feature-button[aria-pressed='true'] .pmap__project-initial {
+		border-color: var(--first-color);
+		background: color-mix(in srgb, var(--first-color) 16%, var(--container-color));
+	}
+	.pmap__feature-description {
+		max-width: 42rem;
+		margin: 0.75rem auto 0;
+		padding: 0.85rem 1rem;
+		border: 1px solid color-mix(in srgb, var(--first-color) 20%, transparent);
+		border-top: 3px solid var(--first-color);
+		border-radius: 0.5rem;
+		background: color-mix(in srgb, var(--first-color) 6%, var(--container-color));
+	}
+	.pmap__feature-description[hidden] { display: none; }
+	.pmap__feature-description strong {
+		color: var(--title-color);
+		font-family: var(--title-font);
+	}
+	.pmap__feature-description p {
+		margin: 0.25rem 0 0;
+		color: var(--text-color-light);
+		font-size: var(--small-font-size);
+		line-height: 1.45;
 	}
 	.pmap__projects img,
 	.pmap__project-initial {
@@ -291,5 +423,26 @@ const cr = center.r ?? 56;
 		font-size: var(--small-font-size);
 		color: var(--title-color);
 		text-align: center;
+	}
+	@media screen and (max-width: 567px) {
+		.pmap__mobile-areas {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 0.1rem;
+		}
+		.pmap__area-button { min-width: 0; padding-inline: 0.25rem; font-size: 0.9rem; }
+		.pmap__projects {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 0.75rem 0.5rem;
+		}
+		.pmap__projects img,
+		.pmap__project-initial {
+			width: min(100%, 4.25rem);
+			height: auto;
+			aspect-ratio: 1;
+		}
+		.pmap__project-name {
+			overflow-wrap: anywhere;
+		}
 	}
 </style>

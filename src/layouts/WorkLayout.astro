@@ -137,17 +137,46 @@ const { title, description, noLinks, variant } = Astro.props;
 		}
 
 		blockquote {
+			max-width: 42rem;
+			margin: 1.25rem auto 1.5rem;
+			padding: 0.5rem 1rem;
+			border: 0;
+			color: var(--title-color);
+			font-family: var(--title-font);
+			font-size: clamp(1.05rem, 2vw, 1.25rem);
 			font-style: italic;
-			color: color-mix(in srgb, var(--text-color) 80%, transparent);
-			background: color-mix(in srgb, var(--first-color) 5%, transparent);
-			padding: 1em;
-			border-radius: 0.5rem;
-			font-weight: 100;
-			border-inline-start: 2px solid color-mix(in srgb, var(--first-color) 10%, transparent);
+			font-weight: 500;
+			line-height: 1.55;
+			text-align: center;
+		}
+
+		blockquote::before,
+		blockquote::after {
+			display: block;
+			color: var(--first-color);
+			font-family: Georgia, serif;
+			font-size: 3.25rem;
+			font-style: normal;
+			font-weight: 700;
+			line-height: 0.7;
+		}
+
+		blockquote::before {
+			content: '“';
+			margin-bottom: 0.35rem;
+		}
+
+		blockquote::after {
+			content: '”';
+			margin-top: 0.35rem;
 		}
 
 		blockquote > p {
 			margin: 0;
+		}
+
+		blockquote + p {
+			margin-block-start: 0.75rem;
 		}
 
 		small {
@@ -290,5 +319,12 @@ const { title, description, noLinks, variant } = Astro.props;
 				opacity: 0.8;
 			}
 		}
+	}
+
+	article :global(blockquote > p) {
+		margin-block: 0;
+	}
+	article :global(blockquote + p) {
+		margin-block-start: 0.75rem;
 	}
 </style>

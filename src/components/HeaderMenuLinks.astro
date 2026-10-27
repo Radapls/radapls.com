@@ -1,0 +1,212 @@
+---
+import { Image } from 'astro:assets';
+import { BLOG_URL, GITHUB, LINKEDIN } from 'src/consts';
+import { useTranslations, type Lang } from 'src/i18n';
+import Ericsson from '@assets/img/brands/ericsson.svg';
+import WibxPreview from '@assets/gifs/wbx-token.gif';
+import BirdiPreview from '@assets/gifs/birdi.gif';
+
+const t = useTranslations(Astro.currentLocale as Lang);
+const featured = [
+	{
+		name: 'Wibx',
+		role: t({ en: 'Frontend · Product platform', es: 'Frontend · Plataforma de producto', 'pt-br': 'Frontend · Plataforma de produto' }),
+		href: '/case-studies/wibx/',
+		preview: WibxPreview,
+		Logo: undefined,
+		alt: 'Wibx product interface',
+	},
+	{
+		name: 'Ericsson',
+		role: t({ en: 'UI/UX · Telecom', es: 'UI/UX · Telecomunicaciones', 'pt-br': 'UI/UX · Telecomunicações' }),
+		href: '/case-studies/ericsson/',
+		preview: undefined,
+		Logo: Ericsson,
+		alt: 'Ericsson logo',
+	},
+	{
+		name: 'BirdiRx',
+		role: t({ en: 'Frontend · Healthcare', es: 'Frontend · Salud', 'pt-br': 'Frontend · Saúde' }),
+		href: '/case-studies/birdi/',
+		preview: BirdiPreview,
+		Logo: undefined,
+		alt: 'BirdiRx product interface',
+	},
+];
+---
+
+<div class="nav-menu-panel">
+	<header class="nav-menu-panel__intro">
+		<h2>Juan Felipe Rada</h2>
+		<p>{t({
+			en: 'Frontend developer, political scientist, and digital business strategist.',
+			es: 'Desarrollador frontend, politólogo y estratega de negocios digitales.',
+			'pt-br': 'Desenvolvedor frontend, cientista político e estrategista de negócios digitais.',
+		})}</p>
+	</header>
+
+	<hr />
+
+	<nav class="nav-menu-panel__nav" aria-label={t('header.navigation')}>
+		<a href="/about" class="nav-menu-pill">{t('header.about')}</a>
+		<a href="/case-studies/" class="nav-menu-pill">{t('header.client-work')}</a>
+		<a href="/#Contact" class="nav-menu-pill">{t('header.contact')}</a>
+		<a href="/blog/" data-blog-link data-blog-url={BLOG_URL} class="nav-menu-pill">{t('header.blog')}</a>
+	</nav>
+
+	<nav class="nav-menu-panel__socials" aria-label={t('header.social-links')}>
+		<a href={LINKEDIN} target="_blank" rel="noopener noreferrer" class="nav-menu-pill" aria-label={t('home.linkedin-profile')}>
+			<i class="uil uil-linkedin" aria-hidden="true"></i><span>LinkedIn</span>
+		</a>
+		<a href={GITHUB} target="_blank" rel="noopener noreferrer" class="nav-menu-pill" aria-label={t('home.github-profile')}>
+			<i class="uil uil-github" aria-hidden="true"></i><span>GitHub</span>
+		</a>
+	</nav>
+
+	<div class="nav-menu-panel__featured-heading">
+		<h3>{t('header.featured-cases')}</h3>
+		<a href="/case-studies/" class="nav-menu-panel__all-cases">{t('header.all-experiences')} <span aria-hidden="true">→</span></a>
+	</div>
+	<div class="nav-menu-panel__cases">
+		{featured.map(({ name, role, href, preview, Logo, alt }) => (
+			<a class="nav-menu-case" href={href}>
+				<span class="nav-menu-case__image">
+					{preview ? <Image src={preview} alt={alt} loading="lazy" /> : Logo && <Logo role="img" aria-label={alt} />}
+				</span>
+				<span class="nav-menu-case__text">
+					<strong>{name}</strong>
+					<small>{role}</small>
+				</span>
+				<span class="nav-menu-case__arrow" aria-hidden="true">→</span>
+			</a>
+		))}
+	</div>
+
+	<div class="nav-menu-panel__settings">
+		<slot />
+	</div>
+</div>
+
+<style>
+	.nav-menu-panel {
+		width: min(72rem, 100%);
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 1.1rem;
+	}
+	.nav-menu-panel__intro h2 {
+		margin-bottom: 0.25rem;
+		color: var(--title-color);
+		font-family: var(--title-font);
+		font-size: clamp(1.5rem, 4vw, 2rem);
+	}
+	.nav-menu-panel__intro p {
+		color: var(--text-color-light);
+		font-size: var(--small-font-size);
+		line-height: 1.5;
+	}
+	.nav-menu-panel hr {
+		width: 100%;
+		border: 0;
+		border-top: 1px solid color-mix(in srgb, var(--text-color) 18%, transparent);
+	}
+	.nav-menu-panel__nav,
+	.nav-menu-panel__socials {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.nav-menu-pill {
+		min-height: 2.5rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.45rem;
+		padding: 0.55rem 0.9rem;
+		border: 1px solid color-mix(in srgb, var(--first-color) 22%, transparent);
+		border-radius: var(--radius-pill);
+		background: color-mix(in srgb, var(--first-color) 4%, var(--container-color));
+		color: var(--title-color);
+		font-size: var(--small-font-size);
+		font-weight: var(--font-medium);
+		text-decoration: none;
+		transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+	}
+	.nav-menu-pill:hover,
+	.nav-menu-pill:focus-visible {
+		border-color: var(--first-color);
+		background: color-mix(in srgb, var(--first-color) 12%, var(--container-color));
+		color: var(--first-color);
+	}
+	.nav-menu-pill i { font-size: 1rem; }
+	.nav-menu-panel__featured-heading {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-top: 0.25rem;
+	}
+	.nav-menu-panel__featured-heading h3 {
+		color: var(--text-color-light);
+		font-size: var(--smaller-font-size);
+		font-weight: var(--font-semi-bold);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+	.nav-menu-panel__all-cases { color: var(--first-color); font-size: var(--small-font-size); white-space: nowrap; }
+	.nav-menu-panel__cases { display: grid; gap: 0.55rem; }
+	.nav-menu-case {
+		min-height: 4.35rem;
+		display: grid;
+		grid-template-columns: 6rem minmax(0, 1fr) 1.5rem;
+		align-items: center;
+		gap: 0.85rem;
+		padding: 0.45rem 0.75rem 0.45rem 0.45rem;
+		border: 1px solid color-mix(in srgb, var(--first-color) 17%, transparent);
+		border-radius: 0.75rem;
+		background: color-mix(in srgb, var(--first-color) 3%, var(--container-color));
+		color: var(--title-color);
+		text-decoration: none;
+		transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+	}
+	.nav-menu-case:hover,
+	.nav-menu-case:focus-visible {
+		transform: translateX(3px);
+		border-color: color-mix(in srgb, var(--first-color) 55%, transparent);
+		background: color-mix(in srgb, var(--first-color) 8%, var(--container-color));
+	}
+	.nav-menu-case__image {
+		width: 6rem;
+		height: 3.45rem;
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+		border-radius: 0.45rem;
+		background: color-mix(in srgb, var(--first-color) 8%, var(--container-color));
+	}
+	.nav-menu-case__image img { width: 100%; height: 100%; object-fit: cover; }
+	.nav-menu-case__image :global(svg) { width: 78%; height: 2rem; color: var(--title-color); }
+	.nav-menu-case__text { min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; }
+	.nav-menu-case__text strong { font-family: var(--title-font); font-size: 1rem; }
+	.nav-menu-case__text small { color: var(--text-color-light); font-size: var(--smaller-font-size); }
+	.nav-menu-case__arrow,
+	.nav-menu-panel__all-cases span {
+		font-family: 'PP Gatwick Jumbo', 'Poppins', sans-serif;
+	}
+	.nav-menu-case__arrow { color: var(--first-color); font-size: 1.5rem; line-height: 1; }
+	.nav-menu-panel__settings {
+		margin-top: 0.2rem;
+		padding-top: 0.8rem;
+		border-top: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent);
+	}
+	@media screen and (max-width: 480px) {
+		.nav-menu-panel { gap: 0.8rem; }
+		.nav-menu-panel__nav { gap: 0.4rem; }
+		.nav-menu-pill { min-height: 2.3rem; padding: 0.45rem 0.7rem; }
+		.nav-menu-case { grid-template-columns: 4.75rem minmax(0, 1fr) 1.25rem; gap: 0.65rem; }
+		.nav-menu-case__image { width: 4.75rem; height: 3rem; }
+	}
+</style>

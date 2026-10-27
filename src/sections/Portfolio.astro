@@ -5,12 +5,10 @@ import Roulette from '@assets/img/roulette.webp';
 import Cunctae from '@assets/img/c.svg';
 
 import PortfolioCard from '@components/PortfolioCard.astro';
-import SparkAr from '@assets/img/face-mesh.svg';
 
 import { useTranslations, type Lang } from 'src/i18n';
 
 const t = useTranslations(Astro.currentLocale as Lang);
-const locale = Astro.currentLocale;
 ---
 
 <section class="portfolio section" id="Portfolio" aria-labelledby="portfolio-title">
@@ -41,14 +39,6 @@ const locale = Astro.currentLocale;
 				title={t('portfolio.space-invaders')}
 				description={t('portfolio.space-invaders-project-created-with-java')}
 				link="https://radapls.github.io/space-invaders/"
-			/>
-			<PortfolioCard
-				variant="wide"
-				bgImage={SparkAr}
-				title="Spark AR Filters"
-				description={t('portfolio.instagram-filters-built-with-spark-ar')}
-				link={`/${locale}/projects/spark-ar/`}
-				external={false}
 			/>
 		</div>
 	</div>
@@ -87,16 +77,21 @@ const locale = Astro.currentLocale;
 		display: grid;
 		flex: 1 1 auto;
 		min-height: 0;
-		grid-template-columns: repeat(12, minmax(0, 1fr));
-		grid-template-rows: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-rows: auto;
+		align-content: center;
 		gap: var(--layout-gap);
 		width: 100%;
+	}
+	/* Equal cells: neutralize the feature/side spans from PortfolioCard. */
+	.card-grid :global(.card) {
+		grid-column: auto;
+		grid-row: auto;
 	}
 
 	@media screen and (max-width: 900px) {
 		.card-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
-			grid-template-rows: repeat(3, minmax(0, 1fr));
 		}
 	}
 
@@ -107,12 +102,11 @@ const locale = Astro.currentLocale;
 		.portfolio .section__title {
 			margin-bottom: clamp(0.5rem, 1.5svh, 0.75rem);
 		}
-		.card-grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			grid-template-rows: repeat(2, minmax(0, 1fr));
-		}
 	}
 	@media screen and (max-width: 560px) {
+		.card-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
 		.portfolio.section {
 			padding-top: clamp(0.75rem, 2svh, 1rem);
 		}

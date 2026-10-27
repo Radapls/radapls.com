@@ -22,8 +22,8 @@ interface Props {
 	withHeader?: boolean;
 	withFooter?: boolean;
 	noLinks?: boolean;
-	/** Full-viewport scroll-snap steps for each section (homepage) */
-	snap?: boolean;
+	/** Full-viewport sections on the homepage (no scroll snapping) */
+	fullHeight?: boolean;
 	/** Overrides the page language for routes outside the [lang] tree (blog posts) */
 	lang?: Lang;
 }
@@ -35,7 +35,7 @@ const {
 	keywords = SITE_CONFIG.keywords,
 	withFooter = true,
 	withHeader = true,
-	snap = false,
+	fullHeight = false,
 	canonical,
 	lang,
 } = Astro.props;
@@ -152,7 +152,7 @@ const showHeaderBack = !['', '/', '/en', '/es', '/pt-br'].includes(currentPath);
 	<body>
 		{withHeader && <Header {variant} hideLocaleSelect={Boolean(canonical)} showBack={showHeaderBack} />}
 		<main
-			class:list={['main', { 'snap-page': snap }]}
+			class:list={['main', { 'full-page': fullHeight }]}
 			id="main"
 			tabindex="-1"
 			transition:animate={canonical ? 'none' : 'fade'}
@@ -178,32 +178,6 @@ const showHeaderBack = !['', '/', '/en', '/es', '/pt-br'].includes(currentPath);
 	document.addEventListener('astro:page-load', () => {
 		document.documentElement.classList.remove('is-navigating');
 	});
-
-	// Hide the fixed header while the footer is the current visible region.
-	(() => {
-		let footerObserver: IntersectionObserver | undefined;
-		const observeFooter = () => {
-			footerObserver?.disconnect();
-			const footer = document.querySelector<HTMLElement>('footer.footer__bg');
-			if (!footer) {
-				document.documentElement.classList.remove('footer-active');
-				return;
-			}
-			footerObserver = new IntersectionObserver(
-				([entry]) => {
-					if (!entry) return;
-					document.documentElement.classList.toggle(
-						'footer-active',
-						entry.isIntersecting && entry.intersectionRatio >= 0.5,
-					);
-				},
-				{ threshold: 0.5 },
-			);
-			footerObserver.observe(footer);
-		};
-		document.addEventListener('astro:page-load', observeFooter);
-		observeFooter();
-	})();
 
 	// Page scrollbar: same treatment as the timeline's — the native bar is
 	// hidden (no layout shift) and a thin overlay indicator fades in while

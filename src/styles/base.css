@@ -162,7 +162,7 @@ body {
 	color: var(--text-color);
 	overflow-x: hidden;
 }
-html:has(.snap-page) body {
+html:has(.full-page) body {
 	padding-top: var(--banner-height, 0px);
 }
 
@@ -210,54 +210,15 @@ button {
 .scroll-lock {
 	overflow-y: hidden;
 }
-/* Step-by-step homepage: each section fills the viewport and the page
-   scrolls in snap steps (hero → about → experience → …). Sections taller
-   than the viewport still scroll freely inside their step. */
-html:has(.snap-page) {
-	scroll-snap-type: y mandatory;
-}
-/* While the stepper animates between steps, native snapping must not
-   fight the animation mid-flight (it causes visible double-corrections). */
-html:has(.snap-page).stepping {
-	scroll-snap-type: none;
-}
-/* The footer is a full step of its own, like every other section. */
-html:has(.snap-page) footer.footer__bg {
+/* Full-viewport homepage sections (hero → about → experience → …).
+   No scroll snapping; sections taller than the viewport just scroll. */
+.full-page .section {
 	min-height: 100svh;
-	scroll-snap-align: start;
-	scroll-snap-stop: always;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	justify-content: safe center;
-	box-sizing: border-box;
-}
-.snap-page .section {
-	min-height: 100svh;
-	scroll-snap-align: start;
-	scroll-snap-stop: always;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	justify-content: safe center; /* falls back to top-aligned */
 	box-sizing: border-box;
-}
-/* Reduced motion: keep plain scrolling, no forced steps. */
-@media (prefers-reduced-motion: reduce) {
-	html:has(.snap-page) {
-		scroll-snap-type: none;
-	}
-	html:has(.snap-page) .header {
-		transition: none;
-	}
-	.snap-page .section {
-		min-height: auto;
-		display: block;
-	}
-	html:has(.snap-page) footer.footer__bg {
-		min-height: auto;
-		display: block;
-	}
 }
 /*==================== LAYOUT ====================*/
 :root {
@@ -321,13 +282,6 @@ html:has(.snap-page) footer.footer__bg {
 	transform: translateY(-110%);
 	visibility: hidden;
 	pointer-events: none;
-	transition:
-		transform 220ms ease,
-		visibility 0s linear 220ms;
-}
-html:has(.snap-page).footer-active .header {
-	transform: translateY(-110%);
-	visibility: hidden;
 	transition:
 		transform 220ms ease,
 		visibility 0s linear 220ms;

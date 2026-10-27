@@ -5,13 +5,9 @@ import Moai from '@components/Moai.astro';
 import RaceBibs from '@components/RaceBibs.astro';
 import Logo from '@assets/img/JFRA.svg';
 import Illustration from '@assets/img/illustration.webp';
-import CuerposDeAguaCover from '@assets/img/publications/cuerpos-de-agua.png';
 import CuerposDeAguaPdf from '@assets/documents/Trujillo_cuerpos_y_agua.pdf?url';
 import EnClavesDePazPdf from '@assets/documents/en-claves-de-paz-no-5.pdf?url';
-import EnClavesDePazPage5 from '@assets/img/publications/en-claves-de-paz-page-5.png';
-import BugaPoliticsCover from '@assets/img/publications/descomposicion-politica-buga.png';
 import BugaPoliticsPdf from '@assets/documents/la-descomposicion-organizaciones-politicas-buga.pdf?url';
-import PasaLaVozPage from '@assets/img/publications/pasa-la-voz-page-46.jpg';
 import PasaLaVozArchiveCopy from '@assets/documents/revista-pasa-la-voz-edicion-23-archive-copy.pdf?url';
 import ArtDecoPoster from '@assets/img/posters/SAMCRO Art Deco-01.png';
 import ConstructivismPoster from '@assets/img/posters/SAMCRO Constructivismo-01.png';
@@ -21,85 +17,108 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { BLOG_URL } from 'src/consts';
 
+import filter1 from '@assets/videos/filter_1.mp4';
+import filter2 from '@assets/videos/filter_2.mp4';
+import filter3 from '@assets/videos/filter_3.mp4';
+import filter4 from '@assets/videos/filter_4.mp4';
+
 import { useTranslations, type Lang } from 'src/i18n';
 
 const t = useTranslations(Astro.currentLocale as Lang);
 const publications = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 3);
-const documentPublications = [
+const documentPublications: {
+	title: string;
+	type: string;
+	pdf: string;
+	contributor: string;
+	archive?: string;
+}[] = [
 	{
 		title: 'Cuerpos de agua',
 		type: t('about.pdf-publication'),
-		cover: CuerposDeAguaCover,
 		pdf: CuerposDeAguaPdf,
 		contributor: '',
-		alt: t('about.poster-for-trujillo-cuerpos-de-agua'),
 	},
 	{
 		title: 'En - claves de paz · Boletín No. 5',
 		type: t('about.peace-bulletin'),
-		cover: EnClavesDePazPage5,
 		pdf: EnClavesDePazPdf,
-		alt: 'Page 5 of the En-claves de paz bulletin, showing the poem “Participaz” by Juan Felipe Rada',
 		contributor: t('about.by-juan-felipe-rada'),
 	},
 	{
 		title:
 			'La descomposición de las organizaciones políticas en Buga en las contiendas electorales (1997–2003) y la relación entre paramilitares y políticos',
 		type: t('about.undergraduate-thesis'),
-		cover: BugaPoliticsCover,
 		pdf: BugaPoliticsPdf,
-		alt: t('about.title-page-of-a-political-science-thesis'),
 		contributor: t('about.co-authored-by-juan-felipe-rada-arias'),
 	},
 	{
-		title: 'Te sueñen Sans Serifa',
+		title: 'Te sueño en Sans Serifa',
 		type: t('about.poem-pasa-la-voz-magazine'),
-		cover: PasaLaVozPage,
 		pdf: PasaLaVozArchiveCopy,
-		alt: 'Page 46 of Revista Pasá la Voz, showing the poem “Te sueñen Sans Serifa” by Juan Felipe Rada Arias',
 		contributor: t('about.poem-by-juan-felipe-rada-arias-23rd-edit'),
+		archive:
+			'https://web.archive.org/web/20230227202541/https://issuu.com/comitepasalavoz/docs/revista_pas__la_voz_edici_n_23___2_',
 	},
 ];
-const funFacts = [
-	t('about.political-scientist-by-training'),
-	t('about.curious-coder-by-nature'),
-	t('about.digital-business-strategist'),
-	t('about.i-write-poems-and-personal-essays'),
-	t('about.i-collect-race-bibs-as-running-souvenirs'),
-];
+// Fun facts: SAMCRO (my cat) posters I designed on my own, one per style.
 const posters = [
 	{
 		src: ArtDecoPoster,
+		title: t({ en: 'Art déco', es: 'Art déco', 'pt-br': 'Art déco' }),
+		description: t({
+			en: 'SAMCRO, my cat, posing as a 1920s icon.',
+			es: 'SAMCRO, mi gato, posando como un ícono de los años veinte.',
+			'pt-br': 'SAMCRO, meu gato, posando como um ícone dos anos vinte.',
+		}),
 		alt: t({
-			en: 'Art Deco poster made at university',
-			es: 'Póster art déco hecho en la universidad',
-			'pt-br': 'Pôster art déco feito na universidade',
+			en: 'Art déco poster of SAMCRO, my cat, designed by me',
+			es: 'Póster art déco de SAMCRO, mi gato, diseñado por mí',
+			'pt-br': 'Pôster art déco de SAMCRO, meu gato, desenhado por mim',
 		}),
 	},
 	{
 		src: ConstructivismPoster,
+		title: t({ en: 'Constructivism', es: 'Constructivismo', 'pt-br': 'Construtivismo' }),
+		description: t({
+			en: 'SAMCRO enlisted for the cause, constructivist cut.',
+			es: 'SAMCRO alistado para la causa, corte constructivista.',
+			'pt-br': 'SAMCRO alistado para a causa, corte construtivista.',
+		}),
 		alt: t({
-			en: 'Constructivist poster made at university',
-			es: 'Póster constructivista hecho en la universidad',
-			'pt-br': 'Pôster construtivista feito na universidade',
+			en: 'Constructivist poster of SAMCRO, my cat, designed by me',
+			es: 'Póster constructivista de SAMCRO, mi gato, diseñado por mí',
+			'pt-br': 'Pôster construtivista de SAMCRO, meu gato, desenhado por mim',
 		}),
 	},
 	{
 		src: JaponismPoster,
+		title: t({ en: 'Japonism', es: 'Japonismo', 'pt-br': 'Japonismo' }),
+		description: t({
+			en: 'SAMCRO floating in a Japonism print.',
+			es: 'SAMCRO flotando en una estampa japonista.',
+			'pt-br': 'SAMCRO flutuando em uma estampa japonista.',
+		}),
 		alt: t({
-			en: 'Japonism poster made at university',
-			es: 'Póster japonista hecho en la universidad',
-			'pt-br': 'Pôster japonista feito na universidade',
+			en: 'Japonism poster of SAMCRO, my cat, designed by me',
+			es: 'Póster japonista de SAMCRO, mi gato, diseñado por mí',
+			'pt-br': 'Pôster japonista de SAMCRO, meu gato, desenhado por mim',
 		}),
 	},
 	{
 		src: PsychedeliaPoster,
+		title: t({ en: 'Psychedelia', es: 'Psicodelia', 'pt-br': 'Psicodelia' }),
+		description: t({
+			en: 'SAMCRO, fully psychedelic.',
+			es: 'SAMCRO, completamente psicodélico.',
+			'pt-br': 'SAMCRO, completamente psicodélico.',
+		}),
 		alt: t({
-			en: 'Psychedelia poster made at university',
-			es: 'Póster psicodélico hecho en la universidad',
-			'pt-br': 'Pôster psicodélico feito na universidade',
+			en: 'Psychedelia poster of SAMCRO, my cat, designed by me',
+			es: 'Póster psicodélico de SAMCRO, mi gato, diseñado por mí',
+			'pt-br': 'Pôster psicodélico de SAMCRO, meu gato, desenhado por mim',
 		}),
 	},
 ];
@@ -282,15 +301,6 @@ const posters = [
 				documentPublications.map((publication) => (
 					<article class="publication-document">
 						<a href={publication.pdf} target="_blank" rel="noopener noreferrer">
-							<Image
-								class="publication-document__cover"
-								src={publication.cover}
-								alt={publication.alt}
-								widths={[320, 480, 640, 800]}
-								sizes="(max-width: 767px) 90vw, (max-width: 1199px) 40vw, 40vw"
-								loading="lazy"
-								decoding="async"
-							/>
 							<div class="publication-document__details">
 								<p>
 									{publication.type}
@@ -315,10 +325,10 @@ const posters = [
 								</span>
 							</div>
 						</a>
-						{publication.pdf === PasaLaVozArchiveCopy && (
+						{publication.archive && (
 							<a
 								class="publication-document__source"
-								href="https://web.archive.org/web/20230227202541/https://issuu.com/comitepasalavoz/docs/revista_pas__la_voz_edici_n_23___2_"
+								href={publication.archive}
 								target="_blank"
 								rel="noopener noreferrer"
 							>
@@ -347,19 +357,6 @@ const posters = [
 						<h3>
 							<a href={`${BLOG_URL}/${publication.id}/`} target="_blank" rel="noopener noreferrer">
 								{publication.data.title}
-								<svg
-									viewBox="0 0 24 24"
-									width="14"
-									height="14"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									aria-hidden="true"
-								>
-									<path d="M7 17 17 7M8 7h9v9"></path>
-								</svg>
 							</a>
 						</h3>
 					</article>
@@ -400,35 +397,76 @@ const posters = [
 				{t('about.fun-facts')}
 			</h2>
 		</header>
-		<ul class="fact-grid layout-full">
-			{
-				funFacts.map((fact, index) => (
-					<li class="fact-card">
-						<>
-							<span>0{index + 1}</span>
-							<p>{fact}</p>
-						</>
-					</li>
-				))
-			}
-		</ul>
 		<div class="poster-strip layout-full">
 			{
 				posters.map((poster) => (
-					<Image
-						class="poster-strip__item"
-						src={poster.src}
-						alt={poster.alt}
-						widths={[200, 400, 600]}
-						sizes="(max-width: 767px) 45vw, 300px"
-						loading="lazy"
-						decoding="async"
-					/>
+					<article class="poster-strip__item">
+						<div class="poster-strip__info">
+							<h3 class="poster-strip__title">{poster.title}</h3>
+							<p class="poster-strip__description">{poster.description}</p>
+						</div>
+						<Image
+							class="poster-strip__image"
+							src={poster.src}
+							alt={poster.alt}
+							widths={[200, 400, 600]}
+							sizes="(max-width: 767px) 70vw, 260px"
+							loading="lazy"
+							decoding="async"
+						/>
+					</article>
 				))
 			}
 		</div>
+		<div class="spark-sub layout-full">
+			<h3>{t('about.spark-ar-filters')}</h3>
+			<p class="spark-sub__text">
+				{t('about.spark-ar-description')}
+				<a
+					href="https://spark.meta.com/learn/FAQ/Meta-spark-update"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{t('about.spark-ar-removed-link')}
+				</a>
+				{t('about.spark-ar-description-end')}
+			</p>
+			<div class="spark-sub__videos">
+				{
+					[
+						{ src: filter1, n: 1 },
+						{ src: filter2, n: 2 },
+						{ src: filter3, n: 3 },
+						{ src: filter4, n: 4 },
+					].map(({ src, n }) => (
+						<span
+							class="spark-sub__tile"
+							role="img"
+							aria-label={t({
+								en: `Filter ${n} preview`,
+								es: `Vista previa del filtro ${n}`,
+								'pt-br': `Prévia do filtro ${n}`,
+							})}
+						>
+							<video src={src} autoplay loop muted playsinline aria-hidden="true" />
+						</span>
+					))
+				}
+			</div>
+		</div>
 	</div>
 </section>
+
+<script>
+	// ponytail: the muted attribute alone isn't honored when ClientRouter
+	// swaps the document — force the property so autoplay never has sound
+	const mute = () =>
+		document
+			.querySelectorAll<HTMLVideoElement>('.spark-sub__tile video')
+			.forEach((v) => (v.muted = true));
+	mute();
+	document.addEventListener('astro:page-load', mute);
+</script>
 
 <style>
 	/*==================== ABOUT (a wall of my room) ====================*/
@@ -483,18 +521,13 @@ const posters = [
 		color: var(--first-color);
 	}
 	.about-publications {
-		--layout-max-width: 94rem;
 		--layout-gap: clamp(1rem, 2vw, 1.5rem);
 		background: color-mix(in srgb, var(--container-color) 45%, transparent);
 	}
-	.publication-grid,
-	.fact-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--layout-card-min, 16rem)), 1fr));
-		gap: var(--layout-gap);
-	}
 	.publication-grid {
+		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--layout-gap);
 	}
 	.publication-card {
 		min-height: 12rem;
@@ -515,6 +548,9 @@ const posters = [
 		border-color: var(--first-color);
 	}
 	.publication-document {
+		display: flex;
+		flex-direction: column;
+		min-height: 12rem;
 		overflow: hidden;
 		border: 1px solid color-mix(in srgb, var(--title-color) 18%, transparent);
 		border-radius: var(--radius-md);
@@ -529,47 +565,49 @@ const posters = [
 	}
 	.publication-document > a {
 		display: flex;
-		height: 100%;
+		flex: 1;
 		flex-direction: column;
 		color: inherit;
 		text-decoration: none;
 	}
 	.publication-document__source {
-		display: block;
-		padding: 0 1.5rem 1.25rem;
+		padding: 0 clamp(1.1rem, 2vw, 1.5rem) 1.25rem;
 		font-size: var(--smaller-font-size);
 		color: var(--first-color);
 	}
-	.publication-document__cover {
-		display: block;
-		width: 100%;
-		height: min(78svh, 46rem);
-		object-fit: contain;
-		background: #fff;
-	}
 	.publication-document__details {
-		display: grid;
+		display: flex;
+		flex-direction: column;
 		gap: 0.75rem;
 		padding: clamp(1.1rem, 2vw, 1.5rem);
 	}
 	.publication-document__details > p {
 		font-size: var(--smaller-font-size);
 		color: var(--text-color-light);
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
 	}
 	.publication-document__details h3 {
 		font-size: clamp(1.35rem, 2.3vw, 1.75rem);
 		line-height: 1.15;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
 	}
 	.publication-document__details > span {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		margin-top: auto;
 		padding-top: 0.75rem;
 		border-top: 1px solid color-mix(in srgb, var(--title-color) 18%, transparent);
 		font-size: var(--small-font-size);
 		font-weight: var(--font-medium);
 	}
-	.publication-document__details > span > span {
+	.publication-document__details > span :global(svg) {
 		color: var(--first-color);
 	}
 	.publication-meta {
@@ -584,15 +622,9 @@ const posters = [
 		line-height: 1.2;
 	}
 	.publication-card h3 a {
-		display: flex;
-		align-items: flex-end;
-		justify-content: space-between;
-		gap: 1rem;
 		color: inherit;
 		text-decoration: none;
 	}
-	.publication-card h3 a span,
-	.publication-card h3 a :global(svg),
 	.about-more-writing span,
 	.about-more-writing :global(svg) {
 		color: var(--first-color);
@@ -612,45 +644,33 @@ const posters = [
 		.publication-grid {
 			grid-template-columns: minmax(0, 1fr);
 		}
-		.publication-document__cover {
-			height: auto;
-		}
 	}
-	.about-facts {
-		--layout-card-min: 13rem;
-	}
-	.fact-grid {
-		list-style: none;
-	}
-	.fact-card {
-		min-height: 11rem;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: 2rem;
-		padding: clamp(1.25rem, 2.5vw, 2rem);
-		border-top: 2px solid var(--first-color);
-		background: color-mix(in srgb, var(--container-color) 70%, transparent);
-	}
-	.fact-card > span {
-		font-family: 'Share Tech Mono', monospace;
-		font-size: var(--small-font-size);
-		color: var(--text-color-light);
-	}
-	.fact-card p {
-		max-width: 18rem;
-		font-size: clamp(1.2rem, 2vw, 1.6rem);
-		font-weight: var(--font-medium);
-		line-height: 1.25;
-	}
-	/* University posters: a row of frames under the fact cards */
+	/* SAMCRO posters: title beside the image, description under the title */
 	.poster-strip {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: minmax(0, 1fr);
 		gap: var(--layout-gap, 1.25rem);
 		margin-top: var(--layout-gap, 1.25rem);
 	}
 	.poster-strip__item {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) clamp(150px, 22vw, 260px);
+		column-gap: clamp(1.25rem, 3vw, 2.5rem);
+		align-items: center;
+	}
+	.poster-strip__title {
+		color: var(--title-color);
+		font-family: var(--title-font);
+		font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+		font-weight: var(--font-semi-bold);
+	}
+	.poster-strip__description {
+		max-width: 44ch;
+		margin-top: 0.35rem;
+		color: var(--text-color);
+		line-height: 1.6;
+	}
+	.poster-strip__image {
 		width: 100%;
 		height: auto;
 		display: block;
@@ -659,9 +679,49 @@ const posters = [
 		box-shadow: var(--shadow-sm);
 	}
 	@media (max-width: 767px) {
-		.poster-strip {
-			grid-template-columns: repeat(2, 1fr);
+		.poster-strip__item {
+			grid-template-columns: minmax(0, 1fr);
 		}
+		.poster-strip__image {
+			order: -1;
+			max-width: 320px;
+		}
+	}
+	/* Spark AR filters: folded in from the retired project page */
+	.spark-sub {
+		display: grid;
+		gap: 1rem;
+		margin-top: calc(var(--layout-gap, 1.25rem) * 2);
+	}
+	.spark-sub h3 {
+		font-size: clamp(1.2rem, 2.3vw, 1.75rem);
+		line-height: 1.2;
+	}
+	.spark-sub__text {
+		max-width: 60ch;
+		line-height: 1.7;
+		color: var(--text-color);
+	}
+	.spark-sub__text a {
+		color: var(--first-color);
+	}
+	.spark-sub__videos {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+		gap: var(--layout-gap, 1.25rem);
+		max-width: 42rem;
+	}
+	.spark-sub__tile {
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		box-shadow: var(--shadow-sm);
+	}
+	.spark-sub__tile video {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 9 / 16;
+		object-fit: cover;
 	}
 	blockquote.about__intro {
 		position: relative;

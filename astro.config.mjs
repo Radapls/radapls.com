@@ -47,9 +47,6 @@ export default defineConfig({
 		'/en/experience/[...id]': '/case-studies/[...id]',
 		'/es/experience/[...id]': '/case-studies/[...id]',
 		'/pt-br/experience/[...id]': '/case-studies/[...id]',
-		'/en/projects/spark-ar': '/projects/spark-ar',
-		'/es/projects/spark-ar': '/projects/spark-ar',
-		'/pt-br/projects/spark-ar': '/projects/spark-ar',
 	},
 	i18n: {
 		defaultLocale: 'en',

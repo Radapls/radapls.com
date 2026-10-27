@@ -1,0 +1,155 @@
+---
+import { useTranslations, type Lang } from 'src/i18n';
+import { workData } from '@data/experienceData';
+
+const t = useTranslations(Astro.currentLocale as Lang);
+
+interface GalleryEntry {
+	title: string;
+	link: string;
+	external?: boolean;
+	/** Half-width block (2-up row, like anatolyzenkov.com's halfWidth) */
+	half?: boolean;
+}
+
+// Homepage shows only the dev roles; IEI, Alcaldía and MOE stay on /case-studies.
+const keptWork = workData.filter(
+	(item) => !['/case-studies/iei', '/case-studies/alcaldia', '/case-studies/moe'].includes(item.link),
+);
+
+const work: GalleryEntry[] = keptWork.map((item, i) => ({
+	title: item.organization,
+	link: item.link,
+	// Wibx+Birdi pair up below the full-width Ericsson block.
+	half: i > 0,
+}));
+
+const projects: GalleryEntry[] = [
+	{
+		title: t('portfolio.roulette-runner'),
+		link: 'https://github.com/Radapls/roulette',
+		external: true,
+	},
+	{
+		title: t('portfolio.cunctum-ui'),
+		link: 'https://cunctae.github.io/cunctum-ui/',
+		external: true,
+		half: true,
+	},
+	{
+		title: t('portfolio.space-invaders'),
+		link: 'https://radapls.github.io/space-invaders/',
+		external: true,
+		half: true,
+	},
+];
+
+// Work first (most recent first, matching the old timeline order), then projects.
+// ponytail: no thumbnails/cards — real assets land later, this is the text layout.
+const entries = [...work, ...projects];
+---
+
+<section class="gallery section" aria-label={t('gallery.title')}>
+	<div class="gallery__grid">
+		{
+			entries.map((entry) => (
+				<a
+					class:list={['gallery__item', { 'gallery__item--half': entry.half }]}
+					href={entry.link}
+					target={entry.external ? '_blank' : undefined}
+					rel={entry.external ? 'noopener noreferrer' : undefined}
+				>
+					<span class="gallery__name">
+						{entry.title}
+						<span class="gallery__arrow" aria-hidden="true">→</span>
+					</span>
+				</a>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	/* anatolyzenkov.com distribution: stacked blocks, one per viewport,
+	   text overlaid and centered, projects 2-up. First block (Ericsson)
+	   sits directly below the hero — no section title above it. */
+	.gallery.section {
+		padding: 0;
+	}
+	.gallery__grid {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		gap: 1rem;
+		width: 100%;
+	}
+	.gallery__item {
+		position: relative;
+		min-height: calc(100svh - 2rem);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		min-width: 0;
+		padding: max(2rem, 3vw);
+		text-align: center;
+		background: linear-gradient(
+			145deg,
+			color-mix(in srgb, var(--container-color) 94%, var(--first-color)),
+			var(--container-color) 58%
+		);
+		color: var(--text-color);
+		text-decoration: none;
+		overflow: hidden;
+	}
+	.gallery__item:not(.gallery__item--half) {
+		grid-column: span 6;
+	}
+	.gallery__item--half {
+		grid-column: span 3;
+		min-height: calc(50svh - 1.5rem);
+	}
+	.gallery__name {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		color: var(--title-color);
+		font-family: var(--title-font);
+		font-size: clamp(1.5rem, 4vw, 2.5rem);
+		font-weight: var(--font-semi-bold);
+		text-wrap: balance;
+	}
+	.gallery__arrow {
+		font-weight: 200;
+		color: var(--first-color);
+		opacity: 0;
+		transform: translateX(-0.35rem);
+		transition:
+			opacity 180ms ease,
+			transform 180ms ease;
+	}
+	.gallery__item:hover .gallery__arrow,
+	.gallery__item:focus-visible .gallery__arrow {
+		opacity: 1;
+		transform: none;
+	}
+	.gallery__item:hover .gallery__name,
+	.gallery__item:focus-visible .gallery__name {
+		color: var(--first-color);
+	}
+	@media screen and (max-width: 700px) {
+		.gallery__grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.gallery__item,
+		.gallery__item--half {
+			grid-column: 1 / -1;
+			min-height: calc(50svh - 1.5rem);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.gallery__arrow {
+			transition: none;
+		}
+	}
+</style>

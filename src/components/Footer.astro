@@ -50,6 +50,8 @@ const creditsUrl = '/credits';
 		>
 			<Image src={WcagBadge} alt="WCAG 2.1 Level AA" width={88} height={31} loading="lazy" />
 		</a>
+	</div>
+	<div class="footer__credits-row">
 		<a class="footer__credits" href={creditsUrl}>
 			{
 				t('footer.third-party-credits')
@@ -93,6 +95,11 @@ const creditsUrl = '/credits';
 		flex-wrap: wrap;
 		gap: 0.75rem;
 		margin-top: 1.5rem;
+	}
+	.footer__credits-row {
+		display: flex;
+		justify-content: center;
+		margin-top: 1.25rem;
 	}
 	.footer__credits {
 		display: inline-flex;

@@ -8,7 +8,7 @@ interface Props {
 	description: string;
 	/** internal links open in the same tab */
 	external?: boolean;
-	variant?: 'feature' | 'side' | 'wide';
+	variant?: 'feature' | 'side';
 }
 
 const { link, bgImage, title, description, external = true, variant = 'side' } = Astro.props;
@@ -44,6 +44,7 @@ const { link, bgImage, title, description, external = true, variant = 'side' } =
 		gap: clamp(0.75rem, 1.4vw, 1.25rem);
 		width: 100%;
 		min-width: 0;
+		overflow: hidden;
 		padding: clamp(0.85rem, 1.6vw, 1.5rem);
 		border: 1px solid color-mix(in srgb, var(--title-color) 12%, transparent);
 		border-radius: var(--radius-lg);
@@ -73,9 +74,6 @@ const { link, bgImage, title, description, external = true, variant = 'side' } =
 	.card--side {
 		grid-column: span 5;
 	}
-	.card--wide {
-		grid-column: 1 / -1;
-	}
 	.card__thumb {
 		flex: 0 0 auto;
 		width: clamp(4.5rem, 8vw, 6rem);
@@ -102,9 +100,6 @@ const { link, bgImage, title, description, external = true, variant = 'side' } =
 		max-height: 100%;
 		padding: clamp(1rem, 3vw, 2.5rem);
 	}
-	.card--wide .card__thumb {
-		width: 5rem;
-	}
 	.card__content {
 		min-width: 0;
 		display: flex;
@@ -121,6 +116,10 @@ const { link, bgImage, title, description, external = true, variant = 'side' } =
 		color: var(--text-color);
 		font-size: var(--smaller-font-size);
 		line-height: 1.5;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
 	}
 	.card__arrow {
 	font-family: var(--title-font);
@@ -145,8 +144,7 @@ const { link, bgImage, title, description, external = true, variant = 'side' } =
 		rotate: 45deg;
 	}
 	@media screen and (max-width: 900px) {
-		.card--feature,
-		.card--wide {
+		.card--feature {
 			grid-column: 1 / -1;
 			grid-row: auto;
 		}
@@ -159,8 +157,7 @@ const { link, bgImage, title, description, external = true, variant = 'side' } =
 	}
 	@media screen and (max-width: 560px) {
 		.card--feature,
-		.card--side,
-		.card--wide {
+		.card--side {
 			grid-column: span 1;
 			grid-row: auto;
 			min-height: 0;
@@ -197,8 +194,7 @@ const { link, bgImage, title, description, external = true, variant = 'side' } =
 	}
 	@media screen and (min-width: 561px) and (max-height: 640px) {
 		.card--feature,
-		.card--side,
-		.card--wide {
+		.card--side {
 			grid-column: span 1;
 			grid-row: auto;
 			min-height: 0;

@@ -15,13 +15,6 @@ const experience = defineCollection({
 		}),
 });
 
-const projects = defineCollection({
-	loader: glob({ pattern: '**/[^_]*.mdx', base: './src/content/projects' }),
-	schema: z.object({
-		title: z.string(),
-	}),
-});
-
 const blog = defineCollection({
 	loader: glob({ pattern: '**/[^_]*.mdx', base: './src/content/blog' }),
 	schema: ({ image }) =>
@@ -36,4 +29,4 @@ const blog = defineCollection({
 		}),
 });
 
-export const collections = { experience, projects, blog };
+export const collections = { experience, blog };

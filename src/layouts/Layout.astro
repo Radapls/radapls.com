@@ -9,6 +9,7 @@ import { getLocalePaths, LOCALES, DEFAULT_LOCALE, type Lang } from 'src/i18n';
 import '@styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import ScrollUp from '@components/ScrollUp.astro';
+import ContactDrawer from '@components/ContactDrawer.astro';
 
 interface Props {
 	title: string;
@@ -160,6 +161,7 @@ const showHeaderBack = !['', '/', '/en', '/es', '/pt-br'].includes(currentPath);
 		</main>
 		{withFooter && <Footer {variant} />}
 		<ScrollUp />
+		<ContactDrawer />
 	<script>
 	import '../scripts/i18n-client';
 </script>

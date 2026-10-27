@@ -123,6 +123,7 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 						href="/"
 						class="nav__back"
 						aria-label={t('header.back-to-portfolio')}
+						onclick="if (history.length > 1) { history.back(); return false; }"
 					>
 						<span aria-hidden="true">←</span>
 					</a>
@@ -178,6 +179,7 @@ const headerKey = `header-${variant}-${hideLocaleSelect ? 'nolocale' : 'locale'}
 						href="/"
 						class="nav__back"
 						aria-label={t('header.back-to-portfolio')}
+						onclick="if (history.length > 1) { history.back(); return false; }"
 					>
 						<span aria-hidden="true">←</span>
 					</a>

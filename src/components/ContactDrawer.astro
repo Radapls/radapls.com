@@ -1,0 +1,414 @@
+---
+import { useTranslations, type Lang } from 'src/i18n';
+import { GLOBAL_EMAIL, LINKEDIN, SITE_URL, WHATSAPP } from 'src/consts';
+
+const t = useTranslations(Astro.currentLocale as Lang);
+---
+
+<div class="contact-drawer" id="contact-drawer">
+	<div class="contact-drawer__backdrop" data-contact-close aria-hidden="true"></div>
+	<aside
+		class="contact-drawer__panel"
+		role="dialog"
+		aria-modal="true"
+		aria-label={t('contactmeform.contact-details')}
+	>
+		<header class="contact-drawer__head">
+			<h2 class="contact-drawer__title">
+				{t('contactmeform.contact-details')}
+			</h2>
+			<button
+				type="button"
+				class="contact-drawer__close"
+				data-contact-close
+				aria-label={t('contactmeform.close')}
+			>
+				<span aria-hidden="true">×</span>
+			</button>
+		</header>
+
+		<form action={`https://formsubmit.co/${GLOBAL_EMAIL}`} method="POST" class="mail">
+			<div class="mail__head">
+				<div class="mail__row">
+					<span class="mail__label">
+						{t('contactmeform.to')}
+					</span>
+					<span class="mail__value">{GLOBAL_EMAIL}</span>
+				</div>
+				<div class="mail__row">
+					<label class="mail__label" for="name">
+						{t('contactmeform.from')}
+					</label>
+					<span class="mail__from">
+						<input
+							id="name"
+							name="name"
+							type="text"
+							class="mail__input"
+							placeholder={t('contactmeform.your-name')}
+							autocomplete="name"
+							required
+						/>
+						<input
+							id="email"
+							name="email"
+							type="email"
+							class="mail__input mail__input--email"
+							placeholder="you@mail.com"
+							autocomplete="email"
+							required
+						/>
+					</span>
+				</div>
+				<div class="mail__row">
+					<label class="mail__label" for="project">
+						{t('contactmeform.subject')}
+					</label>
+					<input
+						id="project"
+						name="project"
+						type="text"
+						class="mail__input"
+						placeholder={t('contactmeform.let-rsquo-s-work-together')}
+					/>
+				</div>
+			</div>
+
+			<textarea
+				id="message"
+				name="message"
+				class="mail__body"
+				rows="8"
+				required
+				wrap="soft"
+				placeholder={t('contactmeform.write-your-message-here')}></textarea>
+
+			<div class="mail__toolbar">
+				<button type="submit" class="mail__send" id="submit-button">
+					<svg
+						viewBox="0 0 24 24"
+						width="16"
+						height="16"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<rect x="2" y="4" width="20" height="16" rx="2"></rect>
+						<path d="m22 7-10 6L2 7"></path>
+					</svg>
+					{
+						t('contactmeform.send')
+					}
+				</button>
+			</div>
+
+			<input type="hidden" name="_next" value={`${SITE_URL}/thanks`} />
+			<input type="hidden" name="_subject" value="Nuevo mensaje de Portafolio" />
+		</form>
+
+		<div class="contact-channels">
+			<a class="contact-channel" href={WHATSAPP as string} target="_blank" rel="noopener noreferrer">
+				<i class="uil uil-whatsapp" aria-hidden="true"></i>
+				<span>WhatsApp</span>
+				<svg
+					viewBox="0 0 24 24"
+					width="14"
+					height="14"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<path d="M7 17 17 7M8 7h9v9"></path>
+				</svg>
+			</a>
+			<a class="contact-channel" href={LINKEDIN} target="_blank" rel="noopener noreferrer">
+				<i class="uil uil-linkedin" aria-hidden="true"></i>
+				<span>LinkedIn</span>
+				<svg
+					viewBox="0 0 24 24"
+					width="14"
+					height="14"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<path d="M7 17 17 7M8 7h9v9"></path>
+				</svg>
+			</a>
+		</div>
+	</aside>
+</div>
+
+<script>
+	const setOpen = (open: boolean) => {
+		// Re-query: the router swaps the drawer's DOM on every navigation.
+		const drawer = document.getElementById('contact-drawer');
+		drawer?.classList.toggle('is-open', open);
+		document.documentElement.classList.toggle('contact-drawer-open', open);
+		if (open) drawer?.querySelector<HTMLElement>('.contact-drawer__close')?.focus();
+	};
+
+	document.addEventListener('click', (e) => {
+		const el = (e.target as HTMLElement).closest('[data-contact-open], [data-contact-close]');
+		if (!el) return;
+		e.preventDefault();
+		if (el.hasAttribute('data-contact-open')) {
+			// Opening from the header menu: close the menu overlay underneath.
+			document.getElementById('nav-menu')?.classList.remove('show-menu');
+			const toggle = document.getElementById('nav-toggle');
+			toggle?.setAttribute('aria-expanded', 'false');
+			setOpen(true);
+		} else {
+			setOpen(false);
+		}
+	});
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') setOpen(false);
+	});
+	// Router swaps recreate the drawer closed; drop the scroll-lock class too.
+	document.addEventListener('astro:page-load', () => setOpen(false));
+</script>
+
+<style>
+	/*==================== CONTACT DRAWER ====================*/
+	.contact-drawer {
+		position: fixed;
+		inset: 0;
+		z-index: calc(var(--z-modal) + 2);
+		pointer-events: none;
+	}
+	:global(html.contact-drawer-open) {
+		overflow: hidden;
+	}
+	.contact-drawer__backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgb(0 0 0 / 0.45);
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+	.contact-drawer__panel {
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 100%;
+		width: min(40rem, 96vw);
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		padding: clamp(1.25rem, 4vw, 2rem);
+		overflow-y: auto;
+		background: var(--container-color);
+		box-shadow: var(--shadow-md);
+		transform: translateX(100%);
+		transition: transform 0.3s ease;
+	}
+	.contact-drawer.is-open {
+		pointer-events: auto;
+	}
+	.contact-drawer.is-open .contact-drawer__backdrop {
+		opacity: 1;
+	}
+	.contact-drawer.is-open .contact-drawer__panel {
+		transform: translateX(0);
+	}
+
+	.contact-drawer__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	.contact-drawer__title {
+		color: var(--title-color);
+		font-family: var(--title-font);
+		font-size: var(--h2-font-size);
+	}
+	.contact-drawer__close {
+		background: none;
+		border: 0;
+		padding: 0;
+		font-family: var(--title-font);
+		font-size: 1.75rem;
+		line-height: 1;
+		color: var(--title-color);
+		cursor: pointer;
+	}
+	.contact-drawer__close:hover {
+		color: var(--first-color);
+	}
+
+	.contact-channels {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.75rem;
+	}
+	.contact-channel {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.8rem 1rem;
+		border: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent);
+		border-radius: var(--radius-md);
+		color: var(--title-color);
+		font-size: var(--small-font-size);
+		font-weight: var(--font-medium);
+		text-decoration: none;
+		transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+	}
+	.contact-channel i {
+		font-size: 1.25rem;
+		color: var(--first-color);
+	}
+	.contact-channel span {
+		flex: 1;
+	}
+	.contact-channel svg {
+		color: var(--text-color-light);
+	}
+	.contact-channel:hover,
+	.contact-channel:focus-visible {
+		border-color: var(--first-color);
+		background: color-mix(in srgb, var(--first-color) 6%, transparent);
+		transform: translateY(-1px);
+	}
+	.contact-channel:hover svg,
+	.contact-channel:focus-visible svg {
+		color: var(--first-color);
+	}
+
+	.mail {
+		width: 100%;
+		padding: clamp(1.25rem, 4vw, 2rem);
+		display: grid;
+		gap: 1.25rem;
+		background: var(--container-color);
+		color: var(--text-color);
+		border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-md);
+	}
+
+	.mail__head {
+		display: grid;
+		gap: 0.75rem;
+	}
+	.mail__row {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		min-width: 0;
+	}
+	.mail__label {
+		flex: none;
+		width: 4.25rem;
+		font-size: var(--small-font-size);
+		font-weight: var(--font-semi-bold);
+		color: var(--text-color-light);
+	}
+	.mail__value {
+		font-size: var(--small-font-size);
+		color: var(--text-color);
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+	.mail__from {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		flex: 1;
+		min-width: 0;
+		color: var(--text-color-light);
+	}
+	.mail__input {
+		min-width: 0;
+		flex: 1;
+		background-color: var(--input-color);
+		border: 1px solid color-mix(in srgb, var(--text-color) 16%, transparent);
+		border-radius: var(--radius-md);
+		font-size: var(--small-font-size);
+		font-family: var(--body-font);
+		color: var(--text-color);
+		padding: 0.65rem 0.75rem;
+		transition: border-color 180ms ease, box-shadow 180ms ease;
+	}
+	.mail__input:focus-visible,
+	.mail__body:focus-visible {
+		outline: 2px solid var(--first-color);
+		outline-offset: 2px;
+		border-color: var(--first-color);
+	}
+	.mail__input::placeholder {
+		color: var(--text-color-light);
+	}
+
+	.mail__body {
+		display: block;
+		width: 100%;
+		border: 1px solid color-mix(in srgb, var(--text-color) 16%, transparent);
+		border-radius: var(--radius-md);
+		background-color: var(--input-color);
+		resize: vertical;
+		min-height: 10rem;
+		padding: 0.75rem;
+		font-family: var(--body-font);
+		font-size: var(--normal-font-size);
+		line-height: 1.5;
+		color: var(--text-color);
+	}
+	.mail__body::placeholder {
+		color: var(--text-color-light);
+	}
+
+	.mail__toolbar {
+		display: flex;
+		justify-content: flex-end;
+	}
+	.mail__send {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.7rem 1.25rem;
+		font-size: var(--small-font-size);
+		font-weight: var(--font-semi-bold);
+		font-family: var(--body-font);
+		color: #fff;
+		background-color: var(--first-color-deep, var(--first-color));
+		border: 0;
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
+		cursor: pointer;
+		transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+	}
+	.mail__send:hover {
+		background-color: var(--first-color-deep-alt, var(--first-color-alt));
+		box-shadow: var(--shadow-md);
+		transform: translateY(-1px);
+	}
+	.mail__send:active {
+		transform: translateY(0);
+	}
+
+	@media (max-width: 520px) {
+		.mail__row {
+			align-items: flex-start;
+			flex-direction: column;
+			gap: 0.4rem;
+		}
+		.mail__label {
+			width: auto;
+		}
+		.mail__from {
+			width: 100%;
+		}
+	}
+</style>

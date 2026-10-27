@@ -9,7 +9,7 @@ const locale = DEFAULT_LOCALE;
 ---
 
 <Layout title="Juan Felipe Rada | Thanks!" variant="radapls" withFooter={false} withHeader={false}>
-	<!-- Matches the retro mail client: the compose window's "sent" dialog -->
+	<!-- Matches the contact drawer's compose card: its "sent" dialog -->
 	<main class="thanks">
 		<div class="thanks__window">
 			<div class="thanks__titlebar">
@@ -72,6 +72,7 @@ const locale = DEFAULT_LOCALE;
 	</main>
 
 	<style>
+		/* Matches the contact form's compose card (ContactDrawer.astro .mail) */
 		.thanks {
 			display: flex;
 			justify-content: center;
@@ -81,45 +82,31 @@ const locale = DEFAULT_LOCALE;
 		}
 
 		.thanks__window {
-			width: min(100%, 440px);
-			background-color: #d6d3ce;
-			border: 1px solid #000;
-			box-shadow: var(--shadow-lg);
+			width: min(100%, 30rem);
+			padding: clamp(1.25rem, 4vw, 2rem);
+			display: grid;
+			gap: 1.25rem;
+			background: var(--container-color);
+			border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);
+			border-radius: var(--radius-lg);
+			box-shadow: var(--shadow-md);
 		}
 
-		/* Same title bar as the contact form's compose window */
 		.thanks__titlebar {
 			display: flex;
 			align-items: center;
-			gap: 0.5rem;
-			padding: 0.5rem 0.75rem;
-			background: repeating-linear-gradient(
-				0deg,
-				#d6d3ce 0 2px,
-				#000 2px 3px,
-				#d6d3ce 3px 5px,
-				#fff 5px 6px
-			);
-			border-bottom: 1px solid #000;
+			gap: 0.65rem;
+			padding-bottom: 0.9rem;
+			border-bottom: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);
 		}
 		.thanks__dot {
-			width: 11px;
-			height: 11px;
-			border-radius: 50%;
-			border: 1px solid #000;
-			background-color: #fff;
-			flex: none;
+			display: none;
 		}
 		.thanks__title {
 			flex: 1;
-			text-align: center;
-			font-size: var(--small-font-size);
+			font-size: var(--h3-font-size);
 			font-weight: var(--font-semi-bold);
-			color: #000;
-			padding: 0.1rem 0.4rem;
-			background-color: #d6d3ce;
-			border-radius: 4px;
-			margin-right: 3rem; /* balance the dots on the left */
+			color: var(--title-color);
 		}
 
 		.thanks__body {
@@ -127,7 +114,6 @@ const locale = DEFAULT_LOCALE;
 			flex-direction: column;
 			align-items: center;
 			text-align: center;
-			padding: 2rem 2rem 1.75rem;
 		}
 		.thanks__icon {
 			color: var(--first-color);
@@ -146,66 +132,31 @@ const locale = DEFAULT_LOCALE;
 			margin-bottom: 1.5rem;
 		}
 
-		/* Same beveled button as the compose window's Send */
+		/* Same send button as the compose window */
 		.thanks__btn {
 			display: inline-flex;
 			align-items: center;
 			gap: 0.5rem;
-			padding: 0.45rem 1.25rem;
+			padding: 0.7rem 1.25rem;
 			font-size: var(--small-font-size);
 			font-weight: var(--font-semi-bold);
-			color: #000;
-			background-color: #d6d3ce;
-			border: 1px solid #000;
-			border-radius: 6px;
-			box-shadow:
-				inset 1px 1px 0 #fff,
-				inset -1px -1px 0 #9a9a9a;
+			font-family: var(--body-font);
+			color: #fff;
+			background-color: var(--first-color-deep, var(--first-color));
+			border: 0;
+			border-radius: var(--radius-md);
+			box-shadow: var(--shadow-sm);
 			text-decoration: none;
+			cursor: pointer;
+			transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 		}
 		.thanks__btn:hover {
-			background-color: #e4e1dc;
+			background-color: var(--first-color-deep-alt, var(--first-color-alt));
+			box-shadow: var(--shadow-md);
+			transform: translateY(-1px);
 		}
 		.thanks__btn:active {
-			box-shadow:
-				inset 1px 1px 0 #9a9a9a,
-				inset -1px -1px 0 #fff;
-		}
-
-		/* Dark theme: graphite window, like the contact form */
-		:global(.dark) .thanks__window {
-			background-color: #3f3f46;
-		}
-		:global(.dark) .thanks__titlebar {
-			background: repeating-linear-gradient(
-				0deg,
-				#3f3f46 0 2px,
-				#000 2px 3px,
-				#3f3f46 3px 5px,
-				#71717a 5px 6px
-			);
-		}
-		:global(.dark) .thanks__title {
-			color: #e4e4e7;
-			background-color: #3f3f46;
-		}
-		:global(.dark) .thanks__dot {
-			background-color: #71717a;
-		}
-		:global(.dark) .thanks__btn {
-			background-color: #52525b;
-			color: #e4e4e7;
-			box-shadow:
-				inset 1px 1px 0 #71717a,
-				inset -1px -1px 0 #27272a;
-		}
-		:global(.dark) .thanks__btn:hover {
-			background-color: #606068;
-		}
-		:global(.dark) .thanks__btn:active {
-			box-shadow:
-				inset 1px 1px 0 #27272a,
-				inset -1px -1px 0 #71717a;
+			transform: translateY(0);
 		}
 	</style>
 </Layout>

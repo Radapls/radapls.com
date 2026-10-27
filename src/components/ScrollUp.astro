@@ -4,14 +4,38 @@ import { useTranslations, type Lang } from 'src/i18n';
 const t = useTranslations(Astro.currentLocale as Lang);
 ---
 
-<button
-	class="scrollup"
-	id="scroll-up"
-	type="button"
-	aria-label={t('scrollup.scroll-to-top')}
->
-	<span class="scrollup__icon" aria-hidden="true">↑</span>
-</button>
+<div class="float-stack">
+	<button
+		class="scrollup"
+		id="scroll-up"
+		type="button"
+		aria-label={t('scrollup.scroll-to-top')}
+	>
+		<span class="scrollup__icon" aria-hidden="true">↑</span>
+	</button>
+
+	<button
+		class="float-stack__contact"
+		type="button"
+		data-contact-open
+		aria-label={t('header.contact')}
+	>
+		<svg
+			viewBox="0 0 24 24"
+			width="20"
+			height="20"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<rect x="2" y="4" width="20" height="16" rx="2"></rect>
+			<path d="m22 7-10 6L2 7"></path>
+		</svg>
+	</button>
+</div>
 
 <script>
 	function setupScrollUp() {
@@ -41,37 +65,52 @@ const t = useTranslations(Astro.currentLocale as Lang);
 </script>
 
 <style>
-	.scrollup {
+	/* Fixed stack, bottom right: scroll-up on top, contact FAB below. */
+	.float-stack {
 		position: fixed;
 		right: max(1rem, env(safe-area-inset-right));
-		bottom: -20%;
+		bottom: max(1rem, env(safe-area-inset-bottom));
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		z-index: var(--z-tooltip);
+	}
+	.scrollup,
+	.float-stack__contact {
 		background-color: var(--first-color);
 		border: 0;
-		opacity: 0;
-		padding: 0.5rem;
+		padding: 0.5rem 0.55rem;
 		border-radius: var(--radius-pill);
-		z-index: var(--z-tooltip);
-		transition: 0.4s;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
+		transition: 0.3s;
 	}
-
-	.scrollup:hover {
+	.scrollup:hover,
+	.float-stack__contact:hover {
 		background-color: var(--first-color-alt);
 	}
+	.float-stack__contact {
+		color: var(--container-color);
+	}
 
+	.scrollup {
+		opacity: 0;
+		transform: translateY(0.5rem);
+		pointer-events: none;
+	}
 	.scrollup__icon {
 		font-family: var(--title-font);
-	font-weight: 200;
+		font-weight: 200;
 		font-size: 1.5rem;
 		line-height: 1;
 		color: var(--container-color);
 	}
-
 	.show-scroll {
-		bottom: max(1rem, env(safe-area-inset-bottom));
 		opacity: 1;
+		transform: none;
+		pointer-events: auto;
 	}
 </style>

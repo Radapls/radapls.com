@@ -116,13 +116,13 @@ import ExperienceContent from '@components/Experience/ExperienceContent.astro';
 				    card (most recent experience). Clickable, but never part
 				    of the highlightable timeline cards. */
 					}
-					<a class="qualification__cta" href="#Contact">
+					<button type="button" class="qualification__cta" data-contact-open>
 						<span class="qualification__cta-title">
 							{
 								t('experience.want-to-be-the-next')
 							}
 						</span>
-					</a>
+					</button>
 					{
 						workData.map((item) => (
 							<ExperienceContent

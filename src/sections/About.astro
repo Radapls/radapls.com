@@ -13,6 +13,10 @@ import BugaPoliticsCover from '@assets/img/publications/descomposicion-politica-
 import BugaPoliticsPdf from '@assets/documents/la-descomposicion-organizaciones-politicas-buga.pdf?url';
 import PasaLaVozPage from '@assets/img/publications/pasa-la-voz-page-46.jpg';
 import PasaLaVozArchiveCopy from '@assets/documents/revista-pasa-la-voz-edicion-23-archive-copy.pdf?url';
+import ArtDecoPoster from '@assets/img/posters/SAMCRO Art Deco-01.png';
+import ConstructivismPoster from '@assets/img/posters/SAMCRO Constructivismo-01.png';
+import JaponismPoster from '@assets/img/posters/SAMCRO Japonismo-01.png';
+import PsychedeliaPoster from '@assets/img/posters/SAMCRO Psicodelia-01.png';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { BLOG_URL } from 'src/consts';
@@ -64,6 +68,40 @@ const funFacts = [
 	t('about.digital-business-strategist'),
 	t('about.i-write-poems-and-personal-essays'),
 	t('about.i-collect-race-bibs-as-running-souvenirs'),
+];
+const posters = [
+	{
+		src: ArtDecoPoster,
+		alt: t({
+			en: 'Art Deco poster made at university',
+			es: 'Póster art déco hecho en la universidad',
+			'pt-br': 'Pôster art déco feito na universidade',
+		}),
+	},
+	{
+		src: ConstructivismPoster,
+		alt: t({
+			en: 'Constructivist poster made at university',
+			es: 'Póster constructivista hecho en la universidad',
+			'pt-br': 'Pôster construtivista feito na universidade',
+		}),
+	},
+	{
+		src: JaponismPoster,
+		alt: t({
+			en: 'Japonism poster made at university',
+			es: 'Póster japonista hecho en la universidad',
+			'pt-br': 'Pôster japonista feito na universidade',
+		}),
+	},
+	{
+		src: PsychedeliaPoster,
+		alt: t({
+			en: 'Psychedelia poster made at university',
+			es: 'Póster psicodélico hecho en la universidad',
+			'pt-br': 'Pôster psicodélico feito na universidade',
+		}),
+	},
 ];
 ---
 
@@ -261,7 +299,19 @@ const funFacts = [
 								{publication.contributor && <p>{publication.contributor}</p>}
 								<span>
 									{t('about.view-publication')}
-									<span aria-hidden="true">↗</span>
+									<svg
+										viewBox="0 0 24 24"
+										width="14"
+										height="14"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										aria-hidden="true"
+									>
+										<path d="M7 17 17 7M8 7h9v9"></path>
+									</svg>
 								</span>
 							</div>
 						</a>
@@ -297,7 +347,19 @@ const funFacts = [
 						<h3>
 							<a href={`${BLOG_URL}/${publication.id}/`} target="_blank" rel="noopener noreferrer">
 								{publication.data.title}
-								<span aria-hidden="true">↗</span>
+								<svg
+									viewBox="0 0 24 24"
+									width="14"
+									height="14"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M7 17 17 7M8 7h9v9"></path>
+								</svg>
 							</a>
 						</h3>
 					</article>
@@ -313,7 +375,19 @@ const funFacts = [
 			{
 				t('about.read-all-my-writing')
 			}
-			<span aria-hidden="true">↗</span>
+			<svg
+				viewBox="0 0 24 24"
+				width="14"
+				height="14"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<path d="M7 17 17 7M8 7h9v9"></path>
+			</svg>
 		</a>
 	</div>
 </section>
@@ -338,6 +412,21 @@ const funFacts = [
 				))
 			}
 		</ul>
+		<div class="poster-strip layout-full">
+			{
+				posters.map((poster) => (
+					<Image
+						class="poster-strip__item"
+						src={poster.src}
+						alt={poster.alt}
+						widths={[200, 400, 600]}
+						sizes="(max-width: 767px) 45vw, 300px"
+						loading="lazy"
+						decoding="async"
+					/>
+				))
+			}
+		</div>
 	</div>
 </section>
 
@@ -503,7 +592,9 @@ const funFacts = [
 		text-decoration: none;
 	}
 	.publication-card h3 a span,
-	.about-more-writing span {
+	.publication-card h3 a :global(svg),
+	.about-more-writing span,
+	.about-more-writing :global(svg) {
 		color: var(--first-color);
 	}
 	.about-more-writing {
@@ -551,6 +642,26 @@ const funFacts = [
 		font-size: clamp(1.2rem, 2vw, 1.6rem);
 		font-weight: var(--font-medium);
 		line-height: 1.25;
+	}
+	/* University posters: a row of frames under the fact cards */
+	.poster-strip {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: var(--layout-gap, 1.25rem);
+		margin-top: var(--layout-gap, 1.25rem);
+	}
+	.poster-strip__item {
+		width: 100%;
+		height: auto;
+		display: block;
+		border: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent);
+		border-radius: var(--radius-sm, 4px);
+		box-shadow: var(--shadow-sm);
+	}
+	@media (max-width: 767px) {
+		.poster-strip {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 	blockquote.about__intro {
 		position: relative;
